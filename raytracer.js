@@ -10,7 +10,7 @@ var EPSILON = 0.00001; //error margins
 //scene to render
 var scene;
 var camera;
-var surfaces;
+var surfaces=[];
 //etc...
 
 
@@ -21,7 +21,6 @@ function init() {
     imageBuffer = context.createImageData(canvas.width, canvas.height); //buffer for pixels
     loadSceneFile("assets/SphereTest.json");
 }
-
 
 
 //____________________________________________________________________________________________________|
@@ -71,20 +70,18 @@ var Camera = function (eye, at, up, fovy, aspect) { //definisco la classe Camera
 
 };
 
-var Sphere = function(center,radius,material)
-{
-    this.center=glMatrix.vec3.fromValues(center[0],center[1],center[2]);
-    this.radius=radius;
-    this.material=material;
-}
+var Sphere = function (center, radius, material) {
+    this.center = glMatrix.vec3.fromValues(center[0], center[1], center[2]);
+    this.radius = radius;
+    this.material = material;
+};
 
-var Triangle = function(p1,p2,p3)
-{
-    this.p1=glMatrix.vec3.fromValues(p1[0],p1[1],p1[2]);
-    this.p2=glMatrix.vec3.fromValues(p2[0],p2[1],p2[2]);
-    this.p3=glMatrix.vec3.fromValues(p3[0],p3[1],p3[2]);
+var Triangle = function (p1, p2, p3) {
+    this.p1 = glMatrix.vec3.fromValues(p1[0], p1[1], p1[2]);
+    this.p2 = glMatrix.vec3.fromValues(p2[0], p2[1], p2[2]);
+    this.p3 = glMatrix.vec3.fromValues(p3[0], p3[1], p3[2]);
 
-}
+};
 
 
 Camera.prototype.castRay = function (x, y) { //aggiungo alla classe Camera la funzione castRay_______ INCOMPLETO!!!
@@ -112,14 +109,25 @@ function loadSceneFile(filepath) {
     var width = 512;
     var height = 512;
 
-    console.log(camera.castRay(0, 0));
-    console.log(camera.castRay(width, height));
-    console.log(camera.castRay(0, height));
-    console.log(camera.castRay(width, 0));
-    console.log(camera.castRay(width/2, height/2));
-
-
+    // console.log(camera.castRay(0, 0));
+    // console.log(camera.castRay(width, height));
+    // console.log(camera.castRay(0, height));
+    // console.log(camera.castRay(width, 0));
+    // console.log(camera.castRay(width / 2, height / 2));
+// console.log(scene.surfaces);
+// console.log(scene.surfaces[0].shape);
     //TODO - set up surfaces
+    scene.surfaces.forEach(function (element) {
+
+        if(element.shape=="Sphere")
+        surfaces.push(new Sphere(element.center,element.radius,element.material));
+
+        if(element.shape=="Triangle")
+            surfaces.push(new Triangle(element.p1,element.p2,element.p3));
+            }
+
+    )
+    console.log(surfaces);
 
 
     render(); //render the scene
@@ -131,11 +139,17 @@ function loadSceneFile(filepath) {
 function render() {
     var start = Date.now(); //for logging
 
-    //TODO - fire a ray though each pixel
+    //Faccio un doppio for per prendere tutti i pixel del canvas
+    for (let coloumn = 0; coloumn < canvas.width; coloumn++) {
+        for (let row = 0; row < canvas.height; row++) {
+            //TODO - fire a ray though each pixel
 
-    //TODO - calculate the intersection of that ray with the scene
+            //TODO - calculate the intersection of that ray with the scene
 
-    //TODO - set the pixel to be the color of that intersection (using setPixel() method)
+            //TODO - set the pixel to be the color of that intersection (using setPixel() method)
+
+        }
+    }
 
 
     //render the pixels that have been set
