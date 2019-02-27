@@ -1,3 +1,4 @@
+//????????????????????????????????????????????????????????????????????????????????????????????????????|
 //CORE VARIABLES
 var canvas;
 var context;
@@ -20,15 +21,82 @@ function init() {
   imageBuffer = context.createImageData(canvas.width, canvas.height); //buffer for pixels
   loadSceneFile("assets/SphereTest.json");
 }
+//____________________________________________________________________________________________________|
+
+var Material = function(ka, kd, ks, shininess, kr){
+  this.ka = ka;
+  this.kd = kd;
+  this.ks = ks;
+  this.shininess = shininess;
+  this.kr = kr;
+};
+//ambient light only has color (???)
+var AmbientLight = function(color){
+  this.color = color;
+};
+var PointLight = function(position, color){
+  this.position = position;
+  this.color = color;
+};
+var DirectionalLight = function(direction, color){
+  this.direction = direction;
+  this.color = color;
+};
+var Ray = function(direction, origin, tMax, tMin){
+  this.direction = direction;
+  this.origin = origin;
+  this.tMax = tMax;
+  this.tMin = tMin;
+};//might not need
+var Intersection = function(t, intersectionPoint, normal){
+  this.t = t;
+  this.intersectionPoint = vec3.clone(intersectionPoint);
+  this.normal = vec3.clone(normal);
+};//might not need
+
+//CLASSI
+
+var Camera = function (eye, at, up, fovy, aspect) { //definisco la classe Camera _______ INCOMPLETO!!!
+    var h, w, u, v;
+
+    this.eye = eye;
+    this.at = at;
+    this.fovy = fovy;
+    this.up = up;
+    this.aspect = aspect;
+
+
+    h = 2 * Math.tan(rad(fovy / 2.0));
+    w = h * aspect;
+
+}
+
+Camera.prototype.castRay = function(x, y){ //aggiungo alla classe Camera la funzione castRay_______ INCOMPLETO!!!
+  var u = (this.w * x/(canvas.width - 1)) - (this.w/2.0);
+  var v = (-this.h * y/(canvas.height - 1)) + (this.h/2.0);
+
+
+  //where is eye used??
+  var direction = vec3.fromValues(u, v, -1);
+  var origin = vec3.clone(this.eye);//vec3.clone(this.at);// vec3.fromValues(0, 0, 0);
+  return new Ray(direction, origin, undefined, shadowBias);
+  //return new ray with origin at (0,0,0) and direction
+};
+
 
 
 //loads and "parses" the scene file at the given path
 function loadSceneFile(filepath) {
   scene = Utils.loadJSON(filepath); //load the scene
 
-  //TODO - set up camera
 
-  //TODO - set up surfaces
+    //TODO - set up camera
+
+    camera = new Camera(scene.camera.eye, scene.camera.at, scene.camera.up, scene.camera.fovy, scene.camera.aspect);
+
+
+    //TODO - set up surfaces
+
 
 
   render(); //render the scene
@@ -55,6 +123,8 @@ function render() {
   console.log("rendered in: "+(end-start)+"ms");
 
 }
+
+//????????????????????????????????????????????????????????????????????????????????????????????????????|
 
 //sets the pixel at the given x,y to the given color
 /**
@@ -97,3 +167,4 @@ $(document).ready(function(){
   });
 
 });
+//____________________________________________________________________________________________________|
