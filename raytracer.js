@@ -11,6 +11,10 @@ var EPSILON = 0.00001; //error margins
 var scene;
 var camera;
 var surfaces = [];
+var lights = [];
+var materials = [];
+var bounce_depth;
+var shadow_bias;
 //etc...
 
 
@@ -26,25 +30,25 @@ function init() {
 
 //____________________________________________________________________________________________________|
 
-// var Material = function (ka, kd, ks, shininess, kr) {
-//     this.ka = ka;
-//     this.kd = kd;
-//     this.ks = ks;
-//     this.shininess = shininess;
-//     this.kr = kr;
-// };
-// //ambient light only has color (???)
-// var AmbientLight = function (color) {
-//     this.color = color;
-// };
-// var PointLight = function (position, color) {
-//     this.position = position;
-//     this.color = color;
-// };
-// var DirectionalLight = function (direction, color) {
-//     this.direction = direction;
-//     this.color = color;
-// };
+var Material = function (ka, kd, ks, shininess, kr) {
+    this.ka = ka; // riflessione ambientale
+    this.kd = kd; // riflessione diffusa
+    this.ks = ks; // riflessione speculare
+    this.shininess = shininess;
+    this.kr = kr; // intensità della luce riflessa restituita
+};
+
+ var AmbientLight = function (color) {
+     this.color = color;
+ };
+ var PointLight = function (position, color) {
+     this.position = position;
+     this.color = color;
+ };
+ var DirectionalLight = function (direction, color) {
+     this.direction = direction;
+     this.color = color;
+ };
 var Ray = function (direction, origin, tMax, tMin) {
     // non mi preoccupo di costruire direction come vec3 perche' arriva gia' come tale
     this.direction =glMatrix.vec3.clone(direction); // e' necessario usare clone e non assegnare solo il valore del vec3
@@ -52,12 +56,12 @@ var Ray = function (direction, origin, tMax, tMin) {
     this.tMax = tMax;
     this.tMin = tMin; // NON COMPLETO !!!!!!! t UNDEFINED non so a cosa servono e li setto in modo "a fiducia"
     
-};//might not need
+};
 var Intersection = function (t, intersectionPoint, normal) {
     this.t = t;
     this.intersectionPoint = glMatrix.vec3.clone(intersectionPoint);
     this.normal = glMatrix.vec3.clone(normal);
-};//might not need
+};
 
 //CLASSI
 
@@ -76,16 +80,18 @@ var Camera = function (eye, at, up, fovy, aspect) { //definisco la classe Camera
 var Sphere = function (center, radius, material) {
     this.center = glMatrix.vec3.fromValues(center[0], center[1], center[2]);
     this.radius = radius;
-    this.material = material;
+    this.material = material; //Indica l'indice all'interno dell'array materiali da applicare alla figura
+
 };
 
-var Triangle = function (p1, p2, p3) {
+var Triangle = function (p1, p2, p3,material) {
 //    this.p1 = glMatrix.vec3.fromValues(p1[0], p1[1], p1[2]);
 //    this.p2 = glMatrix.vec3.fromValues(p2[0], p2[1], p2[2]);
 //    this.p3 = glMatrix.vec3.fromValues(p3[0], p3[1], p3[2]);
     this.p1 = p1;
     this.p2 = p2;
     this.p3 = p3;
+    this.material = material; //Indica l'indice all'interno dell'array materiali da applicare alla figura
 };
 
 Ray.prototype.point_at_parameter = function (t) {
@@ -117,6 +123,25 @@ function loadSceneFile(filepath) {
 
     camera = new Camera(scene.camera.eye, scene.camera.at, scene.camera.up, scene.camera.fovy, scene.camera.aspect);
 
+    scene.lights.forEach(function (element) {
+        if (element.source == "Ambient")
+            lights.push(new AmbientLight(element.color));
+        if (element.source == "Point")
+            lights.push(new PointLight(element.position, element.color));
+        if (element.source == "Directional")
+            lights.push(new DirectionalLight(element.direction, element.color));
+
+
+    }
+    );
+
+    bounce_depth = scene.bounce_depth;
+    shadow_bias = scene.shadow_bias;
+
+    scene.materials.forEach(function (element) {
+        materials.push(new Material(element.ka, element.kd, element.ks, element.shininess, element.kr));
+       
+    });
 
 
    //  console.log(camera.castRay(0, 0));
@@ -128,11 +153,11 @@ function loadSceneFile(filepath) {
     //TODO - set up surfaces
     scene.surfaces.forEach(function (element) {
 
-            if (element.shape == "Sphere")
-                surfaces.push(new Sphere(element.center, element.radius, element.material));
+        if (element.shape == "Sphere")
+             surfaces.push(new Sphere(element.center, element.radius, element.material));
 
-            if (element.shape == "Triangle")
-                surfaces.push(new Triangle(element.p1, element.p2, element.p3));
+        if (element.shape == "Triangle")
+            surfaces.push(new Triangle(element.p1, element.p2, element.p3, element.material));
         }
     );
    // console.log(surfaces);
@@ -203,7 +228,8 @@ Triangle.prototype.intersection = function (ray) {
         [this.p1[2] - this.p2[2], this.p1[2] - this.p3[2], ray.direction[2], this.p1[2] - ray.origin[2]],
     ];
 
-    solutions=(gauss(A));
+    solutions = (gauss(A));//Calcola il vettore contenente la soluzione delle tre equazioni necessarie
+                            //per identificare intersezione triangolo-raggio
 
 
   //  let flag_t1, flag_t2;
