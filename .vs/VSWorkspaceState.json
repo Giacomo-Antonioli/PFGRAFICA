@@ -1,8 +1,9 @@
 {
   "ExpandedNodes": [
     "",
+    "\\assets",
     "\\libs"
   ],
-  "SelectedNode": "\\libs\\gl-matrix.js",
+  "SelectedNode": "\\assets\\ShadowTest1.json",
   "PreviewInSolutionExplorer": false
 }
