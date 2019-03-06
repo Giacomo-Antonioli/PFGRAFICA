@@ -1,4 +1,3 @@
-﻿//MODELLO PHONG IMPLEMENTATO MA NON FUNZIONANTE, FIRST E SECOND MEMBER NON DANNO RISULTATI CORRETTI
 
 var canvas;
 var context;
@@ -34,7 +33,7 @@ var Material = function (ka, kd, ks, shininess, kr) {
     this.kd = glMatrix.vec3.fromValues(kd[0], kd[1], kd[2]); // riflessione diffusa
     this.ks = glMatrix.vec3.fromValues(ks[0], ks[1], ks[2]); // riflessione speculare
     this.shininess = shininess;
-    this.kr = glMatrix.vec3.fromValues(kr[0], kr[1], kr[2]); // intensità della luce riflessa restituita
+    this.kr = glMatrix.vec3.fromValues(kr[0], kr[1], kr[2]); // intensit� della luce riflessa restituita
 };
 
 var AmbientLight = function (color) {
@@ -84,9 +83,9 @@ var Sphere = function (center, radius, material) {
 };
 
 var Triangle = function (p1, p2, p3, material) {
-//    this.p1 = glMatrix.vec3.fromValues(p1[0], p1[1], p1[2]);
-//    this.p2 = glMatrix.vec3.fromValues(p2[0], p2[1], p2[2]);
-//    this.p3 = glMatrix.vec3.fromValues(p3[0], p3[1], p3[2]);
+    //    this.p1 = glMatrix.vec3.fromValues(p1[0], p1[1], p1[2]);
+    //    this.p2 = glMatrix.vec3.fromValues(p2[0], p2[1], p2[2]);
+    //    this.p3 = glMatrix.vec3.fromValues(p3[0], p3[1], p3[2]);
     this.p1 = p1;
     this.p2 = p2;
     this.p3 = p3;
@@ -96,13 +95,13 @@ var Triangle = function (p1, p2, p3, material) {
 Ray.prototype.point_at_parameter = function (t) {
     // non mi preoccupo di costruire direction  e origin come vec3 perche' il costruttore
     // li prende gia' come tali
-    
+
     //*********************************VARIABILI D'APPOGGIO*************/
     let Orig_MUl_scaledDir = glMatrix.vec3.create();
     let ScaledDir = glMatrix.vec3.create();
     //*****************************************************************/
 
-    glMatrix.vec3.scale(ScaledDir, this.direction, t)
+    glMatrix.vec3.scale(ScaledDir, this.direction, t);
     glMatrix.vec3.add(Orig_MUl_scaledDir, ScaledDir, this.origin);
 
     return Orig_MUl_scaledDir;
@@ -111,8 +110,8 @@ Ray.prototype.point_at_parameter = function (t) {
     // return glMatrix.vec3.add(OrigMUlscaledDir,
     //     glMatrix.vec3.scale(ScaledDir, this.direction, t),
     //     this.origin);
-  
-   //return this.origin + t * this.direction; // TODELETE
+
+    //return this.origin + t * this.direction; // TODELETE
 
 };
 
@@ -161,13 +160,13 @@ Sphere.prototype.intersection = function (ray) {
     origin_center_sub_euclidean_norm_squared = glMatrix.vec3.dot(origin_center_sub, origin_center_sub);
 
 
-// -b + sqrt(b^2 - f*(a^2) - R^2) / f
+    // -b + sqrt(b^2 - f*(a^2) - R^2) / f
     flag_t1 = ((-direction_times_origin_center_sub + Math.sqrt(Math.pow(direction_times_origin_center_sub, 2) - direction_euclidean_norm_squared * (origin_center_sub_euclidean_norm_squared - Math.pow(this.radius, 2)))) / direction_euclidean_norm_squared);
-// -b + sqrt(b^2 - f*(a^2) - R^2) / f
+    // -b + sqrt(b^2 - f*(a^2) - R^2) / f
     flag_t2 = ((-direction_times_origin_center_sub - Math.sqrt(Math.pow(direction_times_origin_center_sub, 2) - direction_euclidean_norm_squared * (origin_center_sub_euclidean_norm_squared - Math.pow(this.radius, 2)))) / direction_euclidean_norm_squared);
 
-//Posso fare il controllo solo un flag in quanto se i punti sono coincidenti i flag sono uguali
-// E se son diversi devono avere entrambi un valore non nullo se intersecano la sfera
+    //Posso fare il controllo solo un flag in quanto se i punti sono coincidenti i flag sono uguali
+    // E se son diversi devono avere entrambi un valore non nullo se intersecano la sfera
     if (!isNaN(flag_t1)) {
         //console.log("INTERCEPTISSS");
         if (flag_t1 < 0 && flag_t2 < 0)
@@ -214,61 +213,81 @@ Triangle.prototype.intersection = function (ray) {
 
 
 function setColor(ray) {
-    /* *
-     * 
-     * 
-     * */
 
     var color;
     let setpixel; // variabile d'appoggio
-
-    //prendo light e prendo ka
-
-
-    //fare distanza membro a membro tra due punti per ottenere vettore da superficie a luce
-    //normale sulla sfera  -->  punto intersezione-centrosfera --> glMatrix normalize 
-
     /*
-    *
-    ka*ia --> luce ambientale(ia) x colore materiale(ka)
-    kd(Lm x N)id --> costante riflessione diffusa(kd) x vettore che va dal punto della superficie verso la sorgente di luce(Lm) x Normale al punto di riflesione(N) x intensità luce(is)
-    [ks(Rm x V)^alfa]is --> [costante riflessione speculare(ks) x (direzione che un raggio perfettamente riflesso di luce prenderebbe da questo punto sulla superficie(Rm) x la direzione che punta verso l'osservatore (V))^ coseno dell'angolo tra Rm e V ] x intensità luminosa ###################################################
-
-Nota bene
-
-    Rm = 2(Lm x N)x N - Lm
-    Lm, N, Rm e V sono NORMALIZZATI con la function di glMatrix
-
-    *
-    * */
-
+     ambient_component              OK
+     diffuse_component              Da fare
+     specular_component             Da fare        
+     */
 
     surfaces.forEach(function (element) {
 
             //TODO - calculate the intersection of that ray with the scene
-        setpixel = element.intersection(ray); //setpixel mi dice se il raggio interseca la figura
+            setpixel = element.intersection(ray); //setpixel mi dice se il raggio interseca la figura
 
-        //console.log(isNaN(element.interception_point));
-        if (!isNaN(element.interception_point)) {
-            //console.log("ENTRO");
-                //TODO - set the pixel to be the color of that intersection (using setPixel() method)
-            //console.log("1");
-            this.hit_point = ray.point_at_parameter(element.interception_point);// tre coordinate punto nello spazio
-            //console.log("STAMPO HIT POINT")
-            //console.log(hit_point);
-                //*******************************************Variabili************************************
-                this.total = glMatrix.vec3.create();
-                this.first_member=glMatrix.vec3.create(); //Kd(Lm*N)*Id
-                this.second_member = glMatrix.vec3.create(); //Ks(Rm*V)^alfa*Is
-                this.normal_vector = glMatrix.vec3.create();
-                this.Lm = glMatrix.vec3.create();
-                this.Rm = glMatrix.vec3.create();
-                this.V = glMatrix.vec3.create();
-                //*******************************************End Variabili*******************************
-           //console.log("3");
+            //console.log(isNaN(element.interception_point));
+            if (!isNaN(element.interception_point)) {
 
 
-            /*
+                this.hit_point = ray.point_at_parameter(element.interception_point);// tre coordinate punto nello spazio
+
+                //*******************************************Variabili Principali************************************
+                let total = glMatrix.vec3.fromValues(0,0,0);
+                let ambient_component = glMatrix.vec3.create(); //Ka*Ia
+                let diffuse_component = glMatrix.vec3.create(); //Kd(Lm*N)*Id
+                let specular_component = glMatrix.vec3.create(); //Ks(Rm*V)^alfa*Is
+                //*******************************************End Variabili Principali*******************************
+
+
+                //*******************************************Variabili Di Lavoro************************************
+
+                let Ka = glMatrix.vec3.create();
+                let Ia = glMatrix.vec3.create();
+                //---------------------------------------------------------------------------------------------------
+                let Kd = glMatrix.vec3.create();
+                let N = glMatrix.vec3.create();
+                let L = glMatrix.vec3.create();
+                let maxdot_diffuse;
+                let Kd_MUL_I = glMatrix.vec3.create();
+                //---------------------------------------------------------------------------------------------------
+                let I = glMatrix.vec3.create();//Condivisa dai due membri sopra e sotto
+                //---------------------------------------------------------------------------------------------------
+
+                let Ks = glMatrix.vec3.create();
+                let V = glMatrix.vec3.create();
+                let R = glMatrix.vec3.create();
+                let alpha;
+                let R_multiplyier;
+                let maxdot_specular_powered;
+                let Ks_MUL_I = glMatrix.vec3.create();
+                //*******************************************End Variabili Di Lavoro*******************************
+
+                //Calcolo di ambient_component
+                Ka = glMatrix.vec3.clone(materials[element.material].ka);
+                Ia = glMatrix.vec3.clone(lights[0].color);
+                glMatrix.vec3.multiply(ambient_component, Ka,Ia);//Calcolo KaIA e lo sommo al totale
+                if(DEBUG)
+                    console.log("ambient_component: "+ambient_component);
+
+
+                for (let i = 1; i < lights.length; i++) { // sommatoria per ogni luce
+                //Calcolo di diffuse_component
+                    //Appunto negare r
+                    I = glMatrix.vec3.clone(lights[i].color);
+                    Kd = glMatrix.vec3.clone(materials[element.material].kd);
+
+                    glMatrix.vec3.subtract(L, this.hit_point, lights[i].position);//L
+                    glMatrix.vec3.normalize(L, L);// normalizzo L
+                   // console.log("L:" + L);
+
+                    glMatrix.vec3.subtract(N, this.hit_point, element.center);// N
+                    glMatrix.vec3.scale(N, N, 1 / element.radius);
+                    glMatrix.vec3.normalize(N, N);// normalizzo N
+                   //glMatrix.vec3.negate(L, L); // ??????????????????????
+
+                    /*
             $$$$$$$\   $$$$$$\        $$$$$$$\  $$$$$$\ $$\      $$\ $$$$$$$$\ $$$$$$$$\ $$$$$$$$\ $$$$$$$$\ $$$$$$$\  $$$$$$$$\
             $$  __$$\ $$  __$$\       $$  __$$\ \_$$  _|$$$\    $$$ |$$  _____|\__$$  __|\__$$  __|$$  _____|$$  __$$\ $$  _____|
             $$ |  $$ |$$ /  $$ |      $$ |  $$ |  $$ |  $$$$\  $$$$ |$$ |         $$ |      $$ |   $$ |      $$ |  $$ |$$ |
@@ -277,149 +296,45 @@ Nota bene
             $$ |  $$ |$$ |  $$ |      $$ |  $$ |  $$ |  $$ |\$  /$$ |$$ |         $$ |      $$ |   $$ |      $$ |  $$ |$$ |
             $$$$$$$  |$$ |  $$ |      $$ |  $$ |$$$$$$\ $$ | \_/ $$ |$$$$$$$$\    $$ |      $$ |   $$$$$$$$\ $$ |  $$ |$$$$$$$$\
             \_______/ \__|  \__|      \__|  \__|\______|\__|     \__|\________|   \__|      \__|   \________|\__|  \__|\________|
-
+            Asset modificato :)
              */
-                //Calcolo di KaIa
-               // glMatrix.vec3.multiply(this.total, materials[element.material].ka, lights[0].color);//Calcolo KaIA e lo sommo al totale
-                // console.log(lights[0].color);
 
-            //console.log("4");
-                for (let i = 1; i < lights.length; i++) { // sommatoria per ogni luce
+                    maxdot_diffuse = Math.max(0.0, glMatrix.vec3.dot(L, N));
 
+                    glMatrix.vec3.multiply(Kd_MUL_I, Kd, I); // Kd x I
 
-                    //***************************************FIRST MEMBER**********************************
-                    //Modello Lambertiano
-                    //Kd(Lm*N)*Id
+                    glMatrix.vec3.scale(diffuse_component, Kd_MUL_I, maxdot_diffuse);
+                    if (DEBUG)
+                        console.log("diffuse_component: " + diffuse_component);
 
+                 //Calcolo di diffuse_component
+                 //Appunto negare r
+                    Ks = glMatrix.vec3.clone(materials[element.material].ks);
+                    alpha = materials[element.material].shininess;
+
+                    R_multiplyier = 2 * glMatrix.vec3.dot(L, N);//2(L * N)
+                    glMatrix.vec3.scale(R, N, R_multiplyier);//(2(L * N) * N)
+                    glMatrix.vec3.subtract(R, R, L);//(2(L * N) * N) - L
+                    glMatrix.vec3.normalize(R, R);// normalizzo R
+                    //glMatrix.vec3.negate(R, R); ??????????????????
+                    glMatrix.vec3.subtract(V, this.hit_point, camera.eye);//V
+                    glMatrix.vec3.normalize(V, V);// normalizzo V
                     
-                    this.diffuse_constant = glMatrix.vec3.clone(materials[element.material].kd); //kd
+                    maxdot_specular_powered = Math.pow(Math.max(0.0, glMatrix.vec3.dot(R, V)), alpha);
+                    glMatrix.vec3.multiply(Ks_MUL_I, Ks, I);
+                    glMatrix.vec3.scale(specular_component, Ks_MUL_I, maxdot_specular_powered);
 
-                    this.diffuse_intensity = glMatrix.vec3.clone(lights[i].color); //Id e Is
-
-                    glMatrix.vec3.subtract(this.Lm, this.hit_point, lights[i].position);// Lm
-               
-                    glMatrix.vec3.normalize(this.Lm, this.Lm);// normalizzo Lm
-                    //TEST
-
-                    let temporary = glMatrix.vec3.fromValues(0, 0, 0);
-                    let negativelight = glMatrix.vec3.create();
-                    glMatrix.vec3.subtract(negativelight, temporary, this.Lm);// Lm
-
-
-                    //END TEST
-                    glMatrix.vec3.subtract(this.normal_vector, element.center, lights[i].position);// Normale
-
-                    glMatrix.vec3.normalize(this.normal_vector, this.normal_vector);// Normale normalizzata
-               
-                    
-
-                    //*********************************VARIABILI D'APPOGGIO*************/
-                    let Ki_MUL_Id = glMatrix.vec3.create();
-                    //*****************************************************************/
-
-                    glMatrix.vec3.multiply(Ki_MUL_Id, this.diffuse_constant, this.diffuse_intensity); // Kd x Id
-    //HO MODIFICACATO SOTTO
-                    glMatrix.vec3.scale(this.first_member, Ki_MUL_Id, Math.max(0, glMatrix.vec3.dot(this.normal_vector, negativelight)));
-
-
-                    // this.first_member = glMatrix.vec3.scale( // Kd x Id x (N * Lm)
-                    //     glMatrix.vec3.multiply([], this.diffuse_constant, this.diffuse_intensity), // Kd x Id
-                    //     glMatrix.vec3.dot(this.normal_vector, this.Lm) // N * Lm
-                    // );
-
-
-                    //**************************************END FIRST MEMBER*******************************
-
-
-
-
-                    //***************************************SECOND MEMBER**********************************
-
-                    //*********************************VARIABILI D'APPOGGIO*************/
-                    this.specular_constant = glMatrix.vec3.clone(materials[element.material].ks); //ks
-                    //let Lm_MUL_N = glMatrix.vec3.create();
-                    let Lm_MUL_N = glMatrix.vec3.create();
-                    let multiplyier;
-                    let Scaled_Lm_MUL_N = glMatrix.vec3.create();
-                    let MUL_N_Scaled_Lm_MUL_N = glMatrix.vec3.create();
-                    //*****************************************************************/
-
-                   // glMatrix.vec3.multiply(Lm_MUL_N, this.Lm, this.normal_vector);//Lm x N
-                    //glMatrix.vec3.scale(Scaled_Lm_MUL_N , , 2);//2(Lm x N)
-
-                    multiplyier = 2 * glMatrix.vec3.dot(this.Lm, this.normal_vector);//2(Lm * N)
-
-                    glMatrix.vec3.scale(MUL_N_Scaled_Lm_MUL_N, this.normal_vector, multiplyier);//2(Lm * N) * N
-                    glMatrix.vec3.subtract(this.Rm, MUL_N_Scaled_Lm_MUL_N, this.Lm);//(2(Lm * N) * N) - Lm
-
-                    
-
-                    // this.Rm = glMatrix.vec3.subtract([],//(2(Lm x N) x N) - Lm
-                    //     glMatrix.vec3.multiply([],//2(Lm x N) x N
-                    //         glMatrix.vec3.scale([], //2(Lm x N)
-                    //             glMatrix.vec3.multiply([], this.Lm, this.normal_vector)//Lm x N
-                    //             , 2)
-                    //     , this.Lm); //Rm
-                    //         , this.normal_vector)
-                    glMatrix.vec3.normalize(this.Rm, this.Rm);// Rm normalizzato
-
-                    glMatrix.vec3.subtract(this.V, this.hit_point, camera.eye); // V
-
-                    glMatrix.vec3.normalize(this.V, this.V);// V normalizzato
-
-                    //this.alpha = Math.cos(glMatrix.vec3.angle(this.Rm, this.V)); // alpha
-                    this.alpha = materials[element.material].shininess;
-
-                    
-                    //*********************************VARIABILI D'APPOGGIO*************/
-                    //*****************************************************************/
-
-                   
-                    this.Ks_MUL_Is = glMatrix.vec3.create();
-                   // this.tempvector=glMatrix.vec3.fromValues(this.specular_constant[0]*this.diffuse_intensity[0],this.specular_constant[1]*this.diffuse_intensity[1],this.specular_constant[2]*this.diffuse_intensity[2]);
-                    glMatrix.vec3.multiply(this.Ks_MUL_Is, this.specular_constant, this.diffuse_intensity);// Ks x Is
-                    //var vettoreprodotto=glMatrix.vec3.fromValues(1,1,1);
-                    //console.log("PROD");
-                    //console.log(this.tempvector);
-                    glMatrix.vec3.scale(this.second_member, this.Ks_MUL_Is, 0, Math.pow(Math.max(0.0,glMatrix.vec3.dot(this.Rm, this.V), this.alpha)));// Ks x Is x (Rm * V)^alpha)
-
-
-
-                    // this.second_member = glMatrix.vec3.scale(// Ks x (Is x (Rm * V)^alpha)
-                    //     glMatrix.vec3.multiply([], this.specular_constant, this.diffuse_intensity),// Is x (Rm * V)^alpha
-                    //     Math.pow(// (Rm * V)^alpha
-                    //         glMatrix.vec3.dot(this.Rm, this.V), // Rm * V
-                    //         this.alpha)
-                    // );
-                    
-
-                    //**************************************END SECOND MEMBER*******************************
-
-                    //*********************************VARIABILI D'APPOGGIO*************/
-                    let First_ADD_Sec = glMatrix.vec3.create();
-                    //*****************************************************************/
-
-                    glMatrix.vec3.add(First_ADD_Sec, this.first_member, this.second_member)
-                    //console.log(this.first_member);
-                    //glMatrix.vec3.add(this.total , this.total, First_ADD_Sec);
-                    //TESTTT!!!!!!!!!!!!!!!!!!!
-                    glMatrix.vec3.add(this.total, this.total, this.first_member);
-                    //TESTTT!!!!!!!!!!!!!!!!!!!
-
-                    // this.total = glMatrix.vec3.add([], this.total,
-                    //     glMatrix.vec3.add([], this.first_member, this.second_member)
-                    // ); // il totale e' la somma di KaIa + primo membro + secondo membro                
 
                 }
 
+                glMatrix.vec3.add(total, total, ambient_component);
+                glMatrix.vec3.add(total, total, diffuse_component);
+                glMatrix.vec3.add(total, total, specular_component);
+                //console.log("diffuse_component: " + diffuse_component);
+                if (setpixel) {
+                    color = [total[0], total[1], total[2]];//Colore figura
 
-            
-            if (setpixel) {
-                color = [total[0], total[1], total[2]];//Colore figura
-                //console.log(this.second_member);
-            }
-
-                else
+                } else
                     color = [0, 0, 0];//Colore background
 
             } else
@@ -444,9 +359,9 @@ function loadSceneFile(filepath) {
     scene.lights.forEach(function (element) {
             if (element.source == "Ambient")
                 lights.push(new AmbientLight(element.color));
-        if (element.source == "Point") {
-            lights.push(new PointLight(element.position, element.color));
-        }
+            if (element.source == "Point") {
+                lights.push(new PointLight(element.position, element.color));
+            }
 
             if (element.source == "Directional")
                 lights.push(new DirectionalLight(element.direction, element.color));
@@ -501,15 +416,15 @@ function render() {
             setPixel(coloumn, row, setColor(ray));
 
 
-//‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
+            //????????????????????????????????????????????
             //var v_Color = glMatrix.vec4.create();
 
             var u_AmbientLight = glMatrix.vec3.create();
             var u_AmbientLight = glMatrix.vec3.create();
 
 
-//v_Color = vec4(atten *(diffuse + specular)  + ambient, 1.0);
-//‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
+            //v_Color = vec4(atten *(diffuse + specular)  + ambient, 1.0);
+            //????????????????????????????????????????????
 
 
         }
@@ -559,13 +474,13 @@ $(document).ready(function () {
     });
 
     //debugging - cast a ray through the clicked pixel with DEBUG messaging on
-    $('#canvas').click(function (e) {
+   /* $('#canvas').click(function (e) {
         var x = e.pageX - $('#canvas').offset().left;
         var y = e.pageY - $('#canvas').offset().top;
         DEBUG = true;
         camera.castRay(x, y); //cast a ray through the point
         DEBUG = false;
-    });
+    });*/
 
 });
 //____________________________________________________________________________________________________|
@@ -619,48 +534,3 @@ function gauss(A) {
 }
 
 //____________________________________________________________________________________________________|
-
-
-//‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|
-// Vertex shader program
-var VSHADER_SOURCE =
-    'attribute vec4 a_Position;\n' +
-    'attribute vec4 a_Normal;\n' +
-    'uniform mat4 u_MvpMatrix;\n' +
-    'uniform mat4 u_ModelMatrix;\n' +    // Model matrix
-    'uniform mat4 u_NormalMatrix;\n' +   // Transformation matrix of the normal
-    'uniform vec3 u_LightColor;\n' +   // Light color
-    'uniform vec3 u_LightPosition;\n' +  // Position of the light source
-    'uniform vec3 u_AmbientLight;\n' +   // Ambient light color
-    'uniform vec3 u_DiffuseMat;\n' +   // Diffuse material color
-    'uniform vec3 u_SpecularMat;\n' +   // Specular material color
-    'uniform float u_Shininess  ;\n' +   // Specular material shininess
-    'uniform vec3 u_AmbientMat;\n' +   // Ambient material color
-    'uniform vec3 u_CameraPos;\n' +   // Camera Position
-    'varying vec4 v_Color;\n' +
-    'void main() {\n' +
-    '  gl_Position = u_MvpMatrix * a_Position;\n' +
-    // Calculate a normal to be fit with a model matrix, and make it 1.0 in length
-    '  vec3 normal = normalize(vec3(u_NormalMatrix * a_Normal));\n' +
-    // Calculate world coordinate of vertex
-    '  vec4 vertexPosition = u_ModelMatrix * a_Position;\n' +
-    '  float d = length(u_LightPosition - vec3(vertexPosition));\n' +
-    '  float atten = 1.0/(0.01 * d*d);\n' +
-    // Calculate the light direction and make it 1.0 in length
-    '  vec3 lightDirection = normalize(u_LightPosition - vec3(vertexPosition));\n' +
-    // The dot product of the light direction and the normal
-    '  float nDotL = max(dot(lightDirection, normal), 0.0);\n' +
-    // Calculate the color due to diffuse reflection
-    '  vec3 diffuse = u_LightColor * u_DiffuseMat * nDotL;\n' +
-    // Calculate the color due to ambient reflection
-    '  vec3 ambient = u_AmbientLight * u_AmbientMat;\n' +
-    '  vec3 specular = vec3(0.0,0.0,0.0);\n' +
-    '  if(nDotL > 0.0) {\n' +
-    // Calculate specular component
-    '       vec3 h = normalize(normalize(u_CameraPos - vec3(vertexPosition)) + lightDirection);\n' +
-    '       float hDotn  = max(dot(h, normal), 0.0);\n' +
-    '       specular = u_LightColor * u_SpecularMat * pow(hDotn,u_Shininess);\n' +
-    '  }\n' +
-    // Add the surface colors due to diffuse reflection and ambient reflection
-    '  v_Color = vec4(atten *(diffuse + specular)  + ambient, 1.0);\n' +
-    '}\n';

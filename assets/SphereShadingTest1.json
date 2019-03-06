@@ -10,9 +10,9 @@
 
 	"lights" : [ 
 		{"source" : "Ambient", "color" : [0.1,0.1,0.1]},
-		{"source" : "Point", "position" : [1.5, 1.5, -1], "color" : [1,1,1]}
+		{"source" : "Point", "position" : [-1.5, -1.5, -1], "color" : [1,1,1]}
 	],
-
+  
 	"materials" : [ 
 		{
 			"ka" : [0,0,1],
