@@ -2,21 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="937cbb98-f13e-434b-abd9-c244e871e818" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/libs/functions.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.vs/PFGRAFICA/v15/.suo" beforeDir="false" afterPath="$PROJECT_DIR$/.vs/PFGRAFICA/v15/.suo" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.vs/slnx.sqlite" beforeDir="false" afterPath="$PROJECT_DIR$/.vs/slnx.sqlite" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/classes/AmbientLight.js" beforeDir="false" afterPath="$PROJECT_DIR$/classes/AmbientLight.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/classes/Camera.js" beforeDir="false" afterPath="$PROJECT_DIR$/classes/Camera.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/classes/DirecotionalLight.js" beforeDir="false" afterPath="$PROJECT_DIR$/classes/DirectionalLight.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/classes/Material.js" beforeDir="false" afterPath="$PROJECT_DIR$/classes/Material.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/classes/PointLight.js" beforeDir="false" afterPath="$PROJECT_DIR$/classes/PointLight.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/classes/Ray.js" beforeDir="false" afterPath="$PROJECT_DIR$/classes/Ray.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/classes/Sphere.js" beforeDir="false" afterPath="$PROJECT_DIR$/classes/Sphere.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/classes/Triangle.js" beforeDir="false" afterPath="$PROJECT_DIR$/classes/Triangle.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libs/function_list" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/raytracer_new_jack.js" beforeDir="false" afterPath="$PROJECT_DIR$/raytracer_new_jack.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProgettoFinale_2018_2019.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Ray Tracing in a Weekend.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/rt_chap12.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/rt_chap4.pdf" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -258,20 +247,19 @@
       <workItem from="1551860984367" duration="9156000" />
       <workItem from="1551880922383" duration="6050000" />
       <workItem from="1551896873753" duration="412000" />
-      <workItem from="1551969945530" duration="4868000" />
+      <workItem from="1551969945530" duration="5108000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="52218000" />
+    <option name="totallyTimeSpent" value="52458000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1096" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info id="Gulp" order="0" side_tool="true" />
       <window_info id="npm" order="1" side_tool="true" />
-      <window_info active="true" content_ui="combo" id="Project" order="2" visible="true" weight="0.23614073" />
+      <window_info active="true" content_ui="combo" id="Project" order="2" visible="true" weight="0.14872068" />
       <window_info id="Structure" order="3" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="4" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
