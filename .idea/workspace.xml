@@ -2,25 +2,21 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="937cbb98-f13e-434b-abd9-c244e871e818" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/classes/AmbientLight.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/classes/Camera.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/classes/DirecotionalLight.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/classes/Material.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/classes/PointLight.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/classes/Ray.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/classes/Sphere.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/classes/Triangle.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/libs/function_list" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/raytracer_new_jack.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/libs/functions.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.vs/PFGRAFICA/v15/.suo" beforeDir="false" afterPath="$PROJECT_DIR$/.vs/PFGRAFICA/v15/.suo" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.vs/VSWorkspaceState.json" beforeDir="false" afterPath="$PROJECT_DIR$/.vs/VSWorkspaceState.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.vs/slnx.sqlite" beforeDir="false" afterPath="$PROJECT_DIR$/.vs/slnx.sqlite" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/SphereShadingTest1.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/SphereShadingTest1.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/TriangleShadingTest.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/TriangleShadingTest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/classes/AmbientLight.js" beforeDir="false" afterPath="$PROJECT_DIR$/classes/AmbientLight.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/classes/Camera.js" beforeDir="false" afterPath="$PROJECT_DIR$/classes/Camera.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/classes/DirecotionalLight.js" beforeDir="false" afterPath="$PROJECT_DIR$/classes/DirectionalLight.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/classes/Material.js" beforeDir="false" afterPath="$PROJECT_DIR$/classes/Material.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/classes/PointLight.js" beforeDir="false" afterPath="$PROJECT_DIR$/classes/PointLight.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/classes/Ray.js" beforeDir="false" afterPath="$PROJECT_DIR$/classes/Ray.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/classes/Sphere.js" beforeDir="false" afterPath="$PROJECT_DIR$/classes/Sphere.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/classes/Triangle.js" beforeDir="false" afterPath="$PROJECT_DIR$/classes/Triangle.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/raytracer.js" beforeDir="false" afterPath="$PROJECT_DIR$/raytracer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs/function_list" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/raytracer_new_jack.js" beforeDir="false" afterPath="$PROJECT_DIR$/raytracer_new_jack.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -30,11 +26,29 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="578">
-              <caret line="46" column="48" selection-start-line="46" selection-start-column="48" selection-end-line="46" selection-end-column="48" />
+            <state relative-caret-position="663">
+              <caret line="39" column="59" selection-start-line="39" selection-start-column="59" selection-end-line="39" selection-end-column="59" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/classes/DirectionalLight.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="187">
+              <caret line="11" lean-forward="true" selection-start-line="11" selection-end-line="11" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/libs/functions.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="881">
+              <caret line="103" lean-forward="true" selection-start-line="103" selection-end-line="103" />
             </state>
           </provider>
         </entry>
@@ -42,52 +56,58 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/raytracer_new.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="425">
-              <caret line="490" selection-start-line="490" selection-end-line="534" />
-              <folding>
-                <element signature="n#!!block;n#setColor#0" />
-                <element signature="n#!!block;n#loadSceneFile#0" />
-                <element signature="n#!!block;n#render#0" />
-                <element signature="n#!!block;n#setPixel#0" />
-                <element signature="n#!!block;n#rad#0" />
-                <element signature="e#18629#19199#0" />
-                <element signature="n#!!block;n#gauss#0" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/libs/function_list">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
-              <caret line="290" selection-start-line="290" selection-end-line="290" />
-              <folding>
-                <element signature="n#!!block;n#setColor#0" />
-                <element signature="n#!!block;n#loadSceneFile#0" />
-                <element signature="n#!!block;n#render#0" />
-                <element signature="n#!!block;n#setPixel#0" />
-                <element signature="n#!!block;n#rad#0" />
-                <element signature="n#!!block;n#gauss#0" />
-              </folding>
+            <state relative-caret-position="294">
+              <caret line="20" column="8" selection-start-line="20" selection-start-column="8" selection-end-line="20" selection-end-column="8" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/classes/Material.js">
+        <entry file="file://$PROJECT_DIR$/classes/Triangle.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17">
-              <caret line="1" selection-start-line="1" selection-end-line="1" />
+            <state relative-caret-position="31">
+              <caret line="42" column="1" lean-forward="true" selection-start-line="42" selection-start-column="1" selection-end-line="42" selection-end-column="1" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/classes/Sphere.js">
+        <entry file="file://$PROJECT_DIR$/classes/PointLight.js">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/classes/Ray.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="85">
-              <caret line="5" column="80" selection-start-line="5" selection-start-column="8" selection-end-line="5" selection-end-column="80" />
+            <state relative-caret-position="527">
+              <caret line="31" selection-start-line="31" selection-end-line="31" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/raytracer_new_jack.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="796">
+              <caret line="194" selection-start-line="194" selection-end-line="194" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/classes/AmbientLight.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="119">
+              <caret line="7" selection-start-line="7" selection-end-line="7" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/classes/Camera.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="459">
+              <caret line="27" lean-forward="true" selection-start-line="27" selection-end-line="27" />
             </state>
           </provider>
         </entry>
@@ -112,6 +132,12 @@
       <find>diffuse_intensity</find>
       <find>specular_constant</find>
       <find>center</find>
+      <find>loadSceneFile</find>
+      <find>setPixel</find>
+      <find>load</find>
+      <find>var</find>
+      <find>import</find>
+      <find>functionl</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -124,27 +150,30 @@
         <option value="$PROJECT_DIR$/raytracer.html" />
         <option value="$PROJECT_DIR$/raytracer.js" />
         <option value="$PROJECT_DIR$/raytracer_new.js" />
-        <option value="$PROJECT_DIR$/index.html" />
         <option value="$PROJECT_DIR$/assets/SphereShadingTest1.json" />
-        <option value="$PROJECT_DIR$/raytracer_new_jack.js" />
-        <option value="$PROJECT_DIR$/classes/AmbientLight.js" />
-        <option value="$PROJECT_DIR$/classes/Ray.js" />
-        <option value="$PROJECT_DIR$/classes/PointLight.js" />
-        <option value="$PROJECT_DIR$/classes/DirecotionalLight.js" />
-        <option value="$PROJECT_DIR$/classes/Sphere.js" />
-        <option value="$PROJECT_DIR$/classes/Material.js" />
-        <option value="$PROJECT_DIR$/classes/Camera.js" />
-        <option value="$PROJECT_DIR$/classes/Triangle.js" />
         <option value="$PROJECT_DIR$/libs/function_list" />
+        <option value="$PROJECT_DIR$/libs/function_list.js" />
+        <option value="$PROJECT_DIR$/classes/DirecotionalLight.js" />
+        <option value="$PROJECT_DIR$/classes/AmbientLight.js" />
+        <option value="$PROJECT_DIR$/classes/DirectionalLight.js" />
+        <option value="$PROJECT_DIR$/classes/Material.js" />
+        <option value="$PROJECT_DIR$/classes/PointLight.js" />
+        <option value="$PROJECT_DIR$/classes/Ray.js" />
+        <option value="$PROJECT_DIR$/classes/Sphere.js" />
+        <option value="$PROJECT_DIR$/classes/Triangle.js" />
+        <option value="$PROJECT_DIR$/classes/Camera.js" />
+        <option value="$PROJECT_DIR$/raytracer_new_jack.js" />
+        <option value="$PROJECT_DIR$/libs/functions.js" />
+        <option value="$PROJECT_DIR$/index.html" />
       </list>
     </option>
   </component>
   <component name="PhpServers">
     <servers />
   </component>
-  <component name="ProjectFrameBounds">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="-7" />
-    <option name="width" value="1284" />
+    <option name="width" value="974" />
     <option name="height" value="1087" />
   </component>
   <component name="ProjectLevelVcsManager">
@@ -155,6 +184,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -165,12 +195,7 @@
             <path>
               <item name="PFGRAFICA" type="b2602c69:ProjectViewProjectNode" />
               <item name="PFGRAFICA" type="462c0819:PsiDirectoryNode" />
-              <item name="assets" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="PFGRAFICA" type="b2602c69:ProjectViewProjectNode" />
-              <item name="PFGRAFICA" type="462c0819:PsiDirectoryNode" />
-              <item name="examples" type="462c0819:PsiDirectoryNode" />
+              <item name="classes" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="PFGRAFICA" type="b2602c69:ProjectViewProjectNode" />
@@ -181,7 +206,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -233,23 +257,25 @@
       <workItem from="1551813016316" duration="5185000" />
       <workItem from="1551860984367" duration="9156000" />
       <workItem from="1551880922383" duration="6050000" />
+      <workItem from="1551896873753" duration="412000" />
+      <workItem from="1551969945530" duration="4868000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="46938000" />
+    <option name="totallyTimeSpent" value="52218000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="0" width="1284" height="1087" extended-state="0" />
+    <frame x="-8" y="-8" width="1936" height="1096" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Gulp" order="0" side_tool="true" />
       <window_info id="npm" order="1" side_tool="true" />
-      <window_info active="true" content_ui="combo" id="Project" order="2" visible="true" weight="0.23120914" />
+      <window_info active="true" content_ui="combo" id="Project" order="2" visible="true" weight="0.23614073" />
       <window_info id="Structure" order="3" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="4" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" visible="true" weight="0.32914045" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32914045" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.32914045" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
@@ -386,104 +412,80 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/classes/Ray.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="9" column="19" selection-start-line="9" selection-start-column="19" selection-end-line="9" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/raytracer_new_jack.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="295">
-          <caret line="73" column="29" selection-start-line="66" selection-start-column="4" selection-end-line="73" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="578">
-          <caret line="46" column="48" selection-start-line="46" selection-start-column="48" selection-end-line="46" selection-end-column="48" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/classes/PointLight.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="8" column="8" lean-forward="true" selection-start-line="8" selection-start-column="8" selection-end-line="8" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/classes/DirecotionalLight.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="7" column="31" selection-start-line="7" selection-start-column="31" selection-end-line="7" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/classes/AmbientLight.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="8" selection-start-line="8" selection-end-line="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/classes/Camera.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="7" column="62" selection-start-line="7" selection-start-column="62" selection-end-line="7" selection-end-column="62" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/libs/function_list.js" />
     <entry file="file://$PROJECT_DIR$/classes/Sphere.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" column="80" selection-start-line="5" selection-start-column="8" selection-end-line="5" selection-end-column="80" />
-        </state>
-      </provider>
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/classes/Material.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="1" selection-start-line="1" selection-end-line="1" />
+        <state relative-caret-position="255">
+          <caret line="15" selection-start-line="15" selection-end-line="15" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/classes/Triangle.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="8" column="31" selection-start-line="8" selection-start-column="31" selection-end-line="8" selection-end-column="31" />
+        <state relative-caret-position="31">
+          <caret line="42" column="1" lean-forward="true" selection-start-line="42" selection-start-column="1" selection-end-line="42" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/classes/PointLight.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/classes/Ray.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="527">
+          <caret line="31" selection-start-line="31" selection-end-line="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/classes/AmbientLight.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="7" selection-start-line="7" selection-end-line="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/classes/Camera.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="459">
+          <caret line="27" lean-forward="true" selection-start-line="27" selection-end-line="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/classes/DirectionalLight.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="11" lean-forward="true" selection-start-line="11" selection-end-line="11" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/raytracer_new.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="425">
-          <caret line="490" selection-start-line="490" selection-end-line="534" />
-          <folding>
-            <element signature="n#!!block;n#setColor#0" />
-            <element signature="n#!!block;n#loadSceneFile#0" />
-            <element signature="n#!!block;n#render#0" />
-            <element signature="n#!!block;n#setPixel#0" />
-            <element signature="n#!!block;n#rad#0" />
-            <element signature="e#18629#19199#0" />
-            <element signature="n#!!block;n#gauss#0" />
-          </folding>
+        <state relative-caret-position="294">
+          <caret line="20" column="8" selection-start-line="20" selection-start-column="8" selection-end-line="20" selection-end-column="8" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/libs/function_list">
+    <entry file="file://$PROJECT_DIR$/raytracer_new_jack.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="290" selection-start-line="290" selection-end-line="290" />
-          <folding>
-            <element signature="n#!!block;n#setColor#0" />
-            <element signature="n#!!block;n#loadSceneFile#0" />
-            <element signature="n#!!block;n#render#0" />
-            <element signature="n#!!block;n#setPixel#0" />
-            <element signature="n#!!block;n#rad#0" />
-            <element signature="n#!!block;n#gauss#0" />
-          </folding>
+        <state relative-caret-position="796">
+          <caret line="194" selection-start-line="194" selection-end-line="194" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/libs/functions.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="881">
+          <caret line="103" lean-forward="true" selection-start-line="103" selection-end-line="103" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="663">
+          <caret line="39" column="59" selection-start-line="39" selection-start-column="59" selection-end-line="39" selection-end-column="59" />
         </state>
       </provider>
     </entry>

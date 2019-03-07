@@ -1,4 +1,3 @@
-import * as glMatrix from "../libs/gl-matrix";
 
 class Material {
 
@@ -14,4 +13,3 @@ class Material {
 
 }
 
-export default Material;

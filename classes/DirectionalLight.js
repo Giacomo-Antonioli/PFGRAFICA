@@ -1,6 +1,6 @@
-import AmbientLight from './AmbientLight.js';
 
-class DirecotionalLight extends AmbientLight
+
+class DirectionalLight extends AmbientLight
 {
     constructor(direction, color)
     {
@@ -9,4 +9,3 @@ class DirecotionalLight extends AmbientLight
         this.direction = glMatrix.vec3.fromValues(direction[0], direction[1], direction[2]);
     }
 }
-export default DirecotionalLight;
