@@ -62,7 +62,7 @@ function setColor(ray) {
             if (setpixel) {
 
 
-                this.hit_point = ray.point_at_parameter(element.interception_point);// tre coordinate punto nello spazio
+                //this.hit_point = ray.point_at_parameter(element.interception_point);// tre coordinate punto nello spazio
 
                 //*******************************************letiabili Principali************************************
                 let total = glMatrix.vec3.fromValues(0, 0, 0);
@@ -113,10 +113,11 @@ function setColor(ray) {
                     glMatrix.vec3.normalize(L, L);// normalizzo L
                     // console.log("L:" + L);
 
-                    N=glMatrix.vec3.clone(ray.normalpoint);
+                    N = glMatrix.vec3.clone(ray.normalpoint);
                     glMatrix.vec3.normalize(N, N);// normalizzo N
                     //glMatrix.vec3.negate(L, L); // ??????????????????????
-
+                    let tempL = glMatrix.vec3.create();
+                    glMatrix.vec3.negate(tempL, L);
                     /*
             $$$$$$$\   $$$$$$\        $$$$$$$\  $$$$$$\ $$\      $$\ $$$$$$$$\ $$$$$$$$\ $$$$$$$$\ $$$$$$$$\ $$$$$$$\  $$$$$$$$\
             $$  __$$\ $$  __$$\       $$  __$$\ \_$$  _|$$$\    $$$ |$$  _____|\__$$  __|\__$$  __|$$  _____|$$  __$$\ $$  _____|
@@ -129,7 +130,7 @@ function setColor(ray) {
             Asset modificato :)
              */
 
-                    maxdot_diffuse = Math.max(0.0, glMatrix.vec3.dot(L, N));
+                    maxdot_diffuse = Math.max(0.0, glMatrix.vec3.dot(tempL, N));
 
                     glMatrix.vec3.multiply(Kd_MUL_I, Kd, I); // Kd x I
 
