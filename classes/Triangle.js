@@ -8,7 +8,7 @@ class Triangle {
         this.material=material;
     };
 
-    intersection = function (ray) {
+    intersection (ray) {
         /* *
          * Funzione per il calcolo delle intersezioni del raggio di luce con la sfera
          * INPUT
