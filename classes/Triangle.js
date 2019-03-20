@@ -30,11 +30,29 @@ class Triangle {
         //per identificare intersezione triangolo-raggio
 
 
-        //  let flag_t1, flag_t2;
+        //[beta,gamma,t]trasposta
 
+        //TODO epsilon per +/- 0 e 1
+        
         //if (beta>0 && gamma>0 &&(beta+gamma)<1 ) --> HIT!
-        if (solutions[0] > 0 && solutions[1] > 0 && (solutions[0] + solutions[1]) < 1)
+        if (solutions[0] > 0 && solutions[1] > 0 && (solutions[0] + solutions[1]) < 1) {
+            let point = glMatrix.vec3.create();
+            glMatrix.vec3.scaleAndAdd(point, ray.origin, ray.direction, solutions[2]); // calcolo punto di intersezione
+            
+            let lato1 = glMatrix.vec3.create(); // vettore appoggio lato1 triangolo
+            let lato2 = glMatrix.vec3.create(); // vettore appoggio lato2 triangolo
+            glMatrix.vec3.subtract(lato1, this.p2, this.p1);// calcolo lato1 triangolo 
+            glMatrix.vec3.subtract(lato2, this.p3, this.p2);// calcolo lato2 triangolo 
+
+            let normal = glMatrix.vec3.create();
+            glMatrix.vec3.cross(normal, lato1, lato2); //prodotto vettoriale dei due lati, normale per definizione
+            if (glMatrix.vec3.dot(normal, ray.direction)>rad(90))//NON SO IL VERSO DELLA NORMALE QUINDI LO ADATTO ALLA POS DELLA CAMERA
+                glMatrix.vec3.negate(normal, normal);
+
+            ray.ray_Intersect(solutions[2], point, normal);
             return true;
+
+        }
         else
             return false;
     };

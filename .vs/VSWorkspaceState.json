@@ -2,9 +2,10 @@
   "ExpandedNodes": [
     "",
     "\\assets",
+    "\\classes",
     "\\examples",
     "\\libs"
   ],
-  "SelectedNode": "\\examples\\SphereShadingTest1.png",
+  "SelectedNode": "\\assets\\TriangleTest.json",
   "PreviewInSolutionExplorer": false
 }

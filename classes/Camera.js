@@ -19,7 +19,7 @@ class Camera {
         //where is eye used??
         let direction = glMatrix.vec3.fromValues(u, v, -1);
         let origin = glMatrix.vec3.clone(this.eye);//vec3.clone(this.at);// vec3.fromValues(0, 0, 0);
-        return new Ray(direction, origin, undefined, 0);
+        return new Ray(direction, origin, Number.POSITIVE_INFINITY, 0);
         //return new ray with origin at (0,0,0) and direction
     }
 

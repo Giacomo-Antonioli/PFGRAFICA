@@ -4,7 +4,8 @@ let imageBuffer;
 
 let DEBUG = false; //whether to show debug messages
 let EPSILON = 0.00001; //error margins
-
+//##################################################################
+let file_path = "assets/ShadowTest1.json";
 //####################GLOBAL VALUES#################################
 let scene;
 let camera;
@@ -13,6 +14,7 @@ let lights = [];
 let materials = [];
 let bounce_depth;
 let shadow_bias;
+let counterflag=0;
 //etc...
 //####################GLOBAL VALUES#################################
 
@@ -43,15 +45,17 @@ $(document).ready(function () {
 
 
 function setColor(ray) {
+    /**
+     * This function decides the color of a single pixel based on the nearest object to the camera and based on the lights positions and colors and the object material properties.
+     * @param {Ray} ray This is a ray casted from the camera to the pixel
+     * @return {float array} color RGB composition of the resulting color.
+     *
+     *
+     * **/
 
-
-    let color;
-    let setpixel; // letiabile d'appoggio
-    /*
-     ambient_component              OK
-     diffuse_component              Da fare
-     specular_component             Da fare
-     */
+    let color = [0, 0, 0];
+    let setpixel; // variabile d'appoggio
+    
 
     surfaces.forEach(function (element) {
 
@@ -60,7 +64,6 @@ function setColor(ray) {
 
             //console.log(isNaN(element.interception_point));
             if (setpixel) {
-
 
                 //this.hit_point = ray.point_at_parameter(element.interception_point);// tre coordinate punto nello spazio
 
@@ -106,29 +109,25 @@ function setColor(ray) {
                 for (let i = 1; i < lights.length; i++) { // sommatoria per ogni luce
                     //Calcolo di diffuse_component
                     //Appunto negare r
+
                     I = glMatrix.vec3.clone(lights[i].color);
                     Kd = glMatrix.vec3.clone(materials[element.material].kd);
 
-                    glMatrix.vec3.subtract(L, ray.intersection_point, lights[i].position);//L
+                    if (lights[i] instanceof PointLight)
+                        glMatrix.vec3.subtract(L, ray.intersection_point, lights[i].position);//L
+                    else
+                        L = glMatrix.vec3.clone(lights[i].direction);
                     glMatrix.vec3.normalize(L, L);// normalizzo L
-                    // console.log("L:" + L);
+                    //console.log("L:" + L);
 
                     N = glMatrix.vec3.clone(ray.normalpoint);
+                    //console.log("N:" + N);
+
                     glMatrix.vec3.normalize(N, N);// normalizzo N
                     //glMatrix.vec3.negate(L, L); // ??????????????????????
                     let tempL = glMatrix.vec3.create();
                     glMatrix.vec3.negate(tempL, L);
-                    /*
-            $$$$$$$\   $$$$$$\        $$$$$$$\  $$$$$$\ $$\      $$\ $$$$$$$$\ $$$$$$$$\ $$$$$$$$\ $$$$$$$$\ $$$$$$$\  $$$$$$$$\
-            $$  __$$\ $$  __$$\       $$  __$$\ \_$$  _|$$$\    $$$ |$$  _____|\__$$  __|\__$$  __|$$  _____|$$  __$$\ $$  _____|
-            $$ |  $$ |$$ /  $$ |      $$ |  $$ |  $$ |  $$$$\  $$$$ |$$ |         $$ |      $$ |   $$ |      $$ |  $$ |$$ |
-            $$ |  $$ |$$$$$$$$ |      $$$$$$$  |  $$ |  $$\$$\$$ $$ |$$$$$\       $$ |      $$ |   $$$$$\    $$$$$$$  |$$$$$\
-            $$ |  $$ |$$  __$$ |      $$  __$$<   $$ |  $$ \$$$  $$ |$$  __|      $$ |      $$ |   $$  __|   $$  __$$< $$  __|
-            $$ |  $$ |$$ |  $$ |      $$ |  $$ |  $$ |  $$ |\$  /$$ |$$ |         $$ |      $$ |   $$ |      $$ |  $$ |$$ |
-            $$$$$$$  |$$ |  $$ |      $$ |  $$ |$$$$$$\ $$ | \_/ $$ |$$$$$$$$\    $$ |      $$ |   $$$$$$$$\ $$ |  $$ |$$$$$$$$\
-            \_______/ \__|  \__|      \__|  \__|\______|\__|     \__|\________|   \__|      \__|   \________|\__|  \__|\________|
-            Asset modificato :)
-             */
+
 
                     maxdot_diffuse = Math.max(0.0, glMatrix.vec3.dot(tempL, N));
 
@@ -161,17 +160,25 @@ function setColor(ray) {
                 glMatrix.vec3.add(total, total, ambient_component);
                 glMatrix.vec3.add(total, total, diffuse_component);
                 glMatrix.vec3.add(total, total, specular_component);
+                //console.log("ambient_component: " + ambient_component);
                 //console.log("diffuse_component: " + diffuse_component);
-                if (setpixel) {
+                //console.log("specular_component " + specular_component);
+                //console.log("________________________________________________");
+                //ray.show();
+
+                //console.log("________________________________________________");
+                //console.log("diffuse_component: " + diffuse_component);
+                if (ray.t_Nearest == ray.t_parameter) {
+                // console.log("BOOOOM");
                     color = [total[0], total[1], total[2]];//Colore figura
+                }
+                //console.log("color: "+color);
+        } 
 
-                } else
-                    color = [0, 0, 0];//Colore background
 
-            } else
-                color = [0, 0, 0];
-        }
-    );
+
+    
+        });
 
     return color;
 
@@ -189,7 +196,7 @@ function init() {
     canvas = $('#canvas')[0];
     context = canvas.getContext("2d");
     imageBuffer = context.createImageData(canvas.width, canvas.height); //buffer for pixels
-    loadSceneFile("assets/SphereShadingTest1.json");
+    loadSceneFile(file_path);
 }
 
 function loadSceneFile(filepath) {
@@ -230,7 +237,7 @@ function loadSceneFile(filepath) {
         }
     );
 
-    render(); //render the scene
+
 
 }
 
@@ -241,13 +248,12 @@ function render() {
 
     //Faccio un doppio for per prendere tutti i pixel del canvas
     for (let coloumn = 0; coloumn < 512; coloumn++) {
-        for (let row = 0; row < 512; row++) {
+        for (let row = 0; row < 512 ; row++) {
             //TODO - fire a ray though each pixel
 
             ray = camera.castRay(coloumn, row);
 
             setPixel(coloumn, row, setColor(ray));
-
 
         }
     }

@@ -75,7 +75,7 @@ class Sphere {
             glMatrix.vec3.subtract(normal, point, this.center);
             let unitNormal = glMatrix.vec3.create();
             glMatrix.vec3.scale(unitNormal, normal, 1 / this.radius);
-            ray.ray_Intersect(t,point,normal);
+            ray.ray_Intersect(t, point, unitNormal);
 
             return true;
         }
