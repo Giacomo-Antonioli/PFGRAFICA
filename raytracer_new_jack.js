@@ -3,6 +3,12 @@ let context;
 let imageBuffer;
 let DEBUG = false; //whether to show debug messages
 let EPSILON = 0.00001; //error margins
+let mydebug = false;
+let mincoloumn;
+let maxcoloumn;
+let minrow;
+let maxrow;
+let cropped = false;
 //##################################################################
 let file_path = "assets/ShadowTest1.json";
 //####################GLOBAL VALUES#################################
@@ -61,20 +67,20 @@ function setColor(ray) {
         //TODO - calculate the intersection of that ray with the scene
         setpixel = element.intersection(ray); //setpixel mi dice se il raggio interseca la figura
 
-        //console.log(isNaN(element.interception_point));
+
         if (setpixel) {
 
             //this.hit_point = ray.point_at_parameter(element.interception_point);// tre coordinate punto nello spazio
 
-            //*******************************************letiabili Principali************************************
+            //*******************************************variabili Principali************************************
             let total = glMatrix.vec3.fromValues(0, 0, 0);
             let ambient_component = glMatrix.vec3.create(); //Ka*Ia
             let diffuse_component = glMatrix.vec3.create(); //Kd(Lm*N)*Id
             let specular_component = glMatrix.vec3.create(); //Ks(Rm*V)^alfa*Is
-            //*******************************************End letiabili Principali*******************************
+            //*******************************************End variabili Principali*******************************
 
 
-            //*******************************************letiabili Di Lavoro************************************
+            //*******************************************variabili Di Lavoro************************************
 
             let Ka = glMatrix.vec3.create();
             let Ia = glMatrix.vec3.create();
@@ -82,6 +88,7 @@ function setColor(ray) {
             let Kd = glMatrix.vec3.create();
             let N = glMatrix.vec3.create();
             let L = glMatrix.vec3.create();
+            let NormNegL = glMatrix.vec3.create();
             let maxdot_diffuse;
             let Kd_MUL_I = glMatrix.vec3.create();
             //---------------------------------------------------------------------------------------------------
@@ -102,14 +109,14 @@ function setColor(ray) {
             let negativeL = glMatrix.vec3.create();
             //******Fine Variabili Ombra*******************************
 
-            //*******************************************End letiabili Di Lavoro*******************************
+
+            //*******************************************End variabili Di Lavoro*******************************
 
             //Calcolo di ambient_component
             Ka = glMatrix.vec3.clone(materials[element.material].ka);
             Ia = glMatrix.vec3.clone(lights[0].color);
             glMatrix.vec3.multiply(ambient_component, Ka, Ia); //Calcolo KaIA e lo sommo al totale
-            if (DEBUG)
-                console.log("ambient_component: " + ambient_component);
+
             glMatrix.vec3.add(total, total, ambient_component);
 
 
@@ -122,47 +129,37 @@ function setColor(ray) {
 
                 if (lights[i] instanceof PointLight) {
                     glMatrix.vec3.subtract(L, ray.intersection_point, lights[i].position); //L
-                  //  console.log("point= " + ray.intersection_point);
-                    
-                //console.log("posLight= " + lights[i].position);
-                  //  console.log("L= " + L);
                     maxdistance = glMatrix.vec3.distance(ray.intersection_point, lights[i].position);
                 } else {
                     L = glMatrix.vec3.clone(lights[i].direction);
                     maxdistance = Number.POSITIVE_INFINITY;
                 }
                 ///FUNZIONE CASTING OMBRA
-                
-                //glMatrix.vec3.normalize(L, L); // normalizzo L
-                //glMatrix.vec3.negate(negativeL, L);
-                //console.log("L: " + L);
-                //console.log("NEGL: "+ negativeL);
-               // console.log("point: "+ ray.intersection_point);
-                let shadowHit = ShadowCast(new Ray(negativeL, ray.intersection_point, maxdistance, shadow_bias));
+
+
+                glMatrix.vec3.negate(negativeL, L);
+
+
+                shadowHit = ShadowCast(new Ray(negativeL, ray.intersection_point, maxdistance, shadow_bias));
                 if (!shadowHit) {
                     ///FINE FUNZIONE CASTING OMBRA
                     glMatrix.vec3.normalize(L, L); // normalizzo L
-                    //console.log("L:" + L);
 
                     N = glMatrix.vec3.clone(ray.normalpoint);
-                    //console.log("N:" + N);
 
                     glMatrix.vec3.normalize(N, N); // normalizzo N
-                    //glMatrix.vec3.negate(L, L); // ??????????????????????
-                    let tempL = glMatrix.vec3.create();
-                    glMatrix.vec3.negate(tempL, L);
+
+                    glMatrix.vec3.negate(NormNegL, L);
 
 
-                    maxdot_diffuse = Math.max(0.0, glMatrix.vec3.dot(tempL, N));
+                    maxdot_diffuse = Math.max(0.0, glMatrix.vec3.dot(NormNegL, N));
 
                     glMatrix.vec3.multiply(Kd_MUL_I, Kd, I); // Kd x I
 
                     glMatrix.vec3.scale(diffuse_component, Kd_MUL_I, maxdot_diffuse);
-                    if (DEBUG)
-                        console.log("diffuse_component: " + diffuse_component);
 
                     //Calcolo di diffuse_component
-                    //Appunto negare r
+
                     Ks = glMatrix.vec3.clone(materials[element.material].ks);
                     alpha = materials[element.material].shininess;
 
@@ -170,7 +167,7 @@ function setColor(ray) {
                     glMatrix.vec3.scale(R, N, R_multiplyier); //(2(L * N) * N)
                     glMatrix.vec3.subtract(R, R, L); //(2(L * N) * N) - L
                     glMatrix.vec3.normalize(R, R); // normalizzo R
-                    //glMatrix.vec3.negate(R, R); //??????????????????
+
                     glMatrix.vec3.subtract(V, ray.intersection_point, camera.eye); //V
                     glMatrix.vec3.normalize(V, V); // normalizzo V
 
@@ -183,42 +180,31 @@ function setColor(ray) {
                     glMatrix.vec3.add(total, total, specular_component);
                 }
             }
+            if (mydebug) {
+                showcolor();
+            }
 
-            //console.log("ambient_component: " + ambient_component);
-            //console.log("diffuse_component: " + diffuse_component);
-            //console.log("specular_component " + specular_component);
-            //console.log("________________________________________________");
-            //ray.show();
-
-            //console.log("________________________________________________");
-            //console.log("diffuse_component: " + diffuse_component);
             if (ray.t_Nearest == ray.t_parameter) {
-                // console.log("BOOOOM");
                 color = [total[0], total[1], total[2]]; //Colore figura
             }
-            //console.log("color: "+color);
         }
-
-
-
-
     });
-
     return color;
-
-
 }
 
 
 //##########################################################FUNCTIONS#####################################################
 
 
+//##########################################################DEBUG FUNCTIONS#####################################################
+
+
 function ShadowCast(castedRay) {
     /**
      * Funzione per la verifica delle intersezioni di shadow ray con le figure
      * INPUT
-     * @param {Ray} ray costruito con  L calcolato in setcolor (negato ma non normalizzato), punto di 
-     * intersezione sulla superficie della figura, 
+     * @param {Ray} ray costruito con  L calcolato in setcolor (negato ma non normalizzato), punto di
+     * intersezione sulla superficie della figura,
      * OUTPUT
      * @return {boolean} TRUE o FALSE (interseca/non interseca)
      * Funzionamento
@@ -226,26 +212,10 @@ function ShadowCast(castedRay) {
      *
      **/
 
-    //castedRay.showme();
-    surfaces.forEach(function (element) {
-
-        
-        if (element.intersection(castedRay)) //setpixel mi dice se il raggio interseca la figura
-            return true;
-        // console.log(bula);
-    });
-
-    if(castedRay.t_Nearest!=castedRay.tMax)
-    console.log("near: "+castedRay.t_Nearest);
+    for (var i = 0; i < surfaces.length; i++) {
+        if (surfaces[i].intersection(castedRay)) return true;
+    }
     return false;
-
-
-   // for(var i = 0; i < surfaces.length; i++){
-//if(surfaces[i].intersection(castedRay)) return true;
-   //     }
-  //      return false;
-
-
 }
 
 //converts degrees to radians
@@ -297,17 +267,27 @@ function loadSceneFile(filepath) {
     });
 
 
-
 }
 
 function render() {
 
     let start = Date.now(); //for logging
 
+    if (cropped) {
+        mincoloumn = 150;
+        maxcoloumn = 200;
+        minrow = 230;
+        maxrow = 280;
+    } else {
+        mincoloumn = 0;
+        maxcoloumn = 512;
+        minrow = 0;
+        maxrow = 512;
+    }
 
     //Faccio un doppio for per prendere tutti i pixel del canvas
-    for (let coloumn = 0; coloumn < 512; coloumn++) {
-        for (let row = 0; row < 512; row++) {
+    for (let coloumn = mincoloumn; coloumn < maxcoloumn; coloumn++) {
+        for (let row = minrow; row < maxrow; row++) {
             //TODO - fire a ray though each pixel
 
             ray = camera.castRay(coloumn, row);
@@ -316,7 +296,7 @@ function render() {
 
         }
     }
-    // console.log("T non nulli:" + counter);
+
 
     //render the pixels that have been set
     context.putImageData(imageBuffer, 0, 0);
@@ -336,3 +316,13 @@ function setPixel(x, y, color) {
 }
 
 //##########################################################FUNCTIONS#####################################################
+
+
+//##########################################################DEBUG FUNCTIONS#####################################################
+
+function showcolor() {
+    console.log("ambient_component: " + ambient_component);
+    console.log("diffuse_component: " + diffuse_component);
+    console.log("specular_component " + specular_component);
+    console.log("________________________________________________");
+}

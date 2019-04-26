@@ -7,6 +7,9 @@ class Sphere {
 
     }
 
+    me()
+    {console.log("SPHERE");}
+
     intersection(ray) {
         /* *
          * Funzione per il calcolo delle intersezioni del raggio di luce con la sfera
@@ -66,7 +69,7 @@ class Sphere {
 
             }
         }
-        if (t === -1) {
+        if (t === -1 | t<=ray.tMin) {
             return false;
         } else {
             let point = glMatrix.vec3.create();
