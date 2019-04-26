@@ -10,7 +10,7 @@ let minrow;
 let maxrow;
 let cropped = false;
 //##################################################################
-let file_path = "assets/ShadowTest1.json";
+let file_path = "assets/ShadowTest2.json";
 //####################GLOBAL VALUES#################################
 let scene;
 let camera;
