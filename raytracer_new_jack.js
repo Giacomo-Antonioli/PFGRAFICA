@@ -1,7 +1,6 @@
 let canvas;
 let context;
 let imageBuffer;
-
 let DEBUG = false; //whether to show debug messages
 let EPSILON = 0.00001; //error margins
 //##################################################################
@@ -14,7 +13,7 @@ let lights = [];
 let materials = [];
 let bounce_depth;
 let shadow_bias;
-let counterflag=0;
+let counterflag = 0;
 //etc...
 //####################GLOBAL VALUES#################################
 
@@ -55,75 +54,100 @@ function setColor(ray) {
 
     let color = [0, 0, 0];
     let setpixel; // variabile d'appoggio
-    
+
 
     surfaces.forEach(function (element) {
 
-            //TODO - calculate the intersection of that ray with the scene
-            setpixel = element.intersection(ray); //setpixel mi dice se il raggio interseca la figura
+        //TODO - calculate the intersection of that ray with the scene
+        setpixel = element.intersection(ray); //setpixel mi dice se il raggio interseca la figura
 
-            //console.log(isNaN(element.interception_point));
-            if (setpixel) {
+        //console.log(isNaN(element.interception_point));
+        if (setpixel) {
 
-                //this.hit_point = ray.point_at_parameter(element.interception_point);// tre coordinate punto nello spazio
+            //this.hit_point = ray.point_at_parameter(element.interception_point);// tre coordinate punto nello spazio
 
-                //*******************************************letiabili Principali************************************
-                let total = glMatrix.vec3.fromValues(0, 0, 0);
-                let ambient_component = glMatrix.vec3.create(); //Ka*Ia
-                let diffuse_component = glMatrix.vec3.create(); //Kd(Lm*N)*Id
-                let specular_component = glMatrix.vec3.create(); //Ks(Rm*V)^alfa*Is
-                //*******************************************End letiabili Principali*******************************
-
-
-                //*******************************************letiabili Di Lavoro************************************
-
-                let Ka = glMatrix.vec3.create();
-                let Ia = glMatrix.vec3.create();
-                //---------------------------------------------------------------------------------------------------
-                let Kd = glMatrix.vec3.create();
-                let N = glMatrix.vec3.create();
-                let L = glMatrix.vec3.create();
-                let maxdot_diffuse;
-                let Kd_MUL_I = glMatrix.vec3.create();
-                //---------------------------------------------------------------------------------------------------
-                let I = glMatrix.vec3.create();//Condivisa dai due membri sopra e sotto
-                //---------------------------------------------------------------------------------------------------
-
-                let Ks = glMatrix.vec3.create();
-                let V = glMatrix.vec3.create();
-                let R = glMatrix.vec3.create();
-                let alpha;
-                let R_multiplyier;
-                let maxdot_specular_powered;
-                let Ks_MUL_I = glMatrix.vec3.create();
-                //*******************************************End letiabili Di Lavoro*******************************
-
-                //Calcolo di ambient_component
-                Ka = glMatrix.vec3.clone(materials[element.material].ka);
-                Ia = glMatrix.vec3.clone(lights[0].color);
-                glMatrix.vec3.multiply(ambient_component, Ka, Ia);//Calcolo KaIA e lo sommo al totale
-                if (DEBUG)
-                    console.log("ambient_component: " + ambient_component);
+            //*******************************************letiabili Principali************************************
+            let total = glMatrix.vec3.fromValues(0, 0, 0);
+            let ambient_component = glMatrix.vec3.create(); //Ka*Ia
+            let diffuse_component = glMatrix.vec3.create(); //Kd(Lm*N)*Id
+            let specular_component = glMatrix.vec3.create(); //Ks(Rm*V)^alfa*Is
+            //*******************************************End letiabili Principali*******************************
 
 
-                for (let i = 1; i < lights.length; i++) { // sommatoria per ogni luce
-                    //Calcolo di diffuse_component
-                    //Appunto negare r
+            //*******************************************letiabili Di Lavoro************************************
 
-                    I = glMatrix.vec3.clone(lights[i].color);
-                    Kd = glMatrix.vec3.clone(materials[element.material].kd);
+            let Ka = glMatrix.vec3.create();
+            let Ia = glMatrix.vec3.create();
+            //---------------------------------------------------------------------------------------------------
+            let Kd = glMatrix.vec3.create();
+            let N = glMatrix.vec3.create();
+            let L = glMatrix.vec3.create();
+            let maxdot_diffuse;
+            let Kd_MUL_I = glMatrix.vec3.create();
+            //---------------------------------------------------------------------------------------------------
+            let I = glMatrix.vec3.create(); //Condivisa dai due membri sopra e sotto
+            //---------------------------------------------------------------------------------------------------
 
-                    if (lights[i] instanceof PointLight)
-                        glMatrix.vec3.subtract(L, ray.intersection_point, lights[i].position);//L
-                    else
-                        L = glMatrix.vec3.clone(lights[i].direction);
-                    glMatrix.vec3.normalize(L, L);// normalizzo L
+            let Ks = glMatrix.vec3.create();
+            let V = glMatrix.vec3.create();
+            let R = glMatrix.vec3.create();
+            let alpha;
+            let R_multiplyier;
+            let maxdot_specular_powered;
+            let Ks_MUL_I = glMatrix.vec3.create();
+
+            //******Variabili Ombra************************************
+            let shadowHit;
+            let maxdistance = glMatrix.vec3.create();
+            let negativeL = glMatrix.vec3.create();
+            //******Fine Variabili Ombra*******************************
+
+            //*******************************************End letiabili Di Lavoro*******************************
+
+            //Calcolo di ambient_component
+            Ka = glMatrix.vec3.clone(materials[element.material].ka);
+            Ia = glMatrix.vec3.clone(lights[0].color);
+            glMatrix.vec3.multiply(ambient_component, Ka, Ia); //Calcolo KaIA e lo sommo al totale
+            if (DEBUG)
+                console.log("ambient_component: " + ambient_component);
+            glMatrix.vec3.add(total, total, ambient_component);
+
+
+            for (let i = 1; i < lights.length; i++) { // sommatoria per ogni luce
+                //Calcolo di diffuse_component
+                //Appunto negare r
+
+                I = glMatrix.vec3.clone(lights[i].color);
+                Kd = glMatrix.vec3.clone(materials[element.material].kd);
+
+                if (lights[i] instanceof PointLight) {
+                    glMatrix.vec3.subtract(L, ray.intersection_point, lights[i].position); //L
+                  //  console.log("point= " + ray.intersection_point);
+                    
+                //console.log("posLight= " + lights[i].position);
+                  //  console.log("L= " + L);
+                    maxdistance = glMatrix.vec3.distance(ray.intersection_point, lights[i].position);
+                } else {
+                    L = glMatrix.vec3.clone(lights[i].direction);
+                    maxdistance = Number.POSITIVE_INFINITY;
+                }
+                ///FUNZIONE CASTING OMBRA
+                
+                //glMatrix.vec3.normalize(L, L); // normalizzo L
+                //glMatrix.vec3.negate(negativeL, L);
+                //console.log("L: " + L);
+                //console.log("NEGL: "+ negativeL);
+               // console.log("point: "+ ray.intersection_point);
+                let shadowHit = ShadowCast(new Ray(negativeL, ray.intersection_point, maxdistance, shadow_bias));
+                if (!shadowHit) {
+                    ///FINE FUNZIONE CASTING OMBRA
+                    glMatrix.vec3.normalize(L, L); // normalizzo L
                     //console.log("L:" + L);
 
                     N = glMatrix.vec3.clone(ray.normalpoint);
                     //console.log("N:" + N);
 
-                    glMatrix.vec3.normalize(N, N);// normalizzo N
+                    glMatrix.vec3.normalize(N, N); // normalizzo N
                     //glMatrix.vec3.negate(L, L); // ??????????????????????
                     let tempL = glMatrix.vec3.create();
                     glMatrix.vec3.negate(tempL, L);
@@ -142,43 +166,43 @@ function setColor(ray) {
                     Ks = glMatrix.vec3.clone(materials[element.material].ks);
                     alpha = materials[element.material].shininess;
 
-                    R_multiplyier = 2 * glMatrix.vec3.dot(L, N);//2(L * N)
-                    glMatrix.vec3.scale(R, N, R_multiplyier);//(2(L * N) * N)
-                    glMatrix.vec3.subtract(R, R, L);//(2(L * N) * N) - L
-                    glMatrix.vec3.normalize(R, R);// normalizzo R
+                    R_multiplyier = 2 * glMatrix.vec3.dot(L, N); //2(L * N)
+                    glMatrix.vec3.scale(R, N, R_multiplyier); //(2(L * N) * N)
+                    glMatrix.vec3.subtract(R, R, L); //(2(L * N) * N) - L
+                    glMatrix.vec3.normalize(R, R); // normalizzo R
                     //glMatrix.vec3.negate(R, R); //??????????????????
-                    glMatrix.vec3.subtract(V, ray.intersection_point, camera.eye);//V
-                    glMatrix.vec3.normalize(V, V);// normalizzo V
+                    glMatrix.vec3.subtract(V, ray.intersection_point, camera.eye); //V
+                    glMatrix.vec3.normalize(V, V); // normalizzo V
 
                     maxdot_specular_powered = Math.pow(Math.max(0.0, glMatrix.vec3.dot(R, V)), alpha);
                     glMatrix.vec3.multiply(Ks_MUL_I, Ks, I);
                     glMatrix.vec3.scale(specular_component, Ks_MUL_I, maxdot_specular_powered);
 
 
+                    glMatrix.vec3.add(total, total, diffuse_component);
+                    glMatrix.vec3.add(total, total, specular_component);
                 }
+            }
 
-                glMatrix.vec3.add(total, total, ambient_component);
-                glMatrix.vec3.add(total, total, diffuse_component);
-                glMatrix.vec3.add(total, total, specular_component);
-                //console.log("ambient_component: " + ambient_component);
-                //console.log("diffuse_component: " + diffuse_component);
-                //console.log("specular_component " + specular_component);
-                //console.log("________________________________________________");
-                //ray.show();
+            //console.log("ambient_component: " + ambient_component);
+            //console.log("diffuse_component: " + diffuse_component);
+            //console.log("specular_component " + specular_component);
+            //console.log("________________________________________________");
+            //ray.show();
 
-                //console.log("________________________________________________");
-                //console.log("diffuse_component: " + diffuse_component);
-                if (ray.t_Nearest == ray.t_parameter) {
+            //console.log("________________________________________________");
+            //console.log("diffuse_component: " + diffuse_component);
+            if (ray.t_Nearest == ray.t_parameter) {
                 // console.log("BOOOOM");
-                    color = [total[0], total[1], total[2]];//Colore figura
-                }
-                //console.log("color: "+color);
-        } 
+                color = [total[0], total[1], total[2]]; //Colore figura
+            }
+            //console.log("color: "+color);
+        }
 
 
 
-    
-        });
+
+    });
 
     return color;
 
@@ -187,6 +211,43 @@ function setColor(ray) {
 
 
 //##########################################################FUNCTIONS#####################################################
+
+
+function ShadowCast(castedRay) {
+    /**
+     * Funzione per la verifica delle intersezioni di shadow ray con le figure
+     * INPUT
+     * @param {Ray} ray costruito con  L calcolato in setcolor (negato ma non normalizzato), punto di 
+     * intersezione sulla superficie della figura, 
+     * OUTPUT
+     * @return {boolean} TRUE o FALSE (interseca/non interseca)
+     * Funzionamento
+     *
+     *
+     **/
+
+    //castedRay.showme();
+    surfaces.forEach(function (element) {
+
+        
+        if (element.intersection(castedRay)) //setpixel mi dice se il raggio interseca la figura
+            return true;
+        // console.log(bula);
+    });
+
+    if(castedRay.t_Nearest!=castedRay.tMax)
+    console.log("near: "+castedRay.t_Nearest);
+    return false;
+
+
+   // for(var i = 0; i < surfaces.length; i++){
+//if(surfaces[i].intersection(castedRay)) return true;
+   //     }
+  //      return false;
+
+
+}
+
 //converts degrees to radians
 function rad(degrees) {
     return degrees * Math.PI / 180;
@@ -208,15 +269,14 @@ function loadSceneFile(filepath) {
     camera = new Camera(scene.camera.eye, scene.camera.at, scene.camera.up, scene.camera.fovy, scene.camera.aspect);
 
     scene.lights.forEach(function (element) {
-            if (element.source == "Ambient")
-                lights.push(new AmbientLight(element.color));
-            if (element.source == "Point") {
-                lights.push(new PointLight(element.position, element.color));
-            }
-            if (element.source == "Directional")
-                lights.push(new DirectionalLight(element.direction, element.color));
+        if (element.source == "Ambient")
+            lights.push(new AmbientLight(element.color));
+        if (element.source == "Point") {
+            lights.push(new PointLight(element.position, element.color));
         }
-    );
+        if (element.source == "Directional")
+            lights.push(new DirectionalLight(element.direction, element.color));
+    });
 
     bounce_depth = scene.bounce_depth;
     shadow_bias = scene.shadow_bias;
@@ -229,13 +289,12 @@ function loadSceneFile(filepath) {
     //TODO - set up surfaces
     scene.surfaces.forEach(function (element) {
 
-            if (element.shape == "Sphere")
-                surfaces.push(new Sphere(element.center, element.radius, element.material));
+        if (element.shape == "Sphere")
+            surfaces.push(new Sphere(element.center, element.radius, element.material));
 
-            if (element.shape == "Triangle")
-                surfaces.push(new Triangle(element.p1, element.p2, element.p3, element.material));
-        }
-    );
+        if (element.shape == "Triangle")
+            surfaces.push(new Triangle(element.p1, element.p2, element.p3, element.material));
+    });
 
 
 
@@ -248,7 +307,7 @@ function render() {
 
     //Faccio un doppio for per prendere tutti i pixel del canvas
     for (let coloumn = 0; coloumn < 512; coloumn++) {
-        for (let row = 0; row < 512 ; row++) {
+        for (let row = 0; row < 512; row++) {
             //TODO - fire a ray though each pixel
 
             ray = camera.castRay(coloumn, row);

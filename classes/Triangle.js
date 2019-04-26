@@ -35,7 +35,7 @@ class Triangle {
         //TODO epsilon per +/- 0 e 1
         
         //if (beta>0 && gamma>0 &&(beta+gamma)<1 ) --> HIT!
-        if (solutions[0] > 0 && solutions[1] > 0 && (solutions[0] + solutions[1]) < 1) {
+        if (solutions[0] > -EPSILON && solutions[1] > -EPSILON && (solutions[0] + solutions[1]) < 1) {
             let point = glMatrix.vec3.create();
             glMatrix.vec3.scaleAndAdd(point, ray.origin, ray.direction, solutions[2]); // calcolo punto di intersezione
             
@@ -46,9 +46,9 @@ class Triangle {
 
             let normal = glMatrix.vec3.create();
             glMatrix.vec3.cross(normal, lato1, lato2); //prodotto vettoriale dei due lati, normale per definizione
-            if (glMatrix.vec3.dot(normal, ray.direction)>rad(90))//NON SO IL VERSO DELLA NORMALE QUINDI LO ADATTO ALLA POS DELLA CAMERA
-                glMatrix.vec3.negate(normal, normal);
-
+            //if (glMatrix.vec3.dot(normal, ray.direction)>rad(90))//NON SO IL VERSO DELLA NORMALE QUINDI LO ADATTO ALLA POS DELLA CAMERA
+              //  glMatrix.vec3.negate(normal, normal);
+            //spotata in ray_Intersect
             ray.ray_Intersect(solutions[2], point, normal);
             return true;
 

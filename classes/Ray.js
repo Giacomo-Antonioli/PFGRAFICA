@@ -12,12 +12,16 @@ class Ray{
 
 //#########################################METHODS########################################################
 
-    show(){
-        console.log("direction: " + this.direction);
-        console.log("origin: " + this.origin);
-        console.log("t_Nearest: " + this.t_Nearest);
-        console.log("tMin: " + this.tMin);
-        console.log("tMax: " + this.tMax);
+show(){
+    console.log("direction: " + this.direction);
+    console.log("origin: " + this.origin);
+    console.log("t_Nearest: " + this.t_Nearest);
+    console.log("tMin: " + this.tMin);
+    console.log("tMax: " + this.tMax);
+}
+showme(){
+    console.log("direction: " + this.direction);
+  //  console.log("origin: " + this.origin);
     }
 
 
@@ -28,6 +32,8 @@ class Ray{
         * point     Vettore
         * n         Vettore
         * */
+         if (glMatrix.vec3.dot(n, this.direction)>rad(90))//NON SO IL VERSO DELLA NORMALE QUINDI LO ADATTO ALLA POS DELLA CAMERA
+                glMatrix.vec3.negate(n, n);
         this.t_parameter=t;
         this.intersection_point=glMatrix.vec3.clone(point);
         this.normalpoint = glMatrix.vec3.clone(n);
