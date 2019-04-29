@@ -6,7 +6,10 @@ class Triangle {
         this.p2 = glMatrix.vec3.fromValues(p2[0], p2[1], p2[2]);
         this.p3 = glMatrix.vec3.fromValues(p3[0], p3[1], p3[2]);
         this.material=material;
-    };
+        this.TransformationMatrix = glMatrix.mat4.create();
+        this.inverseTransformationMatrix = glMatrix.mat4.create();
+        this.hasTransformationMatrix=false;
+    }
 
     intersection (ray) {
         /* *
@@ -61,7 +64,39 @@ class Triangle {
     {
         console.log("TRIANGLE");
     }
+    showTransformationMatrix()
+    {   
+        console.log("************************")
+        console.log("TRANSFORMATION MATRIX: ");
+        console.log(this.TransformationMatrix);
+        console.log("************************")
+    }
+    setTranslation(TransaltionVector)
+    {
+      glMatrix.mat4.translate(this.TransformationMatrix, this.TransformationMatrix,TransaltionVector );
+    }
 
+    setRotation(RotationVector)
+    {
+        glMatrix.mat4.rotateX(this.TransformationMatrix, this.TransformationMatrix, rad(RotationVector[0]));
+        glMatrix.mat4.rotateY(this.TransformationMatrix, this.TransformationMatrix, rad(RotationVector[1]));
+        glMatrix.mat4.rotateZ(this.TransformationMatrix, this.TransformationMatrix, rad(RotationVector[2]));
+    }
+
+    setScaling(ScalingVector)
+    {
+        glMatrix.mat4.scale(this.TransformationMatrix, this.TransformationMatrix, ScalingVector);
+    }
+
+    invertMatrix()
+    {
+        glMatrix.mat4.invert( this.inverseTransformationMatrix, this.TransformationMatrix);
+    }
+
+    setTransformationMatrixValue()
+    {
+        this.hasTransformationMatrix=true;
+    }
 
 }
 function gauss(A) {

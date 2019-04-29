@@ -10,7 +10,7 @@ let minrow;
 let maxrow;
 let cropped = false;
 //##################################################################
-let file_path = "assets/ShadowTest2.json";
+let file_path = "assets/TransformationTest.json";
 //####################GLOBAL VALUES#################################
 let scene;
 let camera;
@@ -64,6 +64,10 @@ function setColor(ray) {
 
     surfaces.forEach(function (element) {
 
+
+
+
+        
         //TODO - calculate the intersection of that ray with the scene
         setpixel = element.intersection(ray); //setpixel mi dice se il raggio interseca la figura
 
@@ -259,14 +263,36 @@ function loadSceneFile(filepath) {
     //TODO - set up surfaces
     scene.surfaces.forEach(function (element) {
 
+        let currentObject;
+
         if (element.shape == "Sphere")
-            surfaces.push(new Sphere(element.center, element.radius, element.material));
+            currentObject= new Sphere(element.center, element.radius, element.material);
 
         if (element.shape == "Triangle")
-            surfaces.push(new Triangle(element.p1, element.p2, element.p3, element.material));
+           currentObject= new Triangle(element.p1, element.p2, element.p3, element.material);
+           
+        if (element.transforms != undefined) {
+            element.transforms.forEach(function(transformsArrayMember){
+                console.log(transformsArrayMember[1]);
+                switch(transformsArrayMember[0]) {
+                    case "Translate":
+                      currentObject.setTranslation(transformsArrayMember[1]);
+                      break;
+                    case "Rotate":
+                    currentObject.setRotation(transformsArrayMember[1]);
+                    break;
+                    case "Scale":
+                    currentObject.setScaling(transformsArrayMember[1]);
+                      break;
+                  }
+            });
+            currentObject.invertMatrix();
+            currentObject.setTransformationMatrixValue();
+        }
+
+        surfaces.push(currentObject);
+        currentObject.showTransformationMatrix();
     });
-
-
 }
 
 function render() {
