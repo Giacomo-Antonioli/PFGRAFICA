@@ -1,0 +1,9 @@
+{
+    "opts": {
+  //      "template": "templates/default",  
+        "encoding": "utf8",               // same as -e utf8
+        "destination": "/home/giacomoantonioli/Documents/PFGRAFICA/DOCS",         
+        "recurse": true,                      
+//"tutorials": "path/to/tutorials", 
+    }
+}
