@@ -1,7 +1,15 @@
-
-
+/**
+ * Classe che rappresenta una luce direzionale dotata di una direzione.
+ * @extends AmbientLight
+ */
 class DirectionalLight extends AmbientLight
 {
+    /**
+     * @constructor
+     * Funzione che costruisce una luce direzionale.
+     * @param direction
+     * @param color
+     */
     constructor(direction, color)
     {
         super(color);

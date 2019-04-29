@@ -1,7 +1,13 @@
-
+/**Classe che rappresenta un raggio luminoso qualsiasi. */
 class Ray{
-
-
+    /**
+     * Costruttore del raggio.
+     * @constructor
+     * @param direction direnzione nella quale il raggio si propaga
+     * @param origin origine del raggio 
+     * @param tMax distanza massima dopo la quale il raggio cessa di esistere
+     * @param tMin distanza minima dalla sorgente per la quale si considera il raggio esistente
+     */
     constructor(direction, origin, tMax, tMin) {
         this.direction = glMatrix.vec3.clone(direction); // e' necessario usare clone e non assegnare solo il valore del vec3
         this.origin = glMatrix.vec3.clone(origin);

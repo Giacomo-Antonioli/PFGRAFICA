@@ -1,7 +1,14 @@
-
+/**Classe che definisce un materiale che verrà usato da un oggetto.*/
 class Material {
-
-
+    /**
+     * @constructor
+     * Costruttore del materiale.
+     * @param ka
+     * @param kd
+     * @param ks
+     * @param shininess
+     * @param kr
+     */
     constructor(ka, kd, ks, shininess, kr) {
         this.ka = glMatrix.vec3.fromValues(ka[0], ka[1], ka[2]); // riflessione ambientale
         this.kd = glMatrix.vec3.fromValues(kd[0], kd[1], kd[2]); // riflessione diffusa

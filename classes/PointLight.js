@@ -1,7 +1,15 @@
+/**
+ * Classe che rappresenta una luce posizionale dotata di una sorgente puntiforme.
+ * @extends AmbientLight
+ */
 
-
-class PointLight extends AmbientLight
-{
+class PointLight extends AmbientLight {
+    /**
+     * @constructor
+     * Funzione che costruisce una luce posizionale
+     * @param position
+     * @param color
+     */
     constructor(position, color)
     {
         super(color);
