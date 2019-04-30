@@ -1,13 +1,12 @@
-/** Classe che rappresenta il punto di vista della camera. Indica il punto di osservazione*/
+/** Classe che rappresenta il punto di vista della camera. Indica il punto di osservazione.*/
 class Camera {
     /**
-     * Costruttore della camera.
      * @constructor
-     * @param eye
-     * @param at
-     * @param up
-     * @param fovy
-     * @param aspect
+     * @param eye {Array(3)}
+     * @param at {Array(3)}
+     * @param up {Array(3)}
+     * @param fovy {Float}
+     * @param aspect {Float}
      */
     constructor(eye, at, up, fovy, aspect) { //definisco la classe Camera
         this.eye = glMatrix.vec3.fromValues(eye[0], eye[1], eye[2]);
@@ -21,9 +20,9 @@ class Camera {
     }
     /**
      * Funzione che preso un punto del canvas genera un raggio luminoso verso il pixel a partire dal punto di osservazione della camera.
-     * @param x
-     * @param y
-     * @returns {Ray}
+     * @param x {Integer} Riga del Canvas
+     * @param y {Integer} Colonna del Canvas
+     * @returns {Ray} Raggio generato dalla camera verso il pixel
      */
     castRay(x, y) { //aggiungo alla classe Camera la funzione castRay_______ INCOMPLETO!!!
         let u = (this.w * x / (canvas.width - 1)) - (this.w / 2.0);

@@ -1,26 +1,44 @@
+/**
+ * Classe che rappresenta una generica sfera.
+ */
 class Sphere {
-
+    /**
+     * @constructor
+     * @param {Array} center Centro della sfera
+     * @param {Float} radius Raggio della sfera
+     * @param {Integer} material Indice della lista di materiali di cui è costituito l'oggetto
+     */
     constructor(center, radius, material) {
         this.center = glMatrix.vec3.fromValues(center[0], center[1], center[2]);
         this.radius = radius;
         this.material = material; //Indica l'indice all'interno dell'array materiali da applicare alla figura
-        this.TransformationMatrix=glMatrix.mat4.create();
+        this.TransformationMatrix = glMatrix.mat4.create();
         this.inverseTransformationMatrix = glMatrix.mat4.create();
-        this.hasTransformationMatrix=false;
+        this.hasTransformationMatrix = false;
     }
-
-    me()
-    {console.log("SPHERE");}
-    showTransformationMatrix()
-    {   
+    /**
+     * Funzione che mostra il tipo di oggettto corrente (Sfera).
+     */
+    me() {
+        console.log("SPHERE");
+    }
+    /**
+     * Funzione che mostra la Matrice di Traformazione.
+     */
+    showTransformationMatrix() {
         console.log("************************")
         console.log("TRANSFORMATION MATRIX: ");
-        for(let i=0; i<4; i++)
-        {
-            console.log(this.TransformationMatrix[i*4]+" "+this.TransformationMatrix[i*4 + 1]+ " "+this.TransformationMatrix[i*4 + 2]+" "+this.TransformationMatrix[i*4+3]);
+        for (let i = 0; i < 4; i++) {
+            console.log(this.TransformationMatrix[i * 4] + " " + this.TransformationMatrix[i * 4 + 1] + " " + this.TransformationMatrix[i * 4 + 2] + " " + this.TransformationMatrix[i * 4 + 3]);
         }
         console.log("************************")
     }
+
+    /**
+     * Funzione che calcola il punto di intersezione tra un raggio e l'oggetto.
+     * @param {Ray} ray Raggio 
+     * @returns {Boolean} Hit Dice se il raggio interseca l'oggetto.
+     */
     intersection(ray) {
         /* *
          * Funzione per il calcolo delle intersezioni del raggio di luce con la sfera
@@ -80,7 +98,7 @@ class Sphere {
 
             }
         }
-        if (t === -1 | t<=ray.tMin) {
+        if (t === -1 | t <= ray.tMin) {
             return false;
         } else {
             let point = glMatrix.vec3.create();
@@ -96,33 +114,38 @@ class Sphere {
 
 
     }
-
-    setTranslation(TransaltionVector)
-    {
-      glMatrix.mat4.translate(this.TransformationMatrix, this.TransformationMatrix,TransaltionVector );
+    /**
+     * Trasla la matrice di trasformazione.
+     * @param {Vec3} TransaltionVector Vettore di traslazione
+     */
+    setTranslation(TransaltionVector) {
+        glMatrix.mat4.translate(this.TransformationMatrix, this.TransformationMatrix, TransaltionVector);
     }
-
-    setRotation(RotationVector)
-    {
+    /**
+     * Ruota la matrice di trasformazione.
+     * @param {Vec3} RotationVector Vettore di rotazione
+     */
+    setRotation(RotationVector) {
         glMatrix.mat4.rotateX(this.TransformationMatrix, this.TransformationMatrix, rad(RotationVector[0]));
         glMatrix.mat4.rotateY(this.TransformationMatrix, this.TransformationMatrix, rad(RotationVector[1]));
         glMatrix.mat4.rotateZ(this.TransformationMatrix, this.TransformationMatrix, rad(RotationVector[2]));
     }
-
-    setScaling(ScalingVector)
-    {
+    /**
+     * Scala la matrice di trasformazione.
+     * @param {Vec3} ScalingVector Vettore di scalatura
+     */
+    setScaling(ScalingVector) {
         glMatrix.mat4.scale(this.TransformationMatrix, this.TransformationMatrix, ScalingVector);
     }
-
-    invertMatrix()
-    {
-        glMatrix.mat4.invert( this.inverseTransformationMatrix, this.TransformationMatrix);
+    /**
+     * Funzione di inversione della matrice di Trasformazione
+     */
+    invertMatrix() {
+        glMatrix.mat4.invert(this.inverseTransformationMatrix, this.TransformationMatrix);
     }
-    
-    setTransformationMatrixValue()
-    {
-        this.hasTransformationMatrix=true;
+    /**Setter per definire se l'oggetto ha una matrice di Trasformazione associata */
+    setTransformationMatrixValue() {
+        this.hasTransformationMatrix = true;
     }
 
 }
-
