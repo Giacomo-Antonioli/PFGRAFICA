@@ -6,9 +6,8 @@
 class PointLight extends AmbientLight {
     /**
      * @constructor
-     * Funzione che costruisce una luce posizionale
-     * @param position
-     * @param color
+     * @param position {Array(3)} Vettore posizione della sorgente luminosa
+     * @param color {Array(3)} Vettore che indica l'intensità luminosa rgb della luce
      */
     constructor(position, color)
     {

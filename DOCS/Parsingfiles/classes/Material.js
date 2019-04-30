@@ -2,12 +2,11 @@
 class Material {
     /**
      * @constructor
-     * Costruttore del materiale.
-     * @param ka
-     * @param kd
-     * @param ks
-     * @param shininess
-     * @param kr
+     * @param ka {Array(3)} Componente ambientale
+     * @param kd {Array(3)} Componente diffusa
+     * @param ks {Array(3)} Componente speculare
+     * @param shininess {Float} Grado di riflessività
+     * @param kr {Array(3)} Intensità della luce
      */
     constructor(ka, kd, ks, shininess, kr) {
         this.ka = glMatrix.vec3.fromValues(ka[0], ka[1], ka[2]); // riflessione ambientale

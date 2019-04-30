@@ -6,9 +6,8 @@ class DirectionalLight extends AmbientLight
 {
     /**
      * @constructor
-     * Funzione che costruisce una luce direzionale.
-     * @param direction
-     * @param color
+     * @param direction {Array(3)} Vettore direzione del raggio luminoso
+     * @param color {Array(3)} Vettore che indica l'intensità luminosa rgb della luce
      */
     constructor(direction, color)
     {

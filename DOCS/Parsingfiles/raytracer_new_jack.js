@@ -24,7 +24,9 @@ let counterflag = 0;
 //####################GLOBAL VALUES#################################
 //ProvaBranch
 
-//on load, run the application
+/**
+ * Funzione di inizializzazione a documento pronto.
+ */
 $(document).ready(function () {
     init();
     render();
@@ -48,15 +50,12 @@ $(document).ready(function () {
 
 //____________________________________________________________________________________________________|
 
-
+/**
+ * Funzione di calcolo dei valori dello spazio RGB da applicare ai pixel.
+ * @param {Ray} ray Raggio che dall'osservatore interseca gli oggetti visibili della scena e che puo' essere riflesso un numero finito di volte
+ * @returns {Array} color Colore con cui illluminare il piexl
+ */
 function setColor(ray) {
-    /**
-     * This function decides the color of a single pixel based on the nearest object to the camera and based on the lights positions and colors and the object material properties.
-     * @param {Ray} ray This is a ray casted from the camera to the pixel
-     * @return {float array} color RGB composition of the resulting color.
-     *
-     *
-     * **/
 
     let color = [0, 0, 0];
     let setpixel; // variabile d'appoggio
@@ -67,7 +66,7 @@ function setColor(ray) {
 
 
 
-        
+
         //TODO - calculate the intersection of that ray with the scene
         setpixel = element.intersection(ray); //setpixel mi dice se il raggio interseca la figura
 
@@ -202,19 +201,12 @@ function setColor(ray) {
 
 //##########################################################DEBUG FUNCTIONS#####################################################
 
-
+/**
+ * Funzione di valutazione della presenza o assenza del contributo luminoso di una data sorgente luminosa in un dato pixel. 
+ * @param {Ray} castedRay Raggio con origine sulla superficie con direzione verso la luce (Direzionale o Posizionale) 
+ * @returns {Boolean} Hit Ritorna true se il raggio interseca una figura lungo il suo percorso
+ */
 function ShadowCast(castedRay) {
-    /**
-     * Funzione per la verifica delle intersezioni di shadow ray con le figure
-     * INPUT
-     * @param {Ray} ray costruito con  L calcolato in setcolor (negato ma non normalizzato), punto di
-     * intersezione sulla superficie della figura,
-     * OUTPUT
-     * @return {boolean} TRUE o FALSE (interseca/non interseca)
-     * Funzionamento
-     *
-     *
-     **/
 
     for (var i = 0; i < surfaces.length; i++) {
         if (surfaces[i].intersection(castedRay)) return true;
@@ -222,11 +214,16 @@ function ShadowCast(castedRay) {
     return false;
 }
 
-//converts degrees to radians
+/**
+ * Funzione di conversione in gradi del valore di un angolo espresso in radianti.
+ * @param {Float} degrees Valore in gradi dell'angolo da convertire
+ */
 function rad(degrees) {
     return degrees * Math.PI / 180;
 }
-
+/**
+ * Funzione di inizializzazione della scena.
+ */
 function init() {
     canvas = $('#canvas')[0];
     context = canvas.getContext("2d");
@@ -234,11 +231,14 @@ function init() {
     loadSceneFile(file_path);
 }
 
+/**
+ * Funzione di caricamento degli elementi di ogni asset.
+ * @param {String} filepath Path assoluto o relativo dell'asset da caricare 
+ */
 function loadSceneFile(filepath) {
     scene = Utils.loadJSON(filepath); //load the scene
 
 
-    //TODO - set up camera
 
     camera = new Camera(scene.camera.eye, scene.camera.at, scene.camera.up, scene.camera.fovy, scene.camera.aspect);
 
@@ -260,31 +260,30 @@ function loadSceneFile(filepath) {
 
     });
 
-    //TODO - set up surfaces
     scene.surfaces.forEach(function (element) {
 
         let currentObject;
 
         if (element.shape == "Sphere")
-            currentObject= new Sphere(element.center, element.radius, element.material);
+            currentObject = new Sphere(element.center, element.radius, element.material);
 
         if (element.shape == "Triangle")
-           currentObject= new Triangle(element.p1, element.p2, element.p3, element.material);
-           
+            currentObject = new Triangle(element.p1, element.p2, element.p3, element.material);
+
         if (element.transforms != undefined) {
-            element.transforms.forEach(function(transformsArrayMember){
+            element.transforms.forEach(function (transformsArrayMember) {
                 console.log(transformsArrayMember[1]);
-                switch(transformsArrayMember[0]) {
+                switch (transformsArrayMember[0]) {
                     case "Translate":
-                      currentObject.setTranslation(transformsArrayMember[1]);
-                      break;
+                        currentObject.setTranslation(transformsArrayMember[1]);
+                        break;
                     case "Rotate":
-                    currentObject.setRotation(transformsArrayMember[1]);
-                    break;
+                        currentObject.setRotation(transformsArrayMember[1]);
+                        break;
                     case "Scale":
-                    currentObject.setScaling(transformsArrayMember[1]);
-                      break;
-                  }
+                        currentObject.setScaling(transformsArrayMember[1]);
+                        break;
+                }
             });
             currentObject.invertMatrix();
             currentObject.setTransformationMatrixValue();
@@ -294,7 +293,9 @@ function loadSceneFile(filepath) {
         currentObject.showTransformationMatrix();
     });
 }
-
+/**
+ * Funzione di rendering del canvas.
+ */
 function render() {
 
     let start = Date.now(); //for logging
@@ -333,6 +334,12 @@ function render() {
 
 }
 
+/**
+ * Funzione di assegnazione del colore ad ogni singolo elemento del canvas.
+ * @param {Integer} x Riga del canvas
+ * @param {Integer} y Colonna del canvas
+ * @param {Array} color Array di tre elementi nella quale ciascuno rappresenta una delle componenti RGB. I valori appartengono all'intervallo [0,1]
+ */
 function setPixel(x, y, color) {
     let i = (y * imageBuffer.width + x) * 4;
     imageBuffer.data[i] = (color[0] * 255) | 0;
@@ -345,7 +352,9 @@ function setPixel(x, y, color) {
 
 
 //##########################################################DEBUG FUNCTIONS#####################################################
-
+/**
+ * Funzione di Debug. Mostra le varie compontenti luminose.
+ */
 function showcolor() {
     console.log("ambient_component: " + ambient_component);
     console.log("diffuse_component: " + diffuse_component);
