@@ -12,9 +12,10 @@ class Camera {
         this.eye = glMatrix.vec3.fromValues(eye[0], eye[1], eye[2]);
         this.up = glMatrix.vec3.fromValues(up[0], up[1], up[2]);
         this.at = glMatrix.vec3.fromValues(at[0], at[1], at[2]);
+        this.VirtualProjectionMatrix=glMatrix.mat4.create();
         this.fovy = fovy;
         this.aspect = aspect;
-
+        glMatrix.mat4.lookAt(this.VirtualProjectionMatrix,this.eye,this.at,this.up);
         this.h = 2 * Math.tan(rad(fovy / 2.0));
         this.w = this.h * aspect;
     }
@@ -28,7 +29,10 @@ class Camera {
         let u = (this.w * x / (canvas.width - 1)) - (this.w / 2.0);
         let v = (-this.h * y / (canvas.height - 1)) + (this.h / 2.0);
 
-        let direction = glMatrix.vec3.fromValues(u, v, -1);
+        
+
+        let direction = glMatrix.vec3.fromValues(u, v*this.VirtualProjectionMatrix[5] -this.VirtualProjectionMatrix[6], v*this.VirtualProjectionMatrix[9] -this.VirtualProjectionMatrix[10]);
+        //glMatrix.vec3.normalize(direction,direction);
         let origin = glMatrix.vec3.clone(this.eye);//vec3.clone(this.at);// vec3.fromValues(0, 0, 0);
         return new Ray(direction, origin, Number.POSITIVE_INFINITY, 0);
     }

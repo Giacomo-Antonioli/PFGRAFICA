@@ -14,6 +14,7 @@ class Sphere {
         this.material = material; //Indica l'indice all'interno dell'array materiali da applicare alla figura
         this.TransformationMatrix = glMatrix.mat4.create();
         this.inverseTransformationMatrix = glMatrix.mat4.create();
+        this.transposedInverseTransformationMatrix = glMatrix.mat4.create();
         this.hasTransformationMatrix = false;
     }
     /**
@@ -107,9 +108,9 @@ class Sphere {
             glMatrix.vec3.subtract(normal, point, this.center);
             let unitNormal = glMatrix.vec3.create();
             glMatrix.vec3.scale(unitNormal, normal, 1 / this.radius);
-            ray.ray_Intersect(t, point, unitNormal);
 
-            return true;
+
+            return ray.ray_Intersect(t, point, unitNormal);
         }
 
 
@@ -142,6 +143,12 @@ class Sphere {
      */
     invertMatrix() {
         glMatrix.mat4.invert(this.inverseTransformationMatrix, this.TransformationMatrix);
+    }
+    /**
+     * Funzione di trasposizione dell'inversa della matrice di Trasformazione
+     */
+    transposeMatrix() {
+        glMatrix.mat4.transpose(this.transposedInverseTransformationMatrix, this.inverseTransformationMatrix);
     }
     /**Setter per definire se l'oggetto ha una matrice di Trasformazione associata */
     setTransformationMatrixValue() {

@@ -16,6 +16,7 @@ class Triangle {
         this.material = material;
         this.TransformationMatrix = glMatrix.mat4.create();
         this.inverseTransformationMatrix = glMatrix.mat4.create();
+        this.transposedInverseTransformationMatrix = glMatrix.mat4.create();
         this.hasTransformationMatrix = false;
     }
     /**
@@ -54,8 +55,8 @@ class Triangle {
             //if (glMatrix.vec3.dot(normal, ray.direction)>rad(90))//NON SO IL VERSO DELLA NORMALE QUINDI LO ADATTO ALLA POS DELLA CAMERA
             //  glMatrix.vec3.negate(normal, normal);
             //spotata in ray_Intersect
-            ray.ray_Intersect(solutions[2], point, normal);
-            return true;
+
+            return ray.ray_Intersect(solutions[2], point, normal);
 
         } else
             return false;
@@ -107,6 +108,12 @@ class Triangle {
      */
     invertMatrix() {
         glMatrix.mat4.invert(this.inverseTransformationMatrix, this.TransformationMatrix);
+    }
+    /**
+     * Funzione di trasposizione dell'inversa della matrice di Trasformazione
+     */
+    transposeMatrix() {
+        glMatrix.mat4.transpose(this.transposedInverseTransformationMatrix, this.inverseTransformationMatrix);
     }
     /**Setter per definire se l'oggetto ha una matrice di Trasformazione associata */
     setTransformationMatrixValue() {
