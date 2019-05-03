@@ -8,7 +8,7 @@ let mincoloumn;
 let maxcoloumn;
 let minrow;
 let maxrow;
-let cropped = true;
+let cropped = false;
 //##################################################################
 let file_path = "assets/FullTest.json";
 //####################GLOBAL VALUES#################################
@@ -22,7 +22,6 @@ let shadow_bias;
 let counterflag = 0;
 //etc...
 //####################GLOBAL VALUES#################################
-//ProvaBranch
 
 /**
  * Funzione di inizializzazione a documento pronto.
@@ -184,7 +183,13 @@ function setColor(ray, element) {
 
     glMatrix.vec3.add(total, total, ambient_component);
 
+    if(element.hasTransformationMatrix)
+    {
+        ray.restoreSDRPoints(element);
+    }
 
+
+            
     for (let i = 1; i < lights.length; i++) { // sommatoria per ogni luce
         //Calcolo di diffuse_component
         //Appunto negare r
@@ -192,8 +197,16 @@ function setColor(ray, element) {
         I = glMatrix.vec3.clone(lights[i].color);
         Kd = glMatrix.vec3.clone(materials[element.material].kd);
 
+
         if (lights[i] instanceof PointLight) {
+
+   
+         
             glMatrix.vec3.subtract(L, ray.intersection_point, lights[i].position); //L
+       
+            //console.log("RAY: "+ray.intersection_point );
+           // console.log("LIGHT: "+lights[i].position);
+
             maxdistance = glMatrix.vec3.distance(ray.intersection_point, lights[i].position);
         } else {
             L = glMatrix.vec3.clone(lights[i].direction);
@@ -368,6 +381,8 @@ function loadSceneFile(filepath) {
             currentObject.invertMatrix();
             currentObject.transposeMatrix();
             currentObject.setTransformationMatrixValue();
+
+
         }
 
         surfaces.push(currentObject);

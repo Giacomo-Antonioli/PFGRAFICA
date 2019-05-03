@@ -77,5 +77,14 @@ class Ray {
         this.intersection_point = glMatrix.vec3.clone(tempRay.intersection_point);
         this.normalpoint = glMatrix.vec3.clone(tempRay.normalpoint);
     }
+    restoreSDRPoints(element)
+    {
+        let tempVec4intersectionPoint = glMatrix.vec4.fromValues(this.intersection_point[0],this.intersection_point[1],this.intersection_point[2],1);
+        let tempVec4NormalPoint = glMatrix.vec4.fromValues(this.normalpoint[0],this.normalpoint[1],this.normalpoint[2],0);
+
+        glMatrix.vec4.transformMat4(this.intersection_point,tempVec4intersectionPoint,element.TransformationMatrix);
+        glMatrix.vec4.transformMat4(this.normalpoint,tempVec4NormalPoint,element.transposedInverseTransformationMatrix);
+
+    }
 
 }

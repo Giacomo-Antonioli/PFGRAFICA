@@ -18,12 +18,36 @@ class Triangle {
         this.inverseTransformationMatrix = glMatrix.mat4.create();
         this.transposedInverseTransformationMatrix = glMatrix.mat4.create();
         this.hasTransformationMatrix = false;
+        this.transformedLights=[];
     }
 
     setname(name)
     {
         this.name=name;
     }
+
+
+    setTransformedLights(lights)
+    {
+        let tempvec3Light;
+        for(let i = 0; i < lights.length; i++)
+         {
+            if (lights[i].type == "Ambient") {
+                this.transformedLights.push([0,0,0]);
+            }
+            if (lights[i].type == "Point") {
+                tempvec3Light = glMatrix.vec4.fromValues(lights.origin[0], lights.origin[1], lights.origin[2], 1);
+                glMatrix.vec4.TransformMat4(tempvec3Light,tempvec3Light,this.inverseTransformationMatrix);
+                this.transformedLights.push([tempvec3Light[0],tempvec3Light[1],tempvec3Light[2]]);
+            }
+            if (lights[i].type == "Directional")
+                {  tempvec3Light = glMatrix.vec4.fromValues(lights.origin[0], lights.origin[1], lights.origin[2], 0);
+                    glMatrix.vec4.TransformMat4(tempvec3Light,tempvec3Light,this.inverseTransformationMatrix);
+                    this.transformedLights.push([tempvec3Light[0],tempvec3Light[1],tempvec3Light[2]]);}
+        }
+    
+    }
+
     /**
      * Funzione che calcola il punto di intersezione tra un raggio e l'oggetto.
      * @param {Ray} ray Raggio 

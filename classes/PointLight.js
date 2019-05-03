@@ -8,11 +8,11 @@ class PointLight extends AmbientLight {
      * @constructor
      * @param position {Array(3)} Vettore posizione della sorgente luminosa
      * @param color {Array(3)} Vettore che indica l'intensità luminosa rgb della luce
+     * @param type {String} stringa che indica il tipo di luce (ambient, point o directional)
      */
-    constructor(position, color)
-    {
-        super(color);
-        this.has_position=true;
+    constructor(position, color, type) {
+        super(color, type);
+        //  this.has_position=true;
         this.position = glMatrix.vec3.fromValues(position[0], position[1], position[2]);
     }
 }
