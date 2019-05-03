@@ -82,14 +82,14 @@ function setPixelColor(ray) {
 
             isNearest = element.intersection(tempRay); //setpixel mi dice se il raggio interseca la figura
             //console.log("HAS TRANS: " + isNearest);
-           // if (isNearest) {
-             //   console.log(element);
-                //console.log(tempRay);
-           // }
+            // if (isNearest) {
+            //   console.log(element);
+            //console.log(tempRay);
+            // }
 
         } else {
             isNearest = element.intersection(ray); //setpixel mi dice se il raggio interseca la figura
-           // console.log("NO TRANS: " + isNearest);
+            // console.log("NO TRANS: " + isNearest);
 
         }
 
@@ -102,13 +102,13 @@ function setPixelColor(ray) {
         }
 
 
-       // console.log(tempRay);
+        // console.log(tempRay);
 
     });
 
-   // console.log(tempRay);
+    // console.log(tempRay);
     if (hitDetected) {
-      //  console.log(tempRay);
+        //  console.log(tempRay);
         if (NearestObject.hasTransformationMatrix) {
             if (tempRay.t_Nearest < ray.t_Nearest) { // se la figura piu' vicina e' una trasformata, aggiorno ray con i valori di tempRay
                 ray.setNearestValue(tempRay);
@@ -204,7 +204,8 @@ function setColor(ray, element) {
 
         glMatrix.vec3.negate(negativeL, L);
 
-
+        element.me();
+        console.log("°°°°°°°°°°°°°°");
         shadowHit = ShadowCast(new Ray(negativeL, ray.intersection_point, maxdistance, shadow_bias));
         if (!shadowHit) {
             ///FINE FUNZIONE CASTING OMBRA
@@ -243,9 +244,9 @@ function setColor(ray, element) {
 
             glMatrix.vec3.add(total, total, diffuse_component);
             glMatrix.vec3.add(total, total, specular_component);
+        } else {
+            console.log("Sono in ombra claudio gay");
         }
-        else
-        {console.log("Sono in ombra claudio gay");}
     }
     if (mydebug) {
         showcolor();
@@ -269,10 +270,25 @@ function setColor(ray, element) {
  * @returns {Boolean} Hit Ritorna true se il raggio interseca una figura lungo il suo percorso
  */
 function ShadowCast(castedRay) {
+    let hit;
+    let transformedcastedRay = castedRay;
 
     for (var i = 0; i < surfaces.length; i++) {
-        
-        if (surfaces[i].intersection(castedRay)) return true;
+            surfaces[i].me();
+        //console.log(castedRay);
+        /*if (surfaces[i].hasTransformationMatrix) {
+            tempdirection = glMatrix.vec4.fromValues(castedRay.direction[0], castedRay.direction[1], castedRay.direction[2], 0); //il vettore direzione il termine omogeneo deve essere 0
+
+            glMatrix.vec4.transformMat4(tempdirection, tempdirection, surfaces[i].inverseTransformationMatrix);
+
+            transformedcastedRay.setValues(tempdirection, castedRay.origin);
+            if (surfaces[i].intersection(transformedcastedRay)) return true;
+        }
+        else*/
+        hit=surfaces[i].intersection(castedRay);
+        console.log(castedRay);
+
+        if(hit) return true;
     }
     return false;
 }
@@ -317,7 +333,7 @@ function loadSceneFile(filepath) {
 
     bounce_depth = scene.bounce_depth;
     shadow_bias = scene.shadow_bias;
-
+    //shadow_bias=0.11111111111111111112;
     scene.materials.forEach(function (element) {
         materials.push(new Material(element.ka, element.kd, element.ks, element.shininess, element.kr));
 
@@ -330,9 +346,10 @@ function loadSceneFile(filepath) {
         if (element.shape == "Sphere")
             currentObject = new Sphere(element.center, element.radius, element.material);
 
-        if (element.shape == "Triangle")
+        if (element.shape == "Triangle") {
             currentObject = new Triangle(element.p1, element.p2, element.p3, element.material);
-
+            currentObject.setname(element.name);
+        }
         if (element.transforms != undefined) {
             element.transforms.forEach(function (transformsArrayMember) {
                 console.log(transformsArrayMember[1]);
@@ -365,10 +382,10 @@ function render() {
     let start = Date.now(); //for logging
 
     if (cropped) {
-        mincoloumn = 450;
-        maxcoloumn = 451;
-        minrow = 300;
-        maxrow = 301;
+        mincoloumn = 19;
+        maxcoloumn = 20;
+        minrow = 124;
+        maxrow = 125;
     } else {
         mincoloumn = 0;
         maxcoloumn = 512;
@@ -380,7 +397,7 @@ function render() {
     for (let coloumn = mincoloumn; coloumn < maxcoloumn; coloumn++) {
         for (let row = minrow; row < maxrow; row++) {
             //TODO - fire a ray though each pixel
-            console.log("x: " + coloumn + " y: " + row);
+           // console.log("x: " + coloumn + " y: " + row);
             ray = camera.castRay(coloumn, row);
 
             setPixel(coloumn, row, setPixelColor(ray));

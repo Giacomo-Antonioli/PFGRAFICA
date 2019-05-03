@@ -62,7 +62,7 @@
 			]
 		},
 		{
-			"name" : "The floor",
+			"name" : "The floor1",
 			"shape" : "Triangle",
 			"p1" : [-1000,0,-1000],
 			"p2" : [-1000, 0, 1000],
@@ -73,7 +73,7 @@
 			]
 		},
 		{
-			"name" : "The floor",
+			"name" : "The floor2",
 			"shape" : "Triangle",
 			"p1" : [1000,0,1000],
 			"p2" : [1000, 0, -1000],

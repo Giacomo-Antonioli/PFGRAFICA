@@ -19,6 +19,11 @@ class Triangle {
         this.transposedInverseTransformationMatrix = glMatrix.mat4.create();
         this.hasTransformationMatrix = false;
     }
+
+    setname(name)
+    {
+        this.name=name;
+    }
     /**
      * Funzione che calcola il punto di intersezione tra un raggio e l'oggetto.
      * @param {Ray} ray Raggio 
@@ -44,7 +49,7 @@ class Triangle {
         if (solutions[0] > -EPSILON && solutions[1] > -EPSILON && (solutions[0] + solutions[1]) < 1 && solutions[2] > ray.tMin) {
             let point = glMatrix.vec3.create();
             glMatrix.vec3.scaleAndAdd(point, ray.origin, ray.direction, solutions[2]); // calcolo punto di intersezione
-
+            console.log("ray.tMIN= "+ray.tMin);
             let lato1 = glMatrix.vec3.create(); // vettore appoggio lato1 triangolo
             let lato2 = glMatrix.vec3.create(); // vettore appoggio lato2 triangolo
             glMatrix.vec3.subtract(lato1, this.p2, this.p1); // calcolo lato1 triangolo 
@@ -55,6 +60,8 @@ class Triangle {
             //if (glMatrix.vec3.dot(normal, ray.direction)>rad(90))//NON SO IL VERSO DELLA NORMALE QUINDI LO ADATTO ALLA POS DELLA CAMERA
             //  glMatrix.vec3.negate(normal, normal);
             //spotata in ray_Intersect
+
+            console.log("point= "+solutions[2]);
 
             return ray.ray_Intersect(solutions[2], point, normal);
 
@@ -67,6 +74,7 @@ class Triangle {
 
     me() {
         console.log("TRIANGLE");
+        console.log(this.name);
     }
     /**
      * Funzione che mostra la Matrice di Traformazione.
