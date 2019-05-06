@@ -1,42 +1,91 @@
 /**
  * Classe che rappresenta una generica sfera.
  */
-class Sphere {
+class Sphere extends Figure {
     /**
      * @constructor
      * @param {Array} center Centro della sfera
      * @param {Float} radius Raggio della sfera
      * @param {Integer} material Indice della lista di materiali di cui è costituito l'oggetto
      */
-    constructor(center, radius, material) {
+    constructor(center, radius, material, index) {
+        super(material, index);
         this.center = glMatrix.vec3.fromValues(center[0], center[1], center[2]);
         this.radius = radius;
-        this.material = material; //Indica l'indice all'interno dell'array materiali da applicare alla figura
-        this.TransformationMatrix = glMatrix.mat4.create();
+        this._TransformationMatrix = glMatrix.mat4.create();
         this.inverseTransformationMatrix = glMatrix.mat4.create();
         this.hasTransformationMatrix = false;
     }
-    /**
-     * Funzione che mostra il tipo di oggettto corrente (Sfera).
-     */
-    me() {
-        console.log("SPHERE");
-    }
-    /**
-     * Funzione che mostra la Matrice di Traformazione.
-     */
-    showTransformationMatrix() {
-        console.log("************************")
-        console.log("TRANSFORMATION MATRIX: ");
-        for (let i = 0; i < 4; i++) {
-            console.log(this.TransformationMatrix[i * 4] + " " + this.TransformationMatrix[i * 4 + 1] + " " + this.TransformationMatrix[i * 4 + 2] + " " + this.TransformationMatrix[i * 4 + 3]);
-        }
-        console.log("************************")
+
+    get material() {
+        return super.material;
     }
 
+    set material(value) {
+        super.material = value;
+    }
+
+    get index() {
+        return super.index;
+    }
+
+    set index(value) {
+        super.index = value;
+    }
+
+    get TransformationMatrix() {
+        return super.TransformationMatrix;
+    }
+
+    set TransformationMatrix(value) {
+        super.TransformationMatrix = value;
+    }
+
+    get inverseTransformationMatrix() {
+        return super.inverseTransformationMatrix;
+    }
+
+    set inverseTransformationMatrix(value) {
+        super.inverseTransformationMatrix = value;
+    }
+
+    get hasTransformationMatrix() {
+        return super.hasTransformationMatrix;
+    }
+
+    set hasTransformationMatrix(value) {
+        super.hasTransformationMatrix = value;
+    }
+
+    get t() {
+        return super.t;
+    }
+
+    set t(value) {
+        super.t = value;
+    }
+
+    get interception_point() {
+        return super.interception_point;
+    }
+
+    set interception_point(value) {
+        super.interception_point = value;
+    }
+
+    get normal() {
+        return super.normal;
+    }
+
+    set normal(value) {
+        super.normal = value;
+    }
+
+    //##################################################################################################################
+    //##################################################################################################################
     /**
      * Funzione che calcola il punto di intersezione tra un raggio e l'oggetto.
-     * @param {Ray} ray Raggio 
+     * @param {Ray} ray Raggio
      * @returns {Boolean} Hit Dice se il raggio interseca l'oggetto.
      */
     intersection(ray) {
@@ -114,50 +163,44 @@ class Sphere {
 
 
     }
-    /**
-     * Trasla la matrice di trasformazione.
-     * @param {Vec3} TransaltionVector Vettore di traslazione
-     */
+
+    //##################################################################################################################
+    //##################################################################################################################
+    me() {
+        super.me();
+    }
+
+    showTransformationMatrix() {
+        super.showTransformationMatrix();
+    }
+
     setTranslation(TransaltionVector) {
-        glMatrix.mat4.translate(this.TransformationMatrix, this.TransformationMatrix, TransaltionVector);
+        super.setTranslation(TransaltionVector);
     }
-    /**
-     * Ruota la matrice di trasformazione.
-     * @param {Vec3} RotationVector Vettore di rotazione
-     */
+
     setRotation(RotationVector) {
-        glMatrix.mat4.rotateX(this.TransformationMatrix, this.TransformationMatrix, rad(RotationVector[0]));
-        glMatrix.mat4.rotateY(this.TransformationMatrix, this.TransformationMatrix, rad(RotationVector[1]));
-        glMatrix.mat4.rotateZ(this.TransformationMatrix, this.TransformationMatrix, rad(RotationVector[2]));
+        super.setRotation(RotationVector);
     }
-    /**
-     * Scala la matrice di trasformazione.
-     * @param {Vec3} ScalingVector Vettore di scalatura
-     */
+
     setScaling(ScalingVector) {
-        glMatrix.mat4.scale(this.TransformationMatrix, this.TransformationMatrix, ScalingVector);
+        super.setScaling(ScalingVector);
     }
-    /**
-     * Funzione di inversione della matrice di Trasformazione
-     */
+
     invertMatrix() {
-        glMatrix.mat4.invert(this.inverseTransformationMatrix, this.TransformationMatrix);
+        super.invertMatrix();
     }
-    /**Setter per definire se l'oggetto ha una matrice di Trasformazione associata */
+
     setTransformationMatrixValue() {
-        this.hasTransformationMatrix = true;
+        super.setTransformationMatrixValue();
     }
 
-    initInterception()
-    {   this.t=0;
-        this.interception_point=0;
-        this.normal=0;
-    }
-    setInterception(t,interception_point,normal)
-    {
-        this.t=t;
-        this.interception_point=interception_point;
-        this.normal=normal;
+    initInterception() {
+        super.initInterception();
     }
 
+    setInterception(t, interception_point, normal) {
+        super.setInterception(t, interception_point, normal);
+    }
+
+    //##################################################################################################################
 }
