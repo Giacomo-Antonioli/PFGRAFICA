@@ -113,6 +113,18 @@ class Triangle {
         this.hasTransformationMatrix = true;
     }
 
+    initInterception()
+    {   this.t=0;
+        this.interception_point=0;
+        this.normal=0;
+    }
+    setInterception(t,interception_point,normal)
+    {
+        this.t=t;
+        this.interception_point=interception_point;
+        this.normal=normal;
+    }
+
 }
 /**
  * Fattorizzazzione di Gauss con pivoting parziale per la risoluzione di un sistema lineare di dimensione pari al numero di colonne di A.
