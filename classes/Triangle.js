@@ -9,7 +9,7 @@ class Triangle {
      * @param {Array} p3 Terzo vertice
      * @param {Integer} material Indice della lista di materiali di cui è costituito l'oggetto
      */
-    constructor(p1, p2, p3, material) {
+    constructor(p1, p2, p3, material,index) {
         this.p1 = glMatrix.vec3.fromValues(p1[0], p1[1], p1[2]);
         this.p2 = glMatrix.vec3.fromValues(p2[0], p2[1], p2[2]);
         this.p3 = glMatrix.vec3.fromValues(p3[0], p3[1], p3[2]);
@@ -18,34 +18,33 @@ class Triangle {
         this.inverseTransformationMatrix = glMatrix.mat4.create();
         this.transposedInverseTransformationMatrix = glMatrix.mat4.create();
         this.hasTransformationMatrix = false;
-        this.transformedLights=[];
+        this.transformedLights = [];
+        this.index=index;
     }
 
-    setname(name)
-    {
-        this.name=name;
+    setname(name) {
+        this.name = name;
     }
 
 
-    setTransformedLights(lights)
-    {
+    setTransformedLights(lights) {
         let tempvec3Light;
-        for(let i = 0; i < lights.length; i++)
-         {
+        for (let i = 0; i < lights.length; i++) {
             if (lights[i].type == "Ambient") {
-                this.transformedLights.push([0,0,0]);
+                this.transformedLights.push([0, 0, 0]);
             }
             if (lights[i].type == "Point") {
                 tempvec3Light = glMatrix.vec4.fromValues(lights.origin[0], lights.origin[1], lights.origin[2], 1);
-                glMatrix.vec4.TransformMat4(tempvec3Light,tempvec3Light,this.inverseTransformationMatrix);
-                this.transformedLights.push([tempvec3Light[0],tempvec3Light[1],tempvec3Light[2]]);
+                glMatrix.vec4.TransformMat4(tempvec3Light, tempvec3Light, this.inverseTransformationMatrix);
+                this.transformedLights.push([tempvec3Light[0], tempvec3Light[1], tempvec3Light[2]]);
             }
-            if (lights[i].type == "Directional")
-                {  tempvec3Light = glMatrix.vec4.fromValues(lights.origin[0], lights.origin[1], lights.origin[2], 0);
-                    glMatrix.vec4.TransformMat4(tempvec3Light,tempvec3Light,this.inverseTransformationMatrix);
-                    this.transformedLights.push([tempvec3Light[0],tempvec3Light[1],tempvec3Light[2]]);}
+            if (lights[i].type == "Directional") {
+                tempvec3Light = glMatrix.vec4.fromValues(lights.origin[0], lights.origin[1], lights.origin[2], 0);
+                glMatrix.vec4.TransformMat4(tempvec3Light, tempvec3Light, this.inverseTransformationMatrix);
+                this.transformedLights.push([tempvec3Light[0], tempvec3Light[1], tempvec3Light[2]]);
+            }
         }
-    
+
     }
 
     /**
@@ -73,7 +72,7 @@ class Triangle {
         if (solutions[0] > -EPSILON && solutions[1] > -EPSILON && (solutions[0] + solutions[1]) < 1 && solutions[2] > ray.tMin) {
             let point = glMatrix.vec3.create();
             glMatrix.vec3.scaleAndAdd(point, ray.origin, ray.direction, solutions[2]); // calcolo punto di intersezione
-            console.log("ray.tMIN= "+ray.tMin);
+            console.log("ray.tMIN= " + ray.tMin);
             let lato1 = glMatrix.vec3.create(); // vettore appoggio lato1 triangolo
             let lato2 = glMatrix.vec3.create(); // vettore appoggio lato2 triangolo
             glMatrix.vec3.subtract(lato1, this.p2, this.p1); // calcolo lato1 triangolo 
@@ -85,7 +84,8 @@ class Triangle {
             //  glMatrix.vec3.negate(normal, normal);
             //spotata in ray_Intersect
 
-            console.log("point= "+solutions[2]);
+            console.log("t= " + solutions[2]);
+
 
             return ray.ray_Intersect(solutions[2], point, normal);
 
@@ -151,6 +151,14 @@ class Triangle {
     setTransformationMatrixValue() {
         this.hasTransformationMatrix = true;
     }
+
+    isTheSame(secondObject) {
+        if (this.index==secondObject.index)
+            return true;
+        else
+            return false;
+    }
+
 
 }
 /**

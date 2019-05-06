@@ -8,7 +8,7 @@ class Sphere {
      * @param {Float} radius Raggio della sfera
      * @param {Integer} material Indice della lista di materiali di cui è costituito l'oggetto
      */
-    constructor(center, radius, material) {
+    constructor(center, radius, material,index) {
         this.center = glMatrix.vec3.fromValues(center[0], center[1], center[2]);
         this.radius = radius;
         this.material = material; //Indica l'indice all'interno dell'array materiali da applicare alla figura
@@ -17,6 +17,7 @@ class Sphere {
         this.transposedInverseTransformationMatrix = glMatrix.mat4.create();
         this.hasTransformationMatrix = false;
         this.transformedLights=[];
+        this.index=index;
 
     }
     /**
@@ -135,7 +136,7 @@ class Sphere {
             let unitNormal = glMatrix.vec3.create();
             glMatrix.vec3.scale(unitNormal, normal, 1 / this.radius);
 
-
+            console.log("T Sphere:" +t);
             return ray.ray_Intersect(t, point, unitNormal);
         }
 
@@ -179,6 +180,13 @@ class Sphere {
     /**Setter per definire se l'oggetto ha una matrice di Trasformazione associata */
     setTransformationMatrixValue() {
         this.hasTransformationMatrix = true;
+    }
+
+    isTheSame(secondObject) {
+        if (this.index==secondObject.index)
+            return true;
+        else
+            return false;
     }
 
 }

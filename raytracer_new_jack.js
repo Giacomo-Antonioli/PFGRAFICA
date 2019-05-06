@@ -77,14 +77,10 @@ function setPixelColor(ray) {
             glMatrix.vec4.transformMat4(temporigin, temporigin, element.inverseTransformationMatrix);
 
 
+
             tempRay.setValues(tempdirection, temporigin);
 
             isNearest = element.intersection(tempRay); //setpixel mi dice se il raggio interseca la figura
-            //console.log("HAS TRANS: " + isNearest);
-            // if (isNearest) {
-            //   console.log(element);
-            //console.log(tempRay);
-            // }
 
         } else {
             isNearest = element.intersection(ray); //setpixel mi dice se il raggio interseca la figura
@@ -93,7 +89,7 @@ function setPixelColor(ray) {
         }
 
 
-        //#####################################################################################################################################à  
+        //#####################################################################################################################################
         //isNearest = element.intersection(ray);
         if (isNearest) {
             NearestObject = element;
@@ -101,9 +97,12 @@ function setPixelColor(ray) {
         }
 
 
-        // console.log(tempRay);
+        //console.log(tempRay);
 
     });
+
+    // console.log("FIRSTRAY: " + ray.direction + " | " + ray.origin);
+    // console.log("TEMPRAY: " + tempRay.direction + " | " + tempRay.origin);
 
     // console.log(tempRay);
     if (hitDetected) {
@@ -111,16 +110,41 @@ function setPixelColor(ray) {
         if (NearestObject.hasTransformationMatrix) {
             if (tempRay.t_Nearest < ray.t_Nearest) { // se la figura piu' vicina e' una trasformata, aggiorno ray con i valori di tempRay
                 ray.setNearestValue(tempRay);
+                let reypoint = glMatrix.vec3.create();
+                let reynormt = glMatrix.vec3.create();
+
+
+                //   console.log("FIRSTRAY: " + ray.direction + " | " + ray.origin + " | " + ray.intersection_point + " | " + ray.normalpoint);
+
+
+
+                // console.log("TRANSFORMING.....");
+                ray.intersection_point = glMatrix.vec4.fromValues(ray.intersection_point[0], ray.intersection_point[1], ray.intersection_point[2], 1);
+                //       glMatrix.mat4.multiply(reypoint, NearestObject.TransformationMatrix, [NearestObject.p1[0], NearestObject.p1[1], NearestObject.p1[2], 1]);
+                //     console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n@@@@@@@@@@@@@@@@@@@@@@@\n RESULT: " + reypoint);
+                glMatrix.vec4.transformMat4(reypoint, ray.intersection_point, NearestObject.TransformationMatrix);
+
+
+
+                ray.normalpoint = glMatrix.vec4.fromValues(ray.normalpoint[0], ray.normalpoint[1], ray.normalpoint[2], 0);
+                glMatrix.vec4.transformMat4(reynormt, ray.normalpoint, NearestObject.transposedInverseTransformationMatrix);
+                //glMatrix.mat4.multiply(reynormt, NearestObject.transposedInverseTransformationMatrix, ray.normalpoint );
+
+                //  console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n@@@@@@@@@@@@@@@@@@@@@@@\n RESULT: " + reynormt);
+
+                ray.intersection_point = glMatrix.vec3.clone(reypoint);
+                ray.normalpoint = glMatrix.vec3.clone(reynormt);
+
+                //  console.log("FIRSTRAY: " + ray.direction + " | " + ray.origin + " | " + ray.intersection_point + " | " + ray.normalpoint);
+
+                //
+                // console.log("Points post:");
+                // console.log("Point " + ray.intersection_point);
+                // console.log(" Normal "+ray.normalpoint)
+                // console.log("°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°");
+
+
             }
-
-            //console.log(tempRay);
-            ray.intersection_point = glMatrix.vec4.fromValues(ray.intersection_point[0], ray.intersection_point[1], ray.intersection_point[2], 1);
-            glMatrix.vec4.transformMat4(ray.intersection_point, ray.intersection_point, NearestObject.TransformationMatrix);
-
-
-            ray.normalpoint = glMatrix.vec4.fromValues(ray.normalpoint[0], ray.normalpoint[1], ray.normalpoint[2], 0);
-            glMatrix.vec4.transformMat4(ray.normalpoint, ray.normalpoint, NearestObject.transposedInverseTransformationMatrix);
-
 
         }
 
@@ -132,7 +156,8 @@ function setPixelColor(ray) {
 
 function setColor(ray, element) {
 
-
+    //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
     //this.hit_point = ray.point_at_parameter(element.interception_point);// tre coordinate punto nello spazio
 
@@ -176,6 +201,9 @@ function setColor(ray, element) {
 
     //*******************************************End variabili Di Lavoro*******************************
 
+    //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
     //Calcolo di ambient_component
     Ka = glMatrix.vec3.clone(materials[element.material].ka);
     Ia = glMatrix.vec3.clone(lights[0].color);
@@ -183,13 +211,13 @@ function setColor(ray, element) {
 
     glMatrix.vec3.add(total, total, ambient_component);
 
-    if(element.hasTransformationMatrix)
-    {
-        ray.restoreSDRPoints(element);
+    if (element.hasTransformationMatrix) {
+        //   console.log("YES");
+        // ray.restoreSDRPoints(element);
     }
 
 
-            
+
     for (let i = 1; i < lights.length; i++) { // sommatoria per ogni luce
         //Calcolo di diffuse_component
         //Appunto negare r
@@ -200,12 +228,12 @@ function setColor(ray, element) {
 
         if (lights[i] instanceof PointLight) {
 
-   
-         
+
+
             glMatrix.vec3.subtract(L, ray.intersection_point, lights[i].position); //L
-       
-            //console.log("RAY: "+ray.intersection_point );
-           // console.log("LIGHT: "+lights[i].position);
+
+            //  console.log("RAY: " + ray.intersection_point);
+            //   console.log("LIGHT: " + lights[i].position);
 
             maxdistance = glMatrix.vec3.distance(ray.intersection_point, lights[i].position);
         } else {
@@ -217,9 +245,10 @@ function setColor(ray, element) {
 
         glMatrix.vec3.negate(negativeL, L);
 
-        element.me();
-        console.log("°°°°°°°°°°°°°°");
-        shadowHit = ShadowCast(new Ray(negativeL, ray.intersection_point, maxdistance, shadow_bias));
+        //element.me();
+        // console.log("°°°°°°°°°°°°°°");
+        shadowHit = ShadowCast(new Ray(negativeL, ray.intersection_point, maxdistance, shadow_bias), element);
+
         if (!shadowHit) {
             ///FINE FUNZIONE CASTING OMBRA
             glMatrix.vec3.normalize(L, L); // normalizzo L
@@ -258,7 +287,7 @@ function setColor(ray, element) {
             glMatrix.vec3.add(total, total, diffuse_component);
             glMatrix.vec3.add(total, total, specular_component);
         } else {
-            console.log("Sono in ombra claudio gay");
+            //    console.log("Sono in ombra claudio gay");
         }
     }
     if (mydebug) {
@@ -282,27 +311,70 @@ function setColor(ray, element) {
  * @param {Ray} castedRay Raggio con origine sulla superficie con direzione verso la luce (Direzionale o Posizionale) 
  * @returns {Boolean} Hit Ritorna true se il raggio interseca una figura lungo il suo percorso
  */
-function ShadowCast(castedRay) {
-    let hit;
+function ShadowCast(castedRay, castingObject) {
+    let hit = false;
     let transformedcastedRay = castedRay;
 
+    let temporigin;
+    let tempdirection;
+
+
+    //*******************************************************************************/
     for (var i = 0; i < surfaces.length; i++) {
-            surfaces[i].me();
-        //console.log(castedRay);
-        /*if (surfaces[i].hasTransformationMatrix) {
-            tempdirection = glMatrix.vec4.fromValues(castedRay.direction[0], castedRay.direction[1], castedRay.direction[2], 0); //il vettore direzione il termine omogeneo deve essere 0
+        console.log("#######################################");
+        console.log("Confronto la figura "+ castingObject.name);
+        if (surfaces[i].constructor.name == castingObject.constructor.name) {
+            if (!castingObject.isTheSame(surfaces[i])) {
 
-            glMatrix.vec4.transformMat4(tempdirection, tempdirection, surfaces[i].inverseTransformationMatrix);
+                console.log(" con " + surfaces[i].name);
+                console.log("#######################################");
+                if (surfaces[i].hasTransformationMatrix) {
 
-            transformedcastedRay.setValues(tempdirection, castedRay.origin);
-            if (surfaces[i].intersection(transformedcastedRay)) return true;
+                    temporigin = glMatrix.vec4.fromValues(castedRay.origin[0], castedRay.origin[1], castedRay.origin[2], 1); //l’origine è un punto quindi il termine omogeneo deve essere 1
+                    tempdirection = glMatrix.vec4.fromValues(castedRay.direction[0], castedRay.direction[1], castedRay.direction[2], 0); //il vettore direzione il termine omogeneo deve essere 0
+
+                    glMatrix.vec4.transformMat4(tempdirection, tempdirection, surfaces[i].inverseTransformationMatrix);
+                    glMatrix.vec4.transformMat4(temporigin, temporigin, surfaces[i].inverseTransformationMatrix);
+
+
+
+                    transformedcastedRay.setValues(tempdirection, temporigin);
+                    hit = surfaces[i].intersection(transformedcastedRay);
+                } else
+                    hit = surfaces[i].intersection(castedRay);
+
+                if (hit) return true;
+            }
+        } else {
+
+            
+            console.log(" con " + surfaces[i].name);
+            console.log("#######################################");
+
+            if (surfaces[i].hasTransformationMatrix) {
+
+                temporigin = glMatrix.vec4.fromValues(castedRay.origin[0], castedRay.origin[1], castedRay.origin[2], 1); //l’origine è un punto quindi il termine omogeneo deve essere 1
+                tempdirection = glMatrix.vec4.fromValues(castedRay.direction[0], castedRay.direction[1], castedRay.direction[2], 0); //il vettore direzione il termine omogeneo deve essere 0
+
+                glMatrix.vec4.transformMat4(tempdirection, tempdirection, surfaces[i].inverseTransformationMatrix);
+                glMatrix.vec4.transformMat4(temporigin, temporigin, surfaces[i].inverseTransformationMatrix);
+
+
+
+                transformedcastedRay.setValues(tempdirection, temporigin);
+                hit = surfaces[i].intersection(transformedcastedRay);
+
+            } else
+                hit = surfaces[i].intersection(castedRay);
+
+            if (hit) return true;
         }
-        else*/
-        hit=surfaces[i].intersection(castedRay);
-        console.log(castedRay);
 
-        if(hit) return true;
+
+
     }
+
+    console.log(" NO HIT ");
     return false;
 }
 
@@ -352,20 +424,23 @@ function loadSceneFile(filepath) {
 
     });
 
+    let counter = 0;
+
     scene.surfaces.forEach(function (element) {
 
         let currentObject;
 
         if (element.shape == "Sphere")
-            currentObject = new Sphere(element.center, element.radius, element.material);
+            currentObject = new Sphere(element.center, element.radius, element.material, counter);
 
         if (element.shape == "Triangle") {
-            currentObject = new Triangle(element.p1, element.p2, element.p3, element.material);
+            currentObject = new Triangle(element.p1, element.p2, element.p3, element.material, counter);
             currentObject.setname(element.name);
         }
+        counter++;
         if (element.transforms != undefined) {
             element.transforms.forEach(function (transformsArrayMember) {
-                console.log(transformsArrayMember[1]);
+                // console.log(transformsArrayMember[1]);
                 switch (transformsArrayMember[0]) {
                     case "Translate":
                         currentObject.setTranslation(transformsArrayMember[1]);
@@ -386,7 +461,7 @@ function loadSceneFile(filepath) {
         }
 
         surfaces.push(currentObject);
-        currentObject.showTransformationMatrix();
+      //  currentObject.showTransformationMatrix();
     });
 }
 /**
@@ -397,10 +472,10 @@ function render() {
     let start = Date.now(); //for logging
 
     if (cropped) {
-        mincoloumn = 19;
-        maxcoloumn = 20;
-        minrow = 124;
-        maxrow = 125;
+        mincoloumn = 251;
+        maxcoloumn = 252;
+        minrow = 178;
+        maxrow = 179;
     } else {
         mincoloumn = 0;
         maxcoloumn = 512;
@@ -412,7 +487,7 @@ function render() {
     for (let coloumn = mincoloumn; coloumn < maxcoloumn; coloumn++) {
         for (let row = minrow; row < maxrow; row++) {
             //TODO - fire a ray though each pixel
-           // console.log("x: " + coloumn + " y: " + row);
+            // console.log("x: " + coloumn + " y: " + row);
             ray = camera.castRay(coloumn, row);
 
             setPixel(coloumn, row, setPixelColor(ray));

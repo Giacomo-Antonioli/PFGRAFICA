@@ -3,17 +3,17 @@
 		"eye" : [0.0, 1.5, 0.0],
 		"up" : [0.0, 1.0, 0.0],
 		"at" : [0.0, 0.0, -5.5],
-		"fovy" : 55, "aspect" : 1
+		"fovy" : 55, "aspect" : 1 
 	},
 	"bounce_depth" : 1,
 	"shadow_bias" : 0.0001,
 
-	"lights" : [
+	"lights" : [ 
 		{"source" : "Ambient", "color" : [0.05,0.05,0.05]},
 		{"source" : "Point", "position" : [-2, 4, -3], "color" : [0.8,0.8,0.8]}
 	],
 
-	"materials" : [
+	"materials" : [ 
 		{
 			"name" : "The floor",
 			"ka" : [1,1,1],
@@ -42,6 +42,16 @@
 
 	"surfaces" : [
 		{
+			"name" : "Reflective ball",
+			"shape" : "Sphere",
+			"center" : [1,0,-1],
+			"radius" : 1,
+			"material" : 1,
+			"transforms" : [
+				["Translate", [0, 0.5, -5]]
+			]
+		},
+		{
 			"name" : "Diffuse ball",
 			"shape" : "Sphere",
 			"center" : [-1,0,0],
@@ -49,6 +59,17 @@
 			"material" : 2,
 			"transforms" : [
 				["Translate", [0, 0.5, -5]]
+			]
+		},
+		{
+			"name" : "The floor1",
+			"shape" : "Triangle",
+			"p1" : [-1000,0,-1000],
+			"p2" : [-1000, 0, 1000],
+			"p3" : [1000, 0, 1000],
+			"material" : 0,
+			"transforms" : [
+				["Translate", [0, -0.5, 0]]
 			]
 		},
 		{
