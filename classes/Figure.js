@@ -13,23 +13,161 @@ class Figure {
         this._TransformationMatrix = glMatrix.mat4.create();
         this._inverseTransformationMatrix = glMatrix.mat4.create();
         this._hasTransformationMatrix = false;
-        this._t = 0;
+        this._t = Number.POSITIVE_INFINITY;
         this._interception_point = 0;
         this._normal = 0;
         this._material = material;
         this._index = index;
     }
-/*
 
- ######   ######## ######## ######## ######## ########   ######
-##    ##  ##          ##       ##    ##       ##     ## ##    ##
-##        ##          ##       ##    ##       ##     ## ##
-##   #### ######      ##       ##    ######   ########   ######
-##    ##  ##          ##       ##    ##       ##   ##         ##
-##    ##  ##          ##       ##    ##       ##    ##  ##    ##
- ######   ########    ##       ##    ######## ##     ##  ######
 
-*/
+    //____________________________________________________________________________________________________
+    /*
+
+    ##     ## ######## ######## ##     ##  #######  ########   ######
+    ###   ### ##          ##    ##     ## ##     ## ##     ## ##    ##
+    #### #### ##          ##    ##     ## ##     ## ##     ## ##
+    ## ### ## ######      ##    ######### ##     ## ##     ##  ######
+    ##     ## ##          ##    ##     ## ##     ## ##     ##       ##
+    ##     ## ##          ##    ##     ## ##     ## ##     ## ##    ##
+    ##     ## ########    ##    ##     ##  #######  ########   ######
+
+    */
+
+    /**
+     * Funzione che mostra la Matrice di Traformazione.
+     */
+    showTransformationMatrix() {
+        console.log("************************");
+        console.log("TRANSFORMATION MATRIX: ");
+        for (let i = 0; i < 4; i++) {
+            console.log(this._TransformationMatrix[i * 4] + " " + this._TransformationMatrix[i * 4 + 1] + " " + this._TransformationMatrix[i * 4 + 2] + " " + this._TransformationMatrix[i * 4 + 3]);
+        }
+        console.log("************************")
+    }
+
+    /**
+     * Trasla la matrice di trasformazione.
+     * @param {Vec3} TransaltionVector Vettore di traslazione
+     */
+    setTranslation(TransaltionVector) {
+        glMatrix.mat4.translate(this._TransformationMatrix, this._TransformationMatrix, TransaltionVector);
+    }
+
+    /**
+     * Ruota la matrice di trasformazione.
+     * @param {Vec3} RotationVector Vettore di rotazione
+     */
+    setRotation(RotationVector) {
+        glMatrix.mat4.rotateX(this._TransformationMatrix, this._TransformationMatrix, rad(RotationVector[0]));
+        glMatrix.mat4.rotateY(this._TransformationMatrix, this._TransformationMatrix, rad(RotationVector[1]));
+        glMatrix.mat4.rotateZ(this._TransformationMatrix, this._TransformationMatrix, rad(RotationVector[2]));
+    }
+
+    /**
+     * Scala la matrice di trasformazione.
+     * @param {Vec3} ScalingVector Vettore di scalatura
+     */
+    setScaling(ScalingVector) {
+        glMatrix.mat4.scale(this._TransformationMatrix, this._TransformationMatrix, ScalingVector);
+    }
+
+    /**
+     * Funzione di inversione della matrice di Trasformazione
+     */
+    invertMatrix() {
+        glMatrix.mat4.invert(this._inverseTransformationMatrix, this._TransformationMatrix);
+    }
+
+    /**Setter per definire se l'oggetto ha una matrice di Trasformazione associata */
+    setTransformationMatrixValue() {
+        this._hasTransformationMatrix = true;
+    }
+
+    /**
+     * Funzione di inizializzazione del parametri di intersezione
+     */
+    initInterception() {
+        this._t = Number.POSITIVE_INFINITY;
+        this._interception_point = 0;
+        this._normal = 0;
+    }
+
+    /**
+     * Setta i punti di intersezione Raggio-Figura
+     * @param t {Double} parametro nel calcolo e+td, è uno scalare quindi vale in ogni SDR
+     * @param interception_point {Vec3} punto di intersezione del raggio con l'oggetto
+     * @param normal {Vec3} normale al punto sulla superficie
+     */
+    setInterception(t, interception_point, normal,direction) {
+        if (glMatrix.vec3.dot(normal, direction)>rad(90))//NON SO IL VERSO DELLA NORMALE QUINDI LO ADATTO ALLA POS DELLA CAMERA
+              glMatrix.vec3.negate(normal, normal);
+        this._t = t;
+        this._interception_point = interception_point;
+        this._normal = normal;
+    }
+
+    isTheSame(secondObject) {
+        if (this.index == secondObject.index)
+            return true;
+        else
+            return false;
+    }
+
+    //____________________________________________________________________________________________________
+    /*
+        ######  ######## ######## ######## ######## ########   ######  
+        ##    ## ##          ##       ##    ##       ##     ## ##    ## 
+        ##       ##          ##       ##    ##       ##     ## ##       
+         ######  ######      ##       ##    ######   ########   ######  
+              ## ##          ##       ##    ##       ##   ##         ## 
+        ##    ## ##          ##       ##    ##       ##    ##  ##    ## 
+         ######  ########    ##       ##    ######## ##     ##  ######  
+    */
+
+    set material(value) {
+        this._material = value;
+    }
+ 
+    set index(value) {
+        this._index = value;
+    }
+ 
+    set TransformationMatrix(value) {
+        this._TransformationMatrix = value;
+    }
+   
+    set inverseTransformationMatrix(value) {
+        this._inverseTransformationMatrix = value;
+    }
+    
+    set hasTransformationMatrix(value) {
+        this._hasTransformationMatrix = value;
+    }
+    
+    set t(value) {
+        this._t = value;
+    }
+    
+    set interception_point(value) {
+        this._interception_point = value;
+    }
+    
+    set normal(value) {
+        this._normal = value;
+    }
+
+    /*
+
+     ######   ######## ######## ######## ######## ########   ######
+    ##    ##  ##          ##       ##    ##       ##     ## ##    ##
+    ##        ##          ##       ##    ##       ##     ## ##
+    ##   #### ######      ##       ##    ######   ########   ######
+    ##    ##  ##          ##       ##    ##       ##   ##         ##
+    ##    ##  ##          ##       ##    ##       ##    ##  ##    ##
+     ######   ########    ##       ##    ######## ##     ##  ######
+
+    */
     /**
      * Indice del Materiale della figura
      * @returns material {Integer} material index
@@ -92,122 +230,5 @@ class Figure {
      */
     get normal() {
         return this._normal;
-    }
-
-
-/*
-
-##     ## ######## ######## ##     ##  #######  ########   ######
-###   ### ##          ##    ##     ## ##     ## ##     ## ##    ##
-#### #### ##          ##    ##     ## ##     ## ##     ## ##
-## ### ## ######      ##    ######### ##     ## ##     ##  ######
-##     ## ##          ##    ##     ## ##     ## ##     ##       ##
-##     ## ##          ##    ##     ## ##     ## ##     ## ##    ##
-##     ## ########    ##    ##     ##  #######  ########   ######
-
-*/
-
-    /**
-     * Funzione che mostra la Matrice di Traformazione.
-     */
-    showTransformationMatrix() {
-        console.log("************************");
-        console.log("TRANSFORMATION MATRIX: ");
-        for (let i = 0; i < 4; i++) {
-            console.log(this._TransformationMatrix[i * 4] + " " + this._TransformationMatrix[i * 4 + 1] + " " + this._TransformationMatrix[i * 4 + 2] + " " + this._TransformationMatrix[i * 4 + 3]);
-        }
-        console.log("************************")
-    }
-
-    /**
-     * Trasla la matrice di trasformazione.
-     * @param {Vec3} TransaltionVector Vettore di traslazione
-     */
-    setTranslation(TransaltionVector) {
-        glMatrix.mat4.translate(this._TransformationMatrix, this._TransformationMatrix, TransaltionVector);
-    }
-
-    /**
-     * Ruota la matrice di trasformazione.
-     * @param {Vec3} RotationVector Vettore di rotazione
-     */
-    setRotation(RotationVector) {
-        glMatrix.mat4.rotateX(this._TransformationMatrix, this._TransformationMatrix, rad(RotationVector[0]));
-        glMatrix.mat4.rotateY(this._TransformationMatrix, this._TransformationMatrix, rad(RotationVector[1]));
-        glMatrix.mat4.rotateZ(this._TransformationMatrix, this._TransformationMatrix, rad(RotationVector[2]));
-    }
-
-    /**
-     * Scala la matrice di trasformazione.
-     * @param {Vec3} ScalingVector Vettore di scalatura
-     */
-    setScaling(ScalingVector) {
-        glMatrix.mat4.scale(this._TransformationMatrix, this._TransformationMatrix, ScalingVector);
-    }
-
-    /**
-     * Funzione di inversione della matrice di Trasformazione
-     */
-    invertMatrix() {
-        glMatrix.mat4.invert(this._inverseTransformationMatrix, this._TransformationMatrix);
-    }
-
-    /**Setter per definire se l'oggetto ha una matrice di Trasformazione associata */
-    setTransformationMatrixValue() {
-        this._hasTransformationMatrix = true;
-    }
-
-    /**
-     * Funzione di inizializzazione del parametri di intersezione
-     */
-    initInterception() {
-        this._t = 0;
-        this._interception_point = 0;
-        this._normal = 0;
-    }
-
-    /**
-     * Setta i punti di intersezione Raggio-Figura
-     * @param t {Double} parametro nel calcolo e+td, è uno scalare quindi vale in ogni SDR
-     * @param interception_point {Vec3} punto di intersezione del raggio con l'oggetto
-     * @param normal {Vec3} normale al punto sulla superficie
-     */
-    setInterception(t, interception_point, normal) {
-        this._t = t;
-        this._interception_point = interception_point;
-        this._normal = normal;
-    }
-
-
-    set material(value) {
-        this._material = value;
-    }
-
-    set index(value) {
-        this._index = value;
-    }
-
-    set TransformationMatrix(value) {
-        this._TransformationMatrix = value;
-    }
-
-    set inverseTransformationMatrix(value) {
-        this._inverseTransformationMatrix = value;
-    }
-
-    set hasTransformationMatrix(value) {
-        this._hasTransformationMatrix = value;
-    }
-
-    set t(value) {
-        this._t = value;
-    }
-
-    set interception_point(value) {
-        this._interception_point = value;
-    }
-
-    set normal(value) {
-        this._normal = value;
     }
 }

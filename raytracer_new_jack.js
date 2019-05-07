@@ -10,7 +10,7 @@ let minrow;
 let maxrow;
 let cropped = false;
 //##################################################################
-let file_path = "assets/TransformationTest.json";
+let file_path = "assets/ShadowTest1.json";
 //####################GLOBAL VALUES#################################
 let scene;
 let camera;
@@ -59,7 +59,7 @@ function computePixel(ray) {
 
     let color = [0, 0, 0];
     let setpixel; // variabile d'appoggio
-    let total=[0,0,0];
+    let total = [0, 0, 0];
 
     surfaces.forEach(function (element) {
 
@@ -68,13 +68,22 @@ function computePixel(ray) {
 
 
         if (setpixel)
-            total=   getPixelColor(ray,element);
+            total = getPixelColor(ray, element);
 
-        if (ray.t_Nearest == ray.t_parameter) {
+
+        if (element.t < ray.t_Nearest) {
             color = [total[0], total[1], total[2]]; //Colore figura
-        }
-    });
+            ray.NearestObject = element.index;
+            ray.t_Nearest = element.t;
 
+            element.me();
+
+        }
+        console.log("element.t= " + element.t);
+        console.log("Nearest " + ray.t_Nearest);
+
+    });
+    console.log("color");
     console.log(color);
     return color;
 }
@@ -83,15 +92,10 @@ function computePixel(ray) {
 //##########################################################FUNCTIONS#####################################################
 
 
-
-
-
 //##########################################################DEBUG FUNCTIONS#####################################################
 
 
-
-function getPixelColor(ray,element)
-{
+function getPixelColor(ray, element) {
 
     //this.hit_point = ray.point_at_parameter(element.interception_point);// tre coordinate punto nello spazio
 
@@ -151,8 +155,8 @@ function getPixelColor(ray,element)
         Kd = glMatrix.vec3.clone(materials[element.material].kd);
 
         if (lights[i] instanceof PointLight) {
-            glMatrix.vec3.subtract(L, ray.intersection_point, lights[i].position); //L
-            maxdistance = glMatrix.vec3.distance(ray.intersection_point, lights[i].position);
+            glMatrix.vec3.subtract(L, element.interception_point, lights[i].position); //L
+            maxdistance = glMatrix.vec3.distance(element.interception_point, lights[i].position);
         } else {
             L = glMatrix.vec3.clone(lights[i].direction);
             maxdistance = Number.POSITIVE_INFINITY;
@@ -163,13 +167,15 @@ function getPixelColor(ray,element)
         glMatrix.vec3.negate(negativeL, L);
 
 
-        shadowHit = ShadowCast(new Ray(negativeL, ray.intersection_point, maxdistance, shadow_bias));
+        shadowHit = ShadowCast(new Ray(negativeL, element.interception_point, maxdistance, shadow_bias));
+        // shadowHit = false;
         if (!shadowHit) {
             ///FINE FUNZIONE CASTING OMBRA
             glMatrix.vec3.normalize(L, L); // normalizzo L
 
-            N = glMatrix.vec3.clone(ray.normalpoint);
+            N = glMatrix.vec3.clone(element.normal);
 
+            console.log("N:" + N);
             glMatrix.vec3.normalize(N, N); // normalizzo N
 
             glMatrix.vec3.negate(NormNegL, L);
@@ -191,7 +197,7 @@ function getPixelColor(ray,element)
             glMatrix.vec3.subtract(R, R, L); //(2(L * N) * N) - L
             glMatrix.vec3.normalize(R, R); // normalizzo R
 
-            glMatrix.vec3.subtract(V, ray.intersection_point, camera.eye); //V
+            glMatrix.vec3.subtract(V, element.interception_point, camera.eye); //V
             glMatrix.vec3.normalize(V, V); // normalizzo V
 
             maxdot_specular_powered = Math.pow(Math.max(0.0, glMatrix.vec3.dot(R, V)), alpha);
@@ -201,6 +207,10 @@ function getPixelColor(ray,element)
 
             glMatrix.vec3.add(total, total, diffuse_component);
             glMatrix.vec3.add(total, total, specular_component);
+
+            console.log(ambient_component);
+            console.log(diffuse_component);
+            console.log(specular_component);
         }
     }
     if (mydebug) {
@@ -213,10 +223,9 @@ function getPixelColor(ray,element)
 }
 
 
-
 /**
- * Funzione di valutazione della presenza o assenza del contributo luminoso di una data sorgente luminosa in un dato pixel. 
- * @param {Ray} castedRay Raggio con origine sulla superficie con direzione verso la luce (Direzionale o Posizionale) 
+ * Funzione di valutazione della presenza o assenza del contributo luminoso di una data sorgente luminosa in un dato pixel.
+ * @param {Ray} castedRay Raggio con origine sulla superficie con direzione verso la luce (Direzionale o Posizionale)
  * @returns {Boolean} Hit Ritorna true se il raggio interseca una figura lungo il suo percorso
  */
 function ShadowCast(castedRay) {
@@ -234,6 +243,7 @@ function ShadowCast(castedRay) {
 function rad(degrees) {
     return degrees * Math.PI / 180;
 }
+
 /**
  * Funzione di inizializzazione della scena.
  */
@@ -246,11 +256,10 @@ function init() {
 
 /**
  * Funzione di caricamento degli elementi di ogni asset.
- * @param {String} filepath Path assoluto o relativo dell'asset da caricare 
+ * @param {String} filepath Path assoluto o relativo dell'asset da caricare
  */
 function loadSceneFile(filepath) {
     scene = Utils.loadJSON(filepath); //load the scene
-
 
 
     camera = new Camera(scene.camera.eye, scene.camera.at, scene.camera.up, scene.camera.fovy, scene.camera.aspect);
@@ -276,13 +285,15 @@ function loadSceneFile(filepath) {
     scene.surfaces.forEach(function (element) {
 
         let currentObject;
+        let counter = 0;
 
         if (element.shape == "Sphere")
-            currentObject = new Sphere(element.center, element.radius, element.material);
+            currentObject = new Sphere(element.center, element.radius, element.material, counter);
 
         if (element.shape == "Triangle")
-            currentObject = new Triangle(element.p1, element.p2, element.p3, element.material);
+            currentObject = new Triangle(element.p1, element.p2, element.p3, element.material, counter);
 
+        counter++;
         if (element.transforms != undefined) {
             element.transforms.forEach(function (transformsArrayMember) {
                 console.log(transformsArrayMember[1]);
@@ -306,6 +317,7 @@ function loadSceneFile(filepath) {
         currentObject.showTransformationMatrix();
     });
 }
+
 /**
  * Funzione di rendering del canvas.
  */
@@ -314,10 +326,10 @@ function render() {
     let start = Date.now(); //for logging
 
     if (cropped) {
-        mincoloumn = 150;
-        maxcoloumn = 200;
-        minrow = 230;
-        maxrow = 280;
+        mincoloumn = 258;
+        maxcoloumn = 259;
+        minrow = 362;
+        maxrow = 363;
     } else {
         mincoloumn = 0;
         maxcoloumn = 512;
@@ -334,6 +346,10 @@ function render() {
 
             setPixel(coloumn, row, computePixel(ray));
 
+            surfaces.forEach(function (element) {
+                    element.initInterception();
+                } // azzera i campi
+            );
         }
     }
 
@@ -369,8 +385,8 @@ function setPixel(x, y, color) {
  * Funzione di Debug. Mostra le varie compontenti luminose.
  */
 function showcolor() {
-/*    console.log("ambient_component: " + ambient_component);
-    console.log("diffuse_component: " + diffuse_component);
-    console.log("specular_component " + specular_component);
-    console.log("________________________________________________");*/
+    /*    console.log("ambient_component: " + ambient_component);
+        console.log("diffuse_component: " + diffuse_component);
+        console.log("specular_component " + specular_component);
+        console.log("________________________________________________");*/
 }

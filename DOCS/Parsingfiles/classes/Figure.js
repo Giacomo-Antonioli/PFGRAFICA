@@ -19,93 +19,20 @@ class Figure {
         this._material = material;
         this._index = index;
     }
-/*
-
- ######   ######## ######## ######## ######## ########   ######
-##    ##  ##          ##       ##    ##       ##     ## ##    ##
-##        ##          ##       ##    ##       ##     ## ##
-##   #### ######      ##       ##    ######   ########   ######
-##    ##  ##          ##       ##    ##       ##   ##         ##
-##    ##  ##          ##       ##    ##       ##    ##  ##    ##
- ######   ########    ##       ##    ######## ##     ##  ######
-
-*/
-    /**
-     * Indice del Materiale della figura
-     * @returns material {Integer} material index
-     */
-    get material() {
-        return this._material;
-    }
-
-    /**
-     * Indice della figura all'interno della lista delle figure
-     * @returns index {Integer} indice della lista delle figure
-     */
-    get index() {
-        return this._index;
-    }
-
-    /**
-     * Matrice di Trasformazione della figura
-     * @returns TransformationMatrix {mat4} Matrice di trasformazione della figura
-     */
-    get TransformationMatrix() {
-        return this._TransformationMatrix;
-    }
-
-    /**
-     * Inversa della matrice di Trasformazione della figura
-     * @returns {mat4} Inversa della matrice di trasformazione
-     */
-    get inverseTransformationMatrix() {
-        return this._inverseTransformationMatrix;
-    }
-
-    /**
-     * Boolean che indica se la figura possiede o meno una matrice di Trasformazione
-     * @returns hasTransformationMatrix {boolean} True se ha la matrice, False se non ce l'ha
-     */
-    get hasTransformationMatrix() {
-        return this._hasTransformationMatrix;
-    }
-
-    /**
-     * Parametro t che serve nel calcolo e + t*d
-     * @returns t {Double} Paramtero t
-     */
-    get t() {
-        return this._t;
-    }
-
-    /**
-     * Punto di intersezione sulla superficie
-     * @returns interception_point {Vec3} Punto di intersezione sulla superficie
-     */
-    get interception_point() {
-        return this._interception_point;
-    }
-
-    /**
-     * Normale al punto sulla superficie
-     * @returns normal {Vec3} Normale alla superficie
-     */
-    get normal() {
-        return this._normal;
-    }
 
 
-/*
+    //____________________________________________________________________________________________________
+    /*
 
-##     ## ######## ######## ##     ##  #######  ########   ######
-###   ### ##          ##    ##     ## ##     ## ##     ## ##    ##
-#### #### ##          ##    ##     ## ##     ## ##     ## ##
-## ### ## ######      ##    ######### ##     ## ##     ##  ######
-##     ## ##          ##    ##     ## ##     ## ##     ##       ##
-##     ## ##          ##    ##     ## ##     ## ##     ## ##    ##
-##     ## ########    ##    ##     ##  #######  ########   ######
+    ##     ## ######## ######## ##     ##  #######  ########   ######
+    ###   ### ##          ##    ##     ## ##     ## ##     ## ##    ##
+    #### #### ##          ##    ##     ## ##     ## ##     ## ##
+    ## ### ## ######      ##    ######### ##     ## ##     ##  ######
+    ##     ## ##          ##    ##     ## ##     ## ##     ##       ##
+    ##     ## ##          ##    ##     ## ##     ## ##     ## ##    ##
+    ##     ## ########    ##    ##     ##  #######  ########   ######
 
-*/
+    */
 
     /**
      * Funzione che mostra la Matrice di Traformazione.
@@ -178,4 +105,128 @@ class Figure {
         this._normal = normal;
     }
 
+    isTheSame(secondObject) {
+        if (this.index == secondObject.index)
+            return true;
+        else
+            return false;
+    }
+
+    //____________________________________________________________________________________________________
+    /*
+        ######  ######## ######## ######## ######## ########   ######  
+        ##    ## ##          ##       ##    ##       ##     ## ##    ## 
+        ##       ##          ##       ##    ##       ##     ## ##       
+         ######  ######      ##       ##    ######   ########   ######  
+              ## ##          ##       ##    ##       ##   ##         ## 
+        ##    ## ##          ##       ##    ##       ##    ##  ##    ## 
+         ######  ########    ##       ##    ######## ##     ##  ######  
+    */
+
+    set material(value) {
+        this._material = value;
+    }
+ 
+    set index(value) {
+        this._index = value;
+    }
+ 
+    set TransformationMatrix(value) {
+        this._TransformationMatrix = value;
+    }
+   
+    set inverseTransformationMatrix(value) {
+        this._inverseTransformationMatrix = value;
+    }
+    
+    set hasTransformationMatrix(value) {
+        this._hasTransformationMatrix = value;
+    }
+    
+    set t(value) {
+        this._t = value;
+    }
+    
+    set interception_point(value) {
+        this._interception_point = value;
+    }
+    
+    set normal(value) {
+        this._normal = value;
+    }
+
+    /*
+
+     ######   ######## ######## ######## ######## ########   ######
+    ##    ##  ##          ##       ##    ##       ##     ## ##    ##
+    ##        ##          ##       ##    ##       ##     ## ##
+    ##   #### ######      ##       ##    ######   ########   ######
+    ##    ##  ##          ##       ##    ##       ##   ##         ##
+    ##    ##  ##          ##       ##    ##       ##    ##  ##    ##
+     ######   ########    ##       ##    ######## ##     ##  ######
+
+    */
+    /**
+     * Indice del Materiale della figura
+     * @returns material {Integer} material index
+     */
+    get material() {
+        return this._material;
+    }
+
+    /**
+     * Indice della figura all'interno della lista delle figure
+     * @returns index {Integer} indice della lista delle figure
+     */
+    get index() {
+        return this._index;
+    }
+
+    /**
+     * Matrice di Trasformazione della figura
+     * @returns TransformationMatrix {mat4} Matrice di trasformazione della figura
+     */
+    get TransformationMatrix() {
+        return this._TransformationMatrix;
+    }
+
+    /**
+     * Inversa della matrice di Trasformazione della figura
+     * @returns {mat4} Inversa della matrice di trasformazione
+     */
+    get inverseTransformationMatrix() {
+        return this._inverseTransformationMatrix;
+    }
+
+    /**
+     * Boolean che indica se la figura possiede o meno una matrice di Trasformazione
+     * @returns hasTransformationMatrix {boolean} True se ha la matrice, False se non ce l'ha
+     */
+    get hasTransformationMatrix() {
+        return this._hasTransformationMatrix;
+    }
+
+    /**
+     * Parametro t che serve nel calcolo e + t*d
+     * @returns t {Double} Paramtero t
+     */
+    get t() {
+        return this._t;
+    }
+
+    /**
+     * Punto di intersezione sulla superficie
+     * @returns interception_point {Vec3} Punto di intersezione sulla superficie
+     */
+    get interception_point() {
+        return this._interception_point;
+    }
+
+    /**
+     * Normale al punto sulla superficie
+     * @returns normal {Vec3} Normale alla superficie
+     */
+    get normal() {
+        return this._normal;
+    }
 }

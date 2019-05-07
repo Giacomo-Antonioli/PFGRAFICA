@@ -11,54 +11,24 @@ class Triangle extends Figure {
      */
     constructor(p1, p2, p3, material, index) {
         super(material, index);
-        this.p1 = glMatrix.vec3.fromValues(p1[0], p1[1], p1[2]);
-        this.p2 = glMatrix.vec3.fromValues(p2[0], p2[1], p2[2]);
-        this.p3 = glMatrix.vec3.fromValues(p3[0], p3[1], p3[2]);
+        this._p1 = glMatrix.vec3.fromValues(p1[0], p1[1], p1[2]);
+        this._p2 = glMatrix.vec3.fromValues(p2[0], p2[1], p2[2]);
+        this._p3 = glMatrix.vec3.fromValues(p3[0], p3[1], p3[2]);
     }
+
+    //____________________________________________________________________________________________________
 
     /*
 
- ######   ######## ######## ######## ######## ########   ######
-##    ##  ##          ##       ##    ##       ##     ## ##    ##
-##        ##          ##       ##    ##       ##     ## ##
-##   #### ######      ##       ##    ######   ########   ######
-##    ##  ##          ##       ##    ##       ##   ##         ##
-##    ##  ##          ##       ##    ##       ##    ##  ##    ##
- ######   ########    ##       ##    ######## ##     ##  ######
+##     ## ######## ######## ##     ##  #######  ########   ######
+###   ### ##          ##    ##     ## ##     ## ##     ## ##    ##
+#### #### ##          ##    ##     ## ##     ## ##     ## ##
+## ### ## ######      ##    ######### ##     ## ##     ##  ######
+##     ## ##          ##    ##     ## ##     ## ##     ##       ##
+##     ## ##          ##    ##     ## ##     ## ##     ## ##    ##
+##     ## ########    ##    ##     ##  #######  ########   ######
 
 */
-
-    get material() {
-        return super.material;
-    }
-
-    get index() {
-        return super.index;
-    }
-
-    get TransformationMatrix() {
-        return super.TransformationMatrix;
-    }
-
-    get inverseTransformationMatrix() {
-        return super.inverseTransformationMatrix;
-    }
-
-    get hasTransformationMatrix() {
-        return super.hasTransformationMatrix;
-    }
-
-    get t() {
-        return super.t;
-    }
-
-    get interception_point() {
-        return super.interception_point;
-    }
-
-    get normal() {
-        return super.normal;
-    }
 
     /**
      * Funzione che calcola il punto di intersezione tra un raggio e l'oggetto.
@@ -103,46 +73,166 @@ class Triangle extends Figure {
             return false;
     }
 
+    /** */
     setTranslation(TransaltionVector) {
         super.setTranslation(TransaltionVector);
     }
-
+    /** */
     setRotation(RotationVector) {
         super.setRotation(RotationVector);
     }
-
+    /** */
     setScaling(ScalingVector) {
         super.setScaling(ScalingVector);
     }
-
+    /** */
     invertMatrix() {
         super.invertMatrix();
     }
-
+    /** */
     setTransformationMatrixValue() {
         super.setTransformationMatrixValue();
     }
-
+    /** */
     initInterception() {
         super.initInterception();
     }
-
+    /** */
     setInterception(t, interception_point, normal) {
         super.setInterception(t, interception_point, normal);
     }
 
     /**
-     * Funzione che mostra il tipo di oggettto corrente (Sfera).
+     * Funzione che mostra il tipo di oggetto corrente (Sfera).
      */
     me() {
         console.log("TRIANGLE");
     }
-
+    /** */
     showTransformationMatrix() {
         super.showTransformationMatrix();
     }
 
+
+    /** */
+    isTheSame(secondObject) {
+        return super.isTheSame(secondObject);
+    }
+
+    //____________________________________________________________________________________________________
+    /*
+        ######  ######## ######## ######## ######## ########   ######  
+        ##    ## ##          ##       ##    ##       ##     ## ##    ## 
+        ##       ##          ##       ##    ##       ##     ## ##       
+         ######  ######      ##       ##    ######   ########   ######  
+              ## ##          ##       ##    ##       ##   ##         ## 
+        ##    ## ##          ##       ##    ##       ##    ##  ##    ## 
+         ######  ########    ##       ##    ######## ##     ##  ######  
+    */
+
+
+
+    /** */
+    set material(value) {
+        super.material = value;
+    }
+    /** */
+    set index(value) {
+        super.index = value;
+    }
+    /** */
+    set TransformationMatrix(value) {
+        super.TransformationMatrix = value;
+    }
+    /** */
+    set inverseTransformationMatrix(value) {
+        super.inverseTransformationMatrix = value;
+    }
+    /** */
+    set hasTransformationMatrix(value) {
+        super.hasTransformationMatrix = value;
+    }
+    /** */
+    set t(value) {
+        super.t = value;
+    }
+    /** */
+    set interception_point(value) {
+        super.interception_point = value;
+    }
+    /** */
+    set normal(value) {
+        super.normal = value;
+    }
+    //____________________________________________________________________________________________________
+    /*
+
+    ######   ######## ######## ######## ######## ########   ######
+    ##    ##  ##          ##       ##    ##       ##     ## ##    ##
+    ##        ##          ##       ##    ##       ##     ## ##
+    ##   #### ######      ##       ##    ######   ########   ######
+    ##    ##  ##          ##       ##    ##       ##   ##         ##
+    ##    ##  ##          ##       ##    ##       ##    ##  ##    ##
+     ######   ########    ##       ##    ######## ##     ##  ######
+
+*/
+    
+    get material() {
+        return super.material;
+    }
+    
+    get index() {
+        return super.index;
+    }
+    
+    get TransformationMatrix() {
+        return super.TransformationMatrix;
+    }
+    
+    get inverseTransformationMatrix() {
+        return super.inverseTransformationMatrix;
+    }
+    
+    get hasTransformationMatrix() {
+        return super.hasTransformationMatrix;
+    }
+    
+    get t() {
+        return super.t;
+    }
+    
+    get interception_point() {
+        return super.interception_point;
+    }
+    
+    get normal() {
+        return super.normal;
+    }
+    
+    get p1() {
+        return this._p1;
+    }
+    
+    get p2() {
+        return this._p2;
+    }
+    
+    get p3() {
+        return this._p3;
+    }
+
+
 }
+//____________________________________________________________________________________________________
+/*
+    ######## ##     ## ##    ##  ######  ######## ####  #######  ##    ##  ######  
+    ##       ##     ## ###   ## ##    ##    ##     ##  ##     ## ###   ## ##    ## 
+    ##       ##     ## ####  ## ##          ##     ##  ##     ## ####  ## ##       
+    ######   ##     ## ## ## ## ##          ##     ##  ##     ## ## ## ##  ######  
+    ##       ##     ## ##  #### ##          ##     ##  ##     ## ##  ####       ## 
+    ##       ##     ## ##   ### ##    ##    ##     ##  ##     ## ##   ### ##    ## 
+    ##        #######  ##    ##  ######     ##    ####  #######  ##    ##  ###### 
+*/
 
 /**
  * Fattorizzazzione di Gauss con pivoting parziale per la risoluzione di un sistema lineare di dimensione pari al numero di colonne di A.

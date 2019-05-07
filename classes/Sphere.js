@@ -10,66 +10,21 @@ class Sphere extends Figure {
      */
     constructor(center, radius, material, index) {
         super(material, index);
-        this.center = glMatrix.vec3.fromValues(center[0], center[1], center[2]);
-
-        this._center = center;
+        this._center = glMatrix.vec3.fromValues(center[0], center[1], center[2]);
         this._radius = radius;
 
     }
 
+    //____________________________________________________________________________________________________
     /*
 
-     ######   ######## ######## ######## ######## ########   ######
-    ##    ##  ##          ##       ##    ##       ##     ## ##    ##
-    ##        ##          ##       ##    ##       ##     ## ##
-    ##   #### ######      ##       ##    ######   ########   ######
-    ##    ##  ##          ##       ##    ##       ##   ##         ##
-    ##    ##  ##          ##       ##    ##       ##    ##  ##    ##
-     ######   ########    ##       ##    ######## ##     ##  ######
-
-    */
-
-    get material() {
-        return super.material;
-    }
-
-    get index() {
-        return super.index;
-    }
-
-    get TransformationMatrix() {
-        return super.TransformationMatrix;
-    }
-
-    get inverseTransformationMatrix() {
-        return super.inverseTransformationMatrix;
-    }
-
-    get hasTransformationMatrix() {
-        return super.hasTransformationMatrix;
-    }
-
-    get t() {
-        return super.t;
-    }
-
-    get interception_point() {
-        return super.interception_point;
-    }
-
-    get normal() {
-        return super.normal;
-    }
-
-    /*
-
-##     ## ######## ######## ##     ##  #######  ########   ######
-###   ### ##          ##    ##     ## ##     ## ##     ## ##    ##
-#### #### ##          ##    ##     ## ##     ## ##     ## ##
-## ### ## ######      ##    ######### ##     ## ##     ##  ######
-##     ## ##          ##    ##     ## ##     ## ##     ##       ##
-##     ## ##          ##    ##     ## ##     ## ##     ## ##    ##
-##     ## ########    ##    ##     ##  #######  ########   ######
+    ##     ## ######## ######## ##     ##  #######  ########   ######
+    ###   ### ##          ##    ##     ## ##     ## ##     ## ##    ##
+    #### #### ##          ##    ##     ## ##     ## ##     ## ##
+    ## ### ## ######      ##    ######### ##     ## ##     ##  ######
+    ##     ## ##          ##    ##     ## ##     ## ##     ##       ##
+    ##     ## ##          ##    ##     ## ##     ## ##     ## ##    ##
+    ##     ## ########    ##    ##     ##  #######  ########   ######
 
 */
     /**
@@ -101,7 +56,7 @@ class Sphere extends Figure {
         let direction_euclidean_norm_squared; // f=d*d
         let origin_center_sub_euclidean_norm_squared; // a^2
 
-        glMatrix.vec3.subtract(origin_center_sub, ray.origin, this.center); // a
+        glMatrix.vec3.subtract(origin_center_sub, ray.origin, this._center); // a
         direction_times_origin_center_sub = glMatrix.vec3.dot(ray.direction, origin_center_sub); // b
         direction_euclidean_norm_squared = glMatrix.vec3.dot(ray.direction, ray.direction); // f
         origin_center_sub_euclidean_norm_squared = glMatrix.vec3.dot(origin_center_sub, origin_center_sub);
@@ -142,10 +97,10 @@ class Sphere extends Figure {
             let point = glMatrix.vec3.create();
             glMatrix.vec3.scaleAndAdd(point, ray.origin, ray.direction, t);
             let normal = glMatrix.vec3.create();
-            glMatrix.vec3.subtract(normal, point, this.center);
+            glMatrix.vec3.subtract(normal, point, this._center);
             let unitNormal = glMatrix.vec3.create();
             glMatrix.vec3.scale(unitNormal, normal, 1 / this._radius);
-            ray.ray_Intersect(t, point, unitNormal);
+            this.setInterception(t, point, unitNormal,ray.direction);
 
             return true;
         }
@@ -153,94 +108,150 @@ class Sphere extends Figure {
 
     }
 
-    setTranslation(TransaltionVector) {
-        super.setTranslation(TransaltionVector);
+    isTheSame(secondObject) {
+        return super.isTheSame(secondObject);
     }
 
-    setRotation(RotationVector) {
-        super.setRotation(RotationVector);
-    }
-
-    setScaling(ScalingVector) {
-        super.setScaling(ScalingVector);
-    }
-
-    invertMatrix() {
-        super.invertMatrix();
-    }
-
-    setTransformationMatrixValue() {
-        super.setTransformationMatrixValue();
-    }
-
-    initInterception() {
-        super.initInterception();
-    }
-
-    setInterception(t, interception_point, normal) {
-        super.setInterception(t, interception_point, normal);
-    }
 
     /**
      * Funzione che mostra il tipo di oggettto corrente (Sfera).
      */
     me() {
-       console.log("SPHERE");
+        console.log("SPHERE");
     }
-
+    /** */
     showTransformationMatrix() {
         super.showTransformationMatrix();
     }
+    /** */
+    setTranslation(TransaltionVector) {
+        super.setTranslation(TransaltionVector);
+    }
+    /** */
+    setRotation(RotationVector) {
+        super.setRotation(RotationVector);
+    }
+    /** */
+    setScaling(ScalingVector) {
+        super.setScaling(ScalingVector);
+    }
+    /** */
+    invertMatrix() {
+        super.invertMatrix();
+    }
+    /** */
+    setTransformationMatrixValue() {
+        super.setTransformationMatrixValue();
+    }
+    /** */
+    initInterception() {
+        super.initInterception();
+    }
+    /** */
+    setInterception(t, interception_point, normal,direction) {
+        super.setInterception(t, interception_point, normal,direction);
+    }
 
 
-    //************************
 
+    //____________________________________________________________________________________________________
+    /*
+        ######  ######## ######## ######## ######## ########   ######  
+        ##    ## ##          ##       ##    ##       ##     ## ##    ## 
+        ##       ##          ##       ##    ##       ##     ## ##       
+         ######  ######      ##       ##    ######   ########   ######  
+              ## ##          ##       ##    ##       ##   ##         ## 
+        ##    ## ##          ##       ##    ##       ##    ##  ##    ## 
+         ######  ########    ##       ##    ######## ##     ##  ######  
+    */
 
+    /** */
     set material(value) {
         super.material = value;
     }
-
+    /** */
     set index(value) {
         super.index = value;
     }
-
+    /** */
     set TransformationMatrix(value) {
         super.TransformationMatrix = value;
     }
-
+    /** */
     set inverseTransformationMatrix(value) {
         super.inverseTransformationMatrix = value;
     }
-
+    /** */
     set hasTransformationMatrix(value) {
         super.hasTransformationMatrix = value;
     }
-
+    /** */
     set t(value) {
         super.t = value;
     }
-
+    /** */
     set interception_point(value) {
         super.interception_point = value;
     }
-
+    /** */
     set normal(value) {
         super.normal = value;
     }
+    /** */
+    set radius(value) {
+        this._radius = value;
+    }
 
+    //____________________________________________________________________________________________________
+    /*
+
+     ######   ######## ######## ######## ######## ########   ######
+    ##    ##  ##          ##       ##    ##       ##     ## ##    ##
+    ##        ##          ##       ##    ##       ##     ## ##
+    ##   #### ######      ##       ##    ######   ########   ######
+    ##    ##  ##          ##       ##    ##       ##   ##         ##
+    ##    ##  ##          ##       ##    ##       ##    ##  ##    ##
+     ######   ########    ##       ##    ######## ##     ##  ######
+
+    */
+    
+    get material() {
+        return super.material;
+    }
+    
+    get index() {
+        return super.index;
+    }
+    
+    get TransformationMatrix() {
+        return super.TransformationMatrix;
+    }
+    
+    get inverseTransformationMatrix() {
+        return super.inverseTransformationMatrix;
+    }
+    
+    get hasTransformationMatrix() {
+        return super.hasTransformationMatrix;
+    }
+    
+    get t() {
+        return super.t;
+    }
+    
+    get interception_point() {
+        return super.interception_point;
+    }
+    
+    get normal() {
+        return super.normal;
+    }
+    
     get center() {
         return this._center;
     }
-
-    set center(value) {
-        this._center = value;
-    }
-
+    
     get radius() {
         return this._radius;
-    }
-
-    set radius(value) {
-        this._radius = value;
     }
 }
