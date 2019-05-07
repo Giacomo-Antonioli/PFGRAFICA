@@ -16,69 +16,48 @@ class Triangle extends Figure {
         this.p3 = glMatrix.vec3.fromValues(p3[0], p3[1], p3[2]);
     }
 
+    /*
+
+ ######   ######## ######## ######## ######## ########   ######
+##    ##  ##          ##       ##    ##       ##     ## ##    ##
+##        ##          ##       ##    ##       ##     ## ##
+##   #### ######      ##       ##    ######   ########   ######
+##    ##  ##          ##       ##    ##       ##   ##         ##
+##    ##  ##          ##       ##    ##       ##    ##  ##    ##
+ ######   ########    ##       ##    ######## ##     ##  ######
+
+*/
 
     get material() {
         return super.material;
-    }
-
-    set material(value) {
-        super.material = value;
     }
 
     get index() {
         return super.index;
     }
 
-    set index(value) {
-        super.index = value;
-    }
-
     get TransformationMatrix() {
         return super.TransformationMatrix;
-    }
-
-    set TransformationMatrix(value) {
-        super.TransformationMatrix = value;
     }
 
     get inverseTransformationMatrix() {
         return super.inverseTransformationMatrix;
     }
 
-    set inverseTransformationMatrix(value) {
-        super.inverseTransformationMatrix = value;
-    }
-
     get hasTransformationMatrix() {
         return super.hasTransformationMatrix;
-    }
-
-    set hasTransformationMatrix(value) {
-        super.hasTransformationMatrix = value;
     }
 
     get t() {
         return super.t;
     }
 
-    set t(value) {
-        super.t = value;
-    }
-
     get interception_point() {
         return super.interception_point;
     }
 
-    set interception_point(value) {
-        super.interception_point = value;
-    }
-
     get normal() {
         return super.normal;
-    }
-
-    set normal(value) {
-        super.normal = value;
     }
 
     /**
@@ -124,16 +103,6 @@ class Triangle extends Figure {
             return false;
     }
 
-    //##################################################################################################################
-    me() {
-        super.me();
-    }
-
-    showTransformationMatrix() {
-        super.showTransformationMatrix();
-    }
-
-    //##################################################################################################################
     setTranslation(TransaltionVector) {
         super.setTranslation(TransaltionVector);
     }
@@ -162,8 +131,16 @@ class Triangle extends Figure {
         super.setInterception(t, interception_point, normal);
     }
 
-    //##################################################################################################################
+    /**
+     * Funzione che mostra il tipo di oggettto corrente (Sfera).
+     */
+    me() {
+        console.log("TRIANGLE");
+    }
 
+    showTransformationMatrix() {
+        super.showTransformationMatrix();
+    }
 
 }
 

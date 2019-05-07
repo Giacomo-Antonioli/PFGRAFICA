@@ -17,72 +17,61 @@ class Sphere extends Figure {
         this.hasTransformationMatrix = false;
     }
 
+    /*
+
+     ######   ######## ######## ######## ######## ########   ######
+    ##    ##  ##          ##       ##    ##       ##     ## ##    ##
+    ##        ##          ##       ##    ##       ##     ## ##
+    ##   #### ######      ##       ##    ######   ########   ######
+    ##    ##  ##          ##       ##    ##       ##   ##         ##
+    ##    ##  ##          ##       ##    ##       ##    ##  ##    ##
+     ######   ########    ##       ##    ######## ##     ##  ######
+
+    */
+
     get material() {
         return super.material;
-    }
-
-    set material(value) {
-        super.material = value;
     }
 
     get index() {
         return super.index;
     }
 
-    set index(value) {
-        super.index = value;
-    }
-
     get TransformationMatrix() {
         return super.TransformationMatrix;
-    }
-
-    set TransformationMatrix(value) {
-        super.TransformationMatrix = value;
     }
 
     get inverseTransformationMatrix() {
         return super.inverseTransformationMatrix;
     }
 
-    set inverseTransformationMatrix(value) {
-        super.inverseTransformationMatrix = value;
-    }
-
     get hasTransformationMatrix() {
         return super.hasTransformationMatrix;
-    }
-
-    set hasTransformationMatrix(value) {
-        super.hasTransformationMatrix = value;
     }
 
     get t() {
         return super.t;
     }
 
-    set t(value) {
-        super.t = value;
-    }
-
     get interception_point() {
         return super.interception_point;
-    }
-
-    set interception_point(value) {
-        super.interception_point = value;
     }
 
     get normal() {
         return super.normal;
     }
 
-    set normal(value) {
-        super.normal = value;
-    }
+    /*
 
-    //##################################################################################################################
-    //##################################################################################################################
+##     ## ######## ######## ##     ##  #######  ########   ######
+###   ### ##          ##    ##     ## ##     ## ##     ## ##    ##
+#### #### ##          ##    ##     ## ##     ## ##     ## ##
+## ### ## ######      ##    ######### ##     ## ##     ##  ######
+##     ## ##          ##    ##     ## ##     ## ##     ##       ##
+##     ## ##          ##    ##     ## ##     ## ##     ## ##    ##
+##     ## ########    ##    ##     ##  #######  ########   ######
+
+*/
     /**
      * Funzione che calcola il punto di intersezione tra un raggio e l'oggetto.
      * @param {Ray} ray Raggio
@@ -164,16 +153,6 @@ class Sphere extends Figure {
 
     }
 
-    //##################################################################################################################
-    //##################################################################################################################
-    me() {
-        super.me();
-    }
-
-    showTransformationMatrix() {
-        super.showTransformationMatrix();
-    }
-
     setTranslation(TransaltionVector) {
         super.setTranslation(TransaltionVector);
     }
@@ -202,5 +181,14 @@ class Sphere extends Figure {
         super.setInterception(t, interception_point, normal);
     }
 
-    //##################################################################################################################
+    /**
+     * Funzione che mostra il tipo di oggettto corrente (Sfera).
+     */
+    me() {
+       console.log("SPHERE");
+    }
+
+    showTransformationMatrix() {
+        super.showTransformationMatrix();
+    }
 }
