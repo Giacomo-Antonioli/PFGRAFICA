@@ -3,7 +3,7 @@ let context;
 let imageBuffer;
 let DEBUG = false; //whether to show debug messages
 let EPSILON = 0.00001; //error margins
-let mydebug = false;
+let mydebug = true;
 let mincoloumn;
 let maxcoloumn;
 let minrow;
@@ -59,7 +59,7 @@ function computePixel(ray) {
 
     let color = [0, 0, 0];
     let setpixel; // variabile d'appoggio
-
+    let total=[0,0,0];
 
     surfaces.forEach(function (element) {
 
@@ -68,8 +68,14 @@ function computePixel(ray) {
 
 
         if (setpixel)
-            getPixelColor(ray,element,color);
+            total=   getPixelColor(ray,element);
+
+        if (ray.t_Nearest == ray.t_parameter) {
+            color = [total[0], total[1], total[2]]; //Colore figura
+        }
     });
+
+    console.log(color);
     return color;
 }
 
@@ -84,7 +90,7 @@ function computePixel(ray) {
 
 
 
-function getPixelColor(ray,element,color)
+function getPixelColor(ray,element)
 {
 
     //this.hit_point = ray.point_at_parameter(element.interception_point);// tre coordinate punto nello spazio
@@ -201,9 +207,9 @@ function getPixelColor(ray,element,color)
         showcolor();
     }
 
-    if (ray.t_Nearest == ray.t_parameter) {
-        color = [total[0], total[1], total[2]]; //Colore figura
-    }
+    return total;
+
+
 }
 
 
@@ -363,8 +369,8 @@ function setPixel(x, y, color) {
  * Funzione di Debug. Mostra le varie compontenti luminose.
  */
 function showcolor() {
-    console.log("ambient_component: " + ambient_component);
+/*    console.log("ambient_component: " + ambient_component);
     console.log("diffuse_component: " + diffuse_component);
     console.log("specular_component " + specular_component);
-    console.log("________________________________________________");
+    console.log("________________________________________________");*/
 }

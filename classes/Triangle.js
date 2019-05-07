@@ -14,6 +14,11 @@ class Triangle extends Figure {
         this.p1 = glMatrix.vec3.fromValues(p1[0], p1[1], p1[2]);
         this.p2 = glMatrix.vec3.fromValues(p2[0], p2[1], p2[2]);
         this.p3 = glMatrix.vec3.fromValues(p3[0], p3[1], p3[2]);
+        this._p1 = p1;
+        this._p2 = p2;
+        this._p3 = p3;
+        this._material = material;
+        this._index = index;
     }
 
     /*
@@ -142,6 +147,38 @@ class Triangle extends Figure {
         super.showTransformationMatrix();
     }
 
+
+    get p1() {
+        return this._p1;
+    }
+
+    get p2() {
+        return this._p2;
+    }
+
+    get p3() {
+        return this._p3;
+    }
+
+    set p1(value) {
+        this._p1 = value;
+    }
+
+    set p2(value) {
+        this._p2 = value;
+    }
+
+    set p3(value) {
+        this._p3 = value;
+    }
+
+    set material(value) {
+        this._material = value;
+    }
+
+    set index(value) {
+        this._index = value;
+    }
 }
 
 /**

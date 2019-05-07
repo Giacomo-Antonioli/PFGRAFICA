@@ -11,10 +11,10 @@ class Sphere extends Figure {
     constructor(center, radius, material, index) {
         super(material, index);
         this.center = glMatrix.vec3.fromValues(center[0], center[1], center[2]);
-        this.radius = radius;
-        this._TransformationMatrix = glMatrix.mat4.create();
-        this.inverseTransformationMatrix = glMatrix.mat4.create();
-        this.hasTransformationMatrix = false;
+
+        this._center = center;
+        this._radius = radius;
+
     }
 
     /*
@@ -106,7 +106,7 @@ class Sphere extends Figure {
         direction_euclidean_norm_squared = glMatrix.vec3.dot(ray.direction, ray.direction); // f
         origin_center_sub_euclidean_norm_squared = glMatrix.vec3.dot(origin_center_sub, origin_center_sub);
 
-        let discriminant = Math.pow(direction_times_origin_center_sub, 2) - direction_euclidean_norm_squared * (origin_center_sub_euclidean_norm_squared - Math.pow(this.radius, 2));
+        let discriminant = Math.pow(direction_times_origin_center_sub, 2) - direction_euclidean_norm_squared * (origin_center_sub_euclidean_norm_squared - Math.pow(this._radius, 2));
 
         // -b + sqrt(b^2 - f*(a^2) - R^2) / f
         flag_t1 = (-direction_times_origin_center_sub + Math.sqrt(discriminant)) / direction_euclidean_norm_squared;
@@ -144,7 +144,7 @@ class Sphere extends Figure {
             let normal = glMatrix.vec3.create();
             glMatrix.vec3.subtract(normal, point, this.center);
             let unitNormal = glMatrix.vec3.create();
-            glMatrix.vec3.scale(unitNormal, normal, 1 / this.radius);
+            glMatrix.vec3.scale(unitNormal, normal, 1 / this._radius);
             ray.ray_Intersect(t, point, unitNormal);
 
             return true;
@@ -190,5 +190,57 @@ class Sphere extends Figure {
 
     showTransformationMatrix() {
         super.showTransformationMatrix();
+    }
+
+
+    //************************
+
+
+    set material(value) {
+        super.material = value;
+    }
+
+    set index(value) {
+        super.index = value;
+    }
+
+    set TransformationMatrix(value) {
+        super.TransformationMatrix = value;
+    }
+
+    set inverseTransformationMatrix(value) {
+        super.inverseTransformationMatrix = value;
+    }
+
+    set hasTransformationMatrix(value) {
+        super.hasTransformationMatrix = value;
+    }
+
+    set t(value) {
+        super.t = value;
+    }
+
+    set interception_point(value) {
+        super.interception_point = value;
+    }
+
+    set normal(value) {
+        super.normal = value;
+    }
+
+    get center() {
+        return this._center;
+    }
+
+    set center(value) {
+        this._center = value;
+    }
+
+    get radius() {
+        return this._radius;
+    }
+
+    set radius(value) {
+        this._radius = value;
     }
 }

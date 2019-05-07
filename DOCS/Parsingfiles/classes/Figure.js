@@ -31,7 +31,7 @@ class Figure {
 
 */
     /**
-     * Restituisce l'indice del materiale della figura
+     * Indice del Materiale della figura
      * @returns material {Integer} material index
      */
     get material() {
@@ -39,7 +39,7 @@ class Figure {
     }
 
     /**
-     * Restituisce l'indice di posizione della figura nella lista delle figure
+     * Indice della figura all'interno della lista delle figure
      * @returns index {Integer} indice della lista delle figure
      */
     get index() {
@@ -47,16 +47,15 @@ class Figure {
     }
 
     /**
-     * Restituisce un'eventuale matrice di trasformazione
+     * Matrice di Trasformazione della figura
      * @returns TransformationMatrix {mat4} Matrice di trasformazione della figura
-     * @constructor
      */
     get TransformationMatrix() {
         return this._TransformationMatrix;
     }
 
     /**
-     * Restituisce l'inversa della matrice di trasformazione
+     * Inversa della matrice di Trasformazione della figura
      * @returns {mat4} Inversa della matrice di trasformazione
      */
     get inverseTransformationMatrix() {
@@ -64,7 +63,7 @@ class Figure {
     }
 
     /**
-     * Metodo per capire se la figura ha matrice di trasformazione o meno
+     * Boolean che indica se la figura possiede o meno una matrice di Trasformazione
      * @returns hasTransformationMatrix {boolean} True se ha la matrice, False se non ce l'ha
      */
     get hasTransformationMatrix() {
@@ -72,7 +71,7 @@ class Figure {
     }
 
     /**
-     * Restituisce il parametro t che serve nel calcolo e + t*d
+     * Parametro t che serve nel calcolo e + t*d
      * @returns t {Double} Paramtero t
      */
     get t() {
@@ -80,7 +79,7 @@ class Figure {
     }
 
     /**
-     * Restituisce il punto di intersezione sulla superficie
+     * Punto di intersezione sulla superficie
      * @returns interception_point {Vec3} Punto di intersezione sulla superficie
      */
     get interception_point() {
@@ -88,7 +87,7 @@ class Figure {
     }
 
     /**
-     * Ritorna la normale al punto sulla superficie
+     * Normale al punto sulla superficie
      * @returns normal {Vec3} Normale alla superficie
      */
     get normal() {
