@@ -1,7 +1,7 @@
 /**
  * Classe che rappresenta un generico triangolo.
  */
-class Triangle {
+class Triangle extends Figure {
     /**
      * @constructor
      * @param {Array} p1 Primo vertice
@@ -9,31 +9,63 @@ class Triangle {
      * @param {Array} p3 Terzo vertice
      * @param {Integer} material Indice della lista di materiali di cui è costituito l'oggetto
      */
-    constructor(p1, p2, p3, material) {
+    constructor(p1, p2, p3, material, index) {
+        super(material, index);
         this.p1 = glMatrix.vec3.fromValues(p1[0], p1[1], p1[2]);
         this.p2 = glMatrix.vec3.fromValues(p2[0], p2[1], p2[2]);
         this.p3 = glMatrix.vec3.fromValues(p3[0], p3[1], p3[2]);
-        this.material = material;
-        this.TransformationMatrix = glMatrix.mat4.create();
-        this.inverseTransformationMatrix = glMatrix.mat4.create();
-        this.hasTransformationMatrix = false;
     }
+
+    /*
+
+ ######   ######## ######## ######## ######## ########   ######
+##    ##  ##          ##       ##    ##       ##     ## ##    ##
+##        ##          ##       ##    ##       ##     ## ##
+##   #### ######      ##       ##    ######   ########   ######
+##    ##  ##          ##       ##    ##       ##   ##         ##
+##    ##  ##          ##       ##    ##       ##    ##  ##    ##
+ ######   ########    ##       ##    ######## ##     ##  ######
+
+*/
+
+    get material() {
+        return super.material;
+    }
+
+    get index() {
+        return super.index;
+    }
+
+    get TransformationMatrix() {
+        return super.TransformationMatrix;
+    }
+
+    get inverseTransformationMatrix() {
+        return super.inverseTransformationMatrix;
+    }
+
+    get hasTransformationMatrix() {
+        return super.hasTransformationMatrix;
+    }
+
+    get t() {
+        return super.t;
+    }
+
+    get interception_point() {
+        return super.interception_point;
+    }
+
+    get normal() {
+        return super.normal;
+    }
+
     /**
      * Funzione che calcola il punto di intersezione tra un raggio e l'oggetto.
-     * @param {Ray} ray Raggio 
+     * @param {Ray} ray Raggio
      * @returns {Boolean} Hit Dice se il raggio interseca l'oggetto.
      */
     intersection(ray) {
-        /* *
-         * Funzione per il calcolo delle intersezioni del raggio di luce con la sfera
-         * INPUT
-         * Ray (struct) --> ottenuto dal castray della camera
-         * OUTPUT
-         * t (array) --> array di punti di intersezione con l'oggetto
-         * Funzionamento
-         *
-         *
-         * */
         let solutions;
         let A = [
             [this.p1[0] - this.p2[0], this.p1[0] - this.p3[0], ray.direction[0], this.p1[0] - ray.origin[0]],
@@ -56,8 +88,8 @@ class Triangle {
 
             let lato1 = glMatrix.vec3.create(); // vettore appoggio lato1 triangolo
             let lato2 = glMatrix.vec3.create(); // vettore appoggio lato2 triangolo
-            glMatrix.vec3.subtract(lato1, this.p2, this.p1); // calcolo lato1 triangolo 
-            glMatrix.vec3.subtract(lato2, this.p3, this.p2); // calcolo lato2 triangolo 
+            glMatrix.vec3.subtract(lato1, this.p2, this.p1); // calcolo lato1 triangolo
+            glMatrix.vec3.subtract(lato2, this.p3, this.p2); // calcolo lato2 triangolo
 
             let normal = glMatrix.vec3.create();
             glMatrix.vec3.cross(normal, lato1, lato2); //prodotto vettoriale dei due lati, normale per definizione
@@ -70,60 +102,48 @@ class Triangle {
         } else
             return false;
     }
-    /**
-     * Funzione che mostra il tipo di oggettto corrente (Triangolo).
-     */
 
+    setTranslation(TransaltionVector) {
+        super.setTranslation(TransaltionVector);
+    }
+
+    setRotation(RotationVector) {
+        super.setRotation(RotationVector);
+    }
+
+    setScaling(ScalingVector) {
+        super.setScaling(ScalingVector);
+    }
+
+    invertMatrix() {
+        super.invertMatrix();
+    }
+
+    setTransformationMatrixValue() {
+        super.setTransformationMatrixValue();
+    }
+
+    initInterception() {
+        super.initInterception();
+    }
+
+    setInterception(t, interception_point, normal) {
+        super.setInterception(t, interception_point, normal);
+    }
+
+    /**
+     * Funzione che mostra il tipo di oggettto corrente (Sfera).
+     */
     me() {
         console.log("TRIANGLE");
     }
-    /**
-     * Funzione che mostra la Matrice di Traformazione.
-     */
-    showTransformationMatrix() {
-        console.log("************************")
-        console.log("TRANSFORMATION MATRIX: ");
-        for (let i = 0; i < 4; i++) {
-            console.log(this.TransformationMatrix[i * 4] + " " + this.TransformationMatrix[i * 4 + 1] + " " + this.TransformationMatrix[i * 4 + 2] + " " + this.TransformationMatrix[i * 4 + 3]);
-        }
-        console.log("************************")
-    }
 
-    /**
-     * Trasla la matrice di trasformazione.
-     * @param {Vec3} TransaltionVector Vettore di traslazione
-     */
-    setTranslation(TransaltionVector) {
-        glMatrix.mat4.translate(this.TransformationMatrix, this.TransformationMatrix, TransaltionVector);
-    }
-    /**
-     * Ruota la matrice di trasformazione.
-     * @param {Vec3} RotationVector Vettore di rotazione
-     */
-    setRotation(RotationVector) {
-        glMatrix.mat4.rotateX(this.TransformationMatrix, this.TransformationMatrix, rad(RotationVector[0]));
-        glMatrix.mat4.rotateY(this.TransformationMatrix, this.TransformationMatrix, rad(RotationVector[1]));
-        glMatrix.mat4.rotateZ(this.TransformationMatrix, this.TransformationMatrix, rad(RotationVector[2]));
-    }
-    /**
-     * Scala la matrice di trasformazione.
-     * @param {Vec3} ScalingVector Vettore di scalatura
-     */
-    setScaling(ScalingVector) {
-        glMatrix.mat4.scale(this.TransformationMatrix, this.TransformationMatrix, ScalingVector);
-    }
-    /**
-     * Funzione di inversione della matrice di Trasformazione
-     */
-    invertMatrix() {
-        glMatrix.mat4.invert(this.inverseTransformationMatrix, this.TransformationMatrix);
-    }
-    /**Setter per definire se l'oggetto ha una matrice di Trasformazione associata */
-    setTransformationMatrixValue() {
-        this.hasTransformationMatrix = true;
+    showTransformationMatrix() {
+        super.showTransformationMatrix();
     }
 
 }
+
 /**
  * Fattorizzazzione di Gauss con pivoting parziale per la risoluzione di un sistema lineare di dimensione pari al numero di colonne di A.
  * A deve essere quadrata.
