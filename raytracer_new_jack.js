@@ -10,7 +10,7 @@ let minrow;
 let maxrow;
 let cropped = false;
 //##################################################################
-let file_path = "assets/ShadowTest2.json";
+let file_path = "assets/ShadowTest1.json";
 //####################GLOBAL VALUES#################################
 let scene;
 let camera;
@@ -60,26 +60,51 @@ function computePixel(ray) {
     let color = [0, 0, 0];
     let setpixel; // variabile d'appoggio
     let total = [0, 0, 0];
+    let tempRay;
 
-    surfaces.forEach(function (element) {
+    surfaces.forEach(function (shape) {
 
         //TODO - calculate the intersection of that ray with the scene
-        setpixel = element.intersection(ray); //setpixel mi dice se il raggio interseca la figura
+
+        tempRay = transformRay(ray, shape);
+        setpixel = shape.intersection(tempRay); //setpixel mi dice se il raggio interseca la figura
 
 
-        if (setpixel)
-            total = getPixelColor(ray, element);
 
-
-        if (element.t < ray.t_Nearest) {
-            color = [total[0], total[1], total[2]]; //Colore figura
-            ray.NearestObject = element.index;
-            ray.t_Nearest = element.t;
+        if (setpixel) {
+            if (shape.t < ray.t_Nearest) {
+                ray.NearestObject = shape.index;
+                ray.t_Nearest = shape.t;
+            }
         }
     });
+
+
+
+    color = getPixelColor(ray, surfaces[ray.NearestObject]);
+
     return color;
 }
 
+
+
+function transformRay(ray, shape) {
+    if (shape.hasTransformationMatrix) {
+        let temporigin;
+        let tempdirection;
+
+        temporigin = glMatrix.vec4.fromValues(ray.origin[0], ray.origin[1], ray.origin[2], 1); //l’origine è un punto quindi il termine omogeneo deve essere 1
+        tempdirection = glMatrix.vec4.fromValues(ray.direction[0], ray.direction[1], ray.direction[2], 0); //il vettore direzione il termine omogeneo deve essere 0
+
+        glMatrix.vec4.transformMat4(tempdirection, tempdirection, shape.inverseTransformationMatrix);
+        glMatrix.vec4.transformMat4(temporigin, temporigin, shape.inverseTransformationMatrix);
+
+        return new Ray(tempdirection, temporigin, ray.tMax, ray.tMin);
+    } else {
+        return ray;
+    }
+
+}
 
 //##########################################################FUNCTIONS#####################################################
 
@@ -301,6 +326,7 @@ function loadSceneFile(filepath) {
                 }
             });
             currentObject.invertMatrix();
+            currentObject.transposeInvertedMatrix();
             currentObject.setTransformationMatrixValue();
         }
 
