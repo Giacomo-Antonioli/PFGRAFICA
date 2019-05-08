@@ -3,14 +3,14 @@ let context;
 let imageBuffer;
 let DEBUG = false; //whether to show debug messages
 let EPSILON = 0.00001; //error margins
-let mydebug = true;
+let mydebug = false;
 let mincoloumn;
 let maxcoloumn;
 let minrow;
 let maxrow;
 let cropped = false;
 //##################################################################
-let file_path = "assets/ShadowTest1.json";
+let file_path = "assets/ShadowTest2.json";
 //####################GLOBAL VALUES#################################
 let scene;
 let camera;
@@ -75,16 +75,8 @@ function computePixel(ray) {
             color = [total[0], total[1], total[2]]; //Colore figura
             ray.NearestObject = element.index;
             ray.t_Nearest = element.t;
-
-            element.me();
-
         }
-        console.log("element.t= " + element.t);
-        console.log("Nearest " + ray.t_Nearest);
-
     });
-    console.log("color");
-    console.log(color);
     return color;
 }
 
@@ -167,15 +159,14 @@ function getPixelColor(ray, element) {
         glMatrix.vec3.negate(negativeL, L);
 
 
-        shadowHit = ShadowCast(new Ray(negativeL, element.interception_point, maxdistance, shadow_bias));
-        // shadowHit = false;
+        shadowHit = ShadowCast(new Ray(negativeL, element.interception_point, maxdistance, shadow_bias), element);
         if (!shadowHit) {
             ///FINE FUNZIONE CASTING OMBRA
             glMatrix.vec3.normalize(L, L); // normalizzo L
 
             N = glMatrix.vec3.clone(element.normal);
 
-            console.log("N:" + N);
+            // console.log("N:" + N);
             glMatrix.vec3.normalize(N, N); // normalizzo N
 
             glMatrix.vec3.negate(NormNegL, L);
@@ -208,13 +199,11 @@ function getPixelColor(ray, element) {
             glMatrix.vec3.add(total, total, diffuse_component);
             glMatrix.vec3.add(total, total, specular_component);
 
-            console.log(ambient_component);
-            console.log(diffuse_component);
-            console.log(specular_component);
+
         }
     }
     if (mydebug) {
-        showcolor();
+        showcolor(ambient_component, diffuse_component, specular_component);
     }
 
     return total;
@@ -228,10 +217,12 @@ function getPixelColor(ray, element) {
  * @param {Ray} castedRay Raggio con origine sulla superficie con direzione verso la luce (Direzionale o Posizionale)
  * @returns {Boolean} Hit Ritorna true se il raggio interseca una figura lungo il suo percorso
  */
-function ShadowCast(castedRay) {
+function ShadowCast(castedRay, element) {
 
     for (var i = 0; i < surfaces.length; i++) {
-        if (surfaces[i].intersection(castedRay)) return true;
+        if (!element.isTheSame(surfaces[i])) {
+            if (surfaces[i].intersection(castedRay)) return true;
+        }
     }
     return false;
 }
@@ -281,11 +272,11 @@ function loadSceneFile(filepath) {
         materials.push(new Material(element.ka, element.kd, element.ks, element.shininess, element.kr));
 
     });
-
+    let counter = 0;
     scene.surfaces.forEach(function (element) {
 
         let currentObject;
-        let counter = 0;
+
 
         if (element.shape == "Sphere")
             currentObject = new Sphere(element.center, element.radius, element.material, counter);
@@ -296,7 +287,7 @@ function loadSceneFile(filepath) {
         counter++;
         if (element.transforms != undefined) {
             element.transforms.forEach(function (transformsArrayMember) {
-                console.log(transformsArrayMember[1]);
+                //  console.log(transformsArrayMember[1]);
                 switch (transformsArrayMember[0]) {
                     case "Translate":
                         currentObject.setTranslation(transformsArrayMember[1]);
@@ -326,10 +317,10 @@ function render() {
     let start = Date.now(); //for logging
 
     if (cropped) {
-        mincoloumn = 258;
-        maxcoloumn = 259;
-        minrow = 362;
-        maxrow = 363;
+        mincoloumn = 180;
+        maxcoloumn = 181;
+        minrow = 320;
+        maxrow = 321;
     } else {
         mincoloumn = 0;
         maxcoloumn = 512;
@@ -384,7 +375,7 @@ function setPixel(x, y, color) {
 /**
  * Funzione di Debug. Mostra le varie compontenti luminose.
  */
-function showcolor() {
+function showcolor(ambient_component, diffuse_component, specular_component) {
     /*    console.log("ambient_component: " + ambient_component);
         console.log("diffuse_component: " + diffuse_component);
         console.log("specular_component " + specular_component);

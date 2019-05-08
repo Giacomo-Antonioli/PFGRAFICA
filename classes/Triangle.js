@@ -61,14 +61,14 @@ class Triangle extends Figure {
             let lato2 = glMatrix.vec3.create(); // vettore appoggio lato2 triangolo
             glMatrix.vec3.subtract(lato1, this._p2, this._p1); // calcolo lato1 triangolo
             glMatrix.vec3.subtract(lato2, this._p3, this._p2); // calcolo lato2 triangolo
-            console.log("lato 1: " +lato1);
-            console.log("lato 2: " +lato2);
+            //   console.log("lato 1: " +lato1);
+            //   console.log("lato 2: " +lato2);
             let normal = glMatrix.vec3.create();
             glMatrix.vec3.cross(normal, lato1, lato2); //prodotto vettoriale dei due lati, normale per definizione
-            
+
             //spotata in ray_Intersect
-            console.log("normalo: "+normal);
-            this.setInterception(solutions[2], point, normal,ray.direction);
+            //   console.log("normalo: "+normal);
+            this.setInterception(solutions[2], point, normal, ray.direction);
             return true;
 
         } else
@@ -92,6 +92,10 @@ class Triangle extends Figure {
         super.invertMatrix();
     }
     /** */
+    transposeInvertedMatrix() {
+        super.transposeInvertedMatrix();
+    }
+    /** */
     setTransformationMatrixValue() {
         super.setTransformationMatrixValue();
     }
@@ -100,8 +104,8 @@ class Triangle extends Figure {
         super.initInterception();
     }
     /** */
-    setInterception(t, interception_point, normal,direction) {
-        super.setInterception(t, interception_point, normal,direction);
+    setInterception(t, interception_point, normal, direction) {
+        super.setInterception(t, interception_point, normal, direction);
     }
 
     /**
@@ -151,6 +155,10 @@ class Triangle extends Figure {
         super.inverseTransformationMatrix = value;
     }
     /** */
+    set transposedInverseTransformationMatrix(value) {
+        super.transposedInverseTransformationMatrix = value;
+    }
+    /** */
     set hasTransformationMatrix(value) {
         super.hasTransformationMatrix = value;
     }
@@ -193,6 +201,10 @@ class Triangle extends Figure {
 
     get inverseTransformationMatrix() {
         return super.inverseTransformationMatrix;
+    }
+
+    get transposedInverseTransformationMatrix() {
+        return super.transposedInverseTransformationMatrix;
     }
 
     get hasTransformationMatrix() {

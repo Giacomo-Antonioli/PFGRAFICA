@@ -91,7 +91,7 @@ class Sphere extends Figure {
 
             }
         }
-        if (t === -1 | t <= ray.tMin) {
+        if (t === -1 || t <= ray.tMin) {
             return false;
         } else {
             let point = glMatrix.vec3.create();
@@ -100,7 +100,7 @@ class Sphere extends Figure {
             glMatrix.vec3.subtract(normal, point, this._center);
             let unitNormal = glMatrix.vec3.create();
             glMatrix.vec3.scale(unitNormal, normal, 1 / this._radius);
-            this.setInterception(t, point, unitNormal,ray.direction);
+            this.setInterception(t, point, unitNormal, ray.direction);
 
             return true;
         }
@@ -140,6 +140,10 @@ class Sphere extends Figure {
         super.invertMatrix();
     }
     /** */
+    transposeInvertedMatrix() {
+        super.transposeInvertedMatrix();
+    }
+    /** */
     setTransformationMatrixValue() {
         super.setTransformationMatrixValue();
     }
@@ -148,8 +152,8 @@ class Sphere extends Figure {
         super.initInterception();
     }
     /** */
-    setInterception(t, interception_point, normal,direction) {
-        super.setInterception(t, interception_point, normal,direction);
+    setInterception(t, interception_point, normal, direction) {
+        super.setInterception(t, interception_point, normal, direction);
     }
 
 
@@ -180,6 +184,10 @@ class Sphere extends Figure {
     /** */
     set inverseTransformationMatrix(value) {
         super.inverseTransformationMatrix = value;
+    }
+    /** */
+    set transposedInverseTransformationMatrix(value) {
+        super.transposedInverseTransformationMatrix = value;
     }
     /** */
     set hasTransformationMatrix(value) {
@@ -214,43 +222,47 @@ class Sphere extends Figure {
      ######   ########    ##       ##    ######## ##     ##  ######
 
     */
-    
+
     get material() {
         return super.material;
     }
-    
+
     get index() {
         return super.index;
     }
-    
+
     get TransformationMatrix() {
         return super.TransformationMatrix;
     }
-    
+
     get inverseTransformationMatrix() {
         return super.inverseTransformationMatrix;
     }
-    
+
+    get transposedInverseTransformationMatrix() {
+        return super.transposedInverseTransformationMatrix;
+    }
+
     get hasTransformationMatrix() {
         return super.hasTransformationMatrix;
     }
-    
+
     get t() {
         return super.t;
     }
-    
+
     get interception_point() {
         return super.interception_point;
     }
-    
+
     get normal() {
         return super.normal;
     }
-    
+
     get center() {
         return this._center;
     }
-    
+
     get radius() {
         return this._radius;
     }

@@ -12,6 +12,7 @@ class Figure {
         //Indica l'indice all'interno dell'array materiali da applicare alla figura
         this._TransformationMatrix = glMatrix.mat4.create();
         this._inverseTransformationMatrix = glMatrix.mat4.create();
+        this._transposedInverseTransformationMatrix = glMatrix.mat4.create(); // !!!!!!!!!!!!!!!!!!!!!!!!
         this._hasTransformationMatrix = false;
         this._t = Number.POSITIVE_INFINITY;
         this._interception_point = 0;
@@ -79,6 +80,13 @@ class Figure {
         glMatrix.mat4.invert(this._inverseTransformationMatrix, this._TransformationMatrix);
     }
 
+    /**
+     * Funzione di trasposizione dell' inversa della matrice di Trasformazione
+     */
+    transposeInvertedMatrix() {
+        glMatrix.mat4.transpose(this.transposedInverseTransformationMatrix, this.inverseTransformationMatrix); // !!!!!!!!!!!!!!!!!!!!!!!!
+    }
+
     /**Setter per definire se l'oggetto ha una matrice di Trasformazione associata */
     setTransformationMatrixValue() {
         this._hasTransformationMatrix = true;
@@ -99,9 +107,9 @@ class Figure {
      * @param interception_point {Vec3} punto di intersezione del raggio con l'oggetto
      * @param normal {Vec3} normale al punto sulla superficie
      */
-    setInterception(t, interception_point, normal,direction) {
-        if (glMatrix.vec3.dot(normal, direction)>rad(90))//NON SO IL VERSO DELLA NORMALE QUINDI LO ADATTO ALLA POS DELLA CAMERA
-              glMatrix.vec3.negate(normal, normal);
+    setInterception(t, interception_point, normal, direction) {
+        if (glMatrix.vec3.dot(normal, direction) > rad(90)) //NON SO IL VERSO DELLA NORMALE QUINDI LO ADATTO ALLA POS DELLA CAMERA
+            glMatrix.vec3.negate(normal, normal);
         this._t = t;
         this._interception_point = interception_point;
         this._normal = normal;
@@ -128,31 +136,35 @@ class Figure {
     set material(value) {
         this._material = value;
     }
- 
+
     set index(value) {
         this._index = value;
     }
- 
+
     set TransformationMatrix(value) {
         this._TransformationMatrix = value;
     }
-   
+
     set inverseTransformationMatrix(value) {
         this._inverseTransformationMatrix = value;
     }
-    
+
+    set transposedInverseTransformationMatrix(value) {
+        this._transposedInverseTransformationMatrix = value; // !!!!!!!!!!!!!!!!!!!!!!!!
+    }
+
     set hasTransformationMatrix(value) {
         this._hasTransformationMatrix = value;
     }
-    
+
     set t(value) {
         this._t = value;
     }
-    
+
     set interception_point(value) {
         this._interception_point = value;
     }
-    
+
     set normal(value) {
         this._normal = value;
     }
@@ -198,6 +210,14 @@ class Figure {
      */
     get inverseTransformationMatrix() {
         return this._inverseTransformationMatrix;
+    }
+
+    /**
+     * Inversa della matrice di Trasformazione della figura
+     * @returns {mat4} Inversa della matrice di trasformazione
+     */
+    get transposedInverseTransformationMatrix() {
+        return this._transposedInverseTransformationMatrix;
     }
 
     /**
