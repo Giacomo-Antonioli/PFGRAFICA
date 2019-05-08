@@ -22,7 +22,7 @@ let bounce_depth;
 let shadow_bias;
 let counterflag = 0;
 let countRepetitionsGif;
-let FRAMES = 0;
+let FRAMES = 8;
 
 let cycletime = 500 / FRAMES;
 let cycle_delay = 5000
@@ -51,9 +51,9 @@ $(document).ready(function () {
     for (countRepetitionsGif = 0; countRepetitionsGif < FRAMES + 1; countRepetitionsGif++) {
         init();
         if (countRepetitionsGif < 5)
-            surfaces[0].setcenter([1, Math.sin(countRepetitionsGif * Math.PI / (FRAMES - 3)), -1]);
+            surfaces[0].setcenter([1, 1.5 * Math.sin(countRepetitionsGif * Math.PI / (FRAMES - 3)), -1]);
         if (countRepetitionsGif > 3)
-            surfaces[1].setcenter([-1, Math.sin((countRepetitionsGif - 3) * Math.PI / (FRAMES - 3)), 0]);
+            surfaces[1].setcenter([-1, 1.5 * Math.sin((countRepetitionsGif - 3) * Math.PI / (FRAMES - 3)), 0]);
 
         render();
         ClearALL();
@@ -284,9 +284,12 @@ function getPixelColor(ray, element) {
  */
 function ShadowCast(castedRay, element) {
 
+    let tempRay;
     for (var i = 0; i < surfaces.length; i++) {
         if (!element.isTheSame(surfaces[i])) {
-            if (surfaces[i].intersection(castedRay)) return true;
+            tempRay = transformRay(castedRay, surfaces[i]);
+            if (surfaces[i].intersection(tempRay)) return true;
+
         }
     }
     return false;
