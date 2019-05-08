@@ -19,6 +19,9 @@ class Camera {
         this.h = 2 * Math.tan(rad(fovy / 2.0));
         this.w = this.h * aspect;
     }
+
+    seteye(eye)
+    {this.eye = glMatrix.vec3.fromValues(eye[0], eye[1], eye[2]);}
     /**
      * Funzione che preso un punto del canvas genera un raggio luminoso verso il pixel a partire dal punto di osservazione della camera.
      * @param x {Integer} Riga del Canvas

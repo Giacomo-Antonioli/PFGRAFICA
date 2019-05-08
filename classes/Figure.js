@@ -4,8 +4,6 @@
 class Figure {
     /**
      * @constructor
-     * @param {Array} center Centro della sfera
-     * @param {Float} radius Raggio della sfera
      * @param {Integer} material Indice della lista di materiali di cui è costituito l'oggetto
      */
     constructor(material, index) {
@@ -115,12 +113,34 @@ class Figure {
         this._normal = normal;
     }
 
+    /**
+     * Permette di verificare se una figura estratta dall'asset e quella in uso sono la stessa
+     * @param {Sphere/Triangle} secondObject  Oggetto con la quale devo confrontare l'indice di posizione all'interno dell'array delle figure
+     * @returns {Boolean} Same True nel caso sia lo stesso oggetto False nel caso siano oggetti diversi
+     */
     isTheSame(secondObject) {
         if (this.index == secondObject.index)
             return true;
         else
             return false;
     }
+
+    RestoreSDR() {
+        let retransformed_point = glMatrix.vec3.create();
+        let retransformed_normal = glMatrix.vec3.create();
+
+        //Restoring Interception Point
+        this._interception_point = glMatrix.vec4.fromValues(this._interception_point[0], this._interception_point[1], this._interception_point[2], 1);
+        glMatrix.vec4.transformMat4(retransformed_point, this._interception_point, this._TransformationMatrix);
+        this._interception_point = glMatrix.vec3.clone(retransformed_point);
+
+        //Restoring Normal 
+        this._normal = glMatrix.vec4.fromValues(this._normal[0], this._normal[1], this._normal[2], 0);
+        glMatrix.vec4.transformMat4(retransformed_normal, this._normal, this._transposedInverseTransformationMatrix);
+        this._normal = glMatrix.vec3.clone(retransformed_normal);
+
+    }
+
 
     //____________________________________________________________________________________________________
     /*

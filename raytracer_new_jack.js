@@ -9,8 +9,9 @@ let maxcoloumn;
 let minrow;
 let maxrow;
 let cropped = false;
+let save = true;
 //##################################################################
-let file_path = "assets/ShadowTest1.json";
+let file_path = "assets/FullTest.json";
 //####################GLOBAL VALUES#################################
 let scene;
 let camera;
@@ -20,22 +21,51 @@ let materials = [];
 let bounce_depth;
 let shadow_bias;
 let counterflag = 0;
+let countRepetitionsGif;
+let FRAMES = 0;
+
+let cycletime = 500 / FRAMES;
+let cycle_delay = 5000
+
+let IMMAGEARRAY = [];
+
+
 //etc...
 //####################GLOBAL VALUES#################################
 //ProvaBranch
+function ClearALL() {
+    let camera;
+    surfaces = [];
+    lights = [];
+    materials = [];
+    bounce_depth = 0;
+    shadow_bias = 0;
+    counterflag = 0;
+}
 
 /**
  * Funzione di inizializzazione a documento pronto.
  */
 $(document).ready(function () {
-    init();
-    render();
 
+    for (countRepetitionsGif = 0; countRepetitionsGif < FRAMES + 1; countRepetitionsGif++) {
+        init();
+        if (countRepetitionsGif < 5)
+            surfaces[0].setcenter([1, Math.sin(countRepetitionsGif * Math.PI / (FRAMES - 3)), -1]);
+        if (countRepetitionsGif > 3)
+            surfaces[1].setcenter([-1, Math.sin((countRepetitionsGif - 3) * Math.PI / (FRAMES - 3)), 0]);
+
+        render();
+        ClearALL();
+    }
     //load and render new scene
     $('#load_scene_button').click(function () {
         let filepath = 'assets/' + $('#scene_file_input').val() + '.json';
         loadSceneFile(filepath);
     });
+
+
+    showImagesLikeVideo(0);
 
     //debugging - cast a ray through the clicked pixel with DEBUG messaging on
     /* $('#canvas').click(function (e) {
@@ -48,6 +78,14 @@ $(document).ready(function () {
 
 });
 
+
+function showImagesLikeVideo(index) {
+    if (index < IMMAGEARRAY.length) {
+        document.getElementById("AnimatedVideo").src = IMMAGEARRAY[index];
+        setTimeout(showImagesLikeVideo.bind(null, index + 1), cycletime);
+    } else
+        setTimeout(showImagesLikeVideo.bind(null, 0), cycletime + cycle_delay);
+}
 //____________________________________________________________________________________________________|
 
 /**
@@ -79,7 +117,9 @@ function computePixel(ray) {
         }
     });
 
-
+    let intercepted_shape = surfaces[ray.NearestObject];
+    if (intercepted_shape.hasTransformationMatrix)
+        intercepted_shape.RestoreSDR();
 
     color = getPixelColor(ray, surfaces[ray.NearestObject]);
 
@@ -331,15 +371,17 @@ function loadSceneFile(filepath) {
         }
 
         surfaces.push(currentObject);
-        currentObject.showTransformationMatrix();
+        //currentObject.showTransformationMatrix();
+
     });
+    console.log("Computing Image Number: " + countRepetitionsGif);
 }
 
 /**
  * Funzione di rendering del canvas.
  */
 function render() {
-
+    let counter;
     let start = Date.now(); //for logging
 
     if (cropped) {
@@ -353,6 +395,7 @@ function render() {
         minrow = 0;
         maxrow = 512;
     }
+
 
     //Faccio un doppio for per prendere tutti i pixel del canvas
     for (let coloumn = mincoloumn; coloumn < maxcoloumn; coloumn++) {
@@ -374,11 +417,34 @@ function render() {
     //render the pixels that have been set
     context.putImageData(imageBuffer, 0, 0);
 
+    /*
+        if (save) {
+            var canvas = document.getElementById("canvas");
+            // draw to canvas...
+            canvas.toBlob(function (blob) {
+                saveAs(blob, "frame.png");
+            });
+
+        }
+    */
+    var canvas = document.getElementById('canvas');
+    var fullQuality = canvas.toDataURL('image/jpeg', 1.0);
+
+    IMMAGEARRAY.push(fullQuality);
     let end = Date.now(); //for logging
     $('#log').html("rendered in: " + (end - start) + "ms");
     console.log("rendered in: " + (end - start) + "ms");
 
+
 }
+
+// function download() {
+//     var download = document.getElementById("download");
+//     var image = document.getElementById("canvas").toDataURL("image/png")
+//         .replace("image/png", "image/octet-stream");
+//     download.setAttribute("href", image);
+
+// }
 
 /**
  * Funzione di assegnazione del colore ad ogni singolo elemento del canvas.

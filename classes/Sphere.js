@@ -156,9 +156,17 @@ class Sphere extends Figure {
         super.setInterception(t, interception_point, normal, direction);
     }
 
+    /** */
+    RestoreSDR() {
+        super.RestoreSDR();
+    }
 
+    setcenter(center)
+    {
+        this._center = glMatrix.vec3.fromValues(center[0], center[1], center[2]);
+    }
 
-    //____________________________________________________________________________________________________
+//____________________________________________________________________________________________________
     /*
         ######  ######## ######## ######## ######## ########   ######  
         ##    ## ##          ##       ##    ##       ##     ## ##    ## 
