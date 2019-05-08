@@ -9,9 +9,9 @@ let maxcoloumn;
 let minrow;
 let maxrow;
 let cropped = false;
-let save = true;
+let animate = false;
 //##################################################################
-let file_path = "assets/FullTest.json";
+let file_path = "assets/CornellBox.json";
 //####################GLOBAL VALUES#################################
 let scene;
 let camera;
@@ -22,7 +22,14 @@ let bounce_depth;
 let shadow_bias;
 let counterflag = 0;
 let countRepetitionsGif;
-let FRAMES = 8;
+let FRAMES;
+
+
+if (animate) {
+    FRAMES = 8;
+} else {
+    FRAMES = 0;
+}
 
 let cycletime = 500 / FRAMES;
 let cycle_delay = 5000
@@ -50,10 +57,12 @@ $(document).ready(function () {
 
     for (countRepetitionsGif = 0; countRepetitionsGif < FRAMES + 1; countRepetitionsGif++) {
         init();
-        if (countRepetitionsGif < 5)
-            surfaces[0].setcenter([1, 1.5 * Math.sin(countRepetitionsGif * Math.PI / (FRAMES - 3)), -1]);
-        if (countRepetitionsGif > 3)
-            surfaces[1].setcenter([-1, 1.5 * Math.sin((countRepetitionsGif - 3) * Math.PI / (FRAMES - 3)), 0]);
+        if (animate) {
+            if (countRepetitionsGif < 5)
+                surfaces[0].setcenter([1, 1.5 * Math.sin(countRepetitionsGif * Math.PI / (FRAMES - 3)), -1]);
+            if (countRepetitionsGif > 3)
+                surfaces[1].setcenter([-1, 1.5 * Math.sin((countRepetitionsGif - 3) * Math.PI / (FRAMES - 3)), 0]);
+        }
 
         render();
         ClearALL();
@@ -64,8 +73,8 @@ $(document).ready(function () {
         loadSceneFile(filepath);
     });
 
-
-    showImagesLikeVideo(0);
+    if (animate)
+        showImagesLikeVideo(0);
 
     //debugging - cast a ray through the clicked pixel with DEBUG messaging on
     /* $('#canvas').click(function (e) {
@@ -93,12 +102,13 @@ function showImagesLikeVideo(index) {
  * @param {Ray} ray Raggio che dall'osservatore interseca gli oggetti visibili della scena e che puo' essere riflesso un numero finito di volte
  * @returns {Array} color Colore con cui illluminare il piexl
  */
-function computePixel(ray) {
+function computePixel(ray, current_bounce) {
 
     let color = [0, 0, 0];
     let setpixel; // variabile d'appoggio
-    let total = [0, 0, 0];
     let tempRay;
+    let Recorded_HIT = false;
+    let Recorded_color = [0, 0, 0];
 
     surfaces.forEach(function (shape) {
 
@@ -110,6 +120,7 @@ function computePixel(ray) {
 
 
         if (setpixel) {
+            Recorded_HIT = true;
             if (shape.t < ray.t_Nearest) {
                 ray.NearestObject = shape.index;
                 ray.t_Nearest = shape.t;
@@ -121,10 +132,53 @@ function computePixel(ray) {
     if (intercepted_shape.hasTransformationMatrix)
         intercepted_shape.RestoreSDR();
 
-    color = getPixelColor(ray, surfaces[ray.NearestObject]);
+    if (Recorded_HIT) {
+       // console.log("HIT");
+        color = getPixelColor(ray, surfaces[ray.NearestObject]);
+
+        //console.log(color);
+        if (current_bounce < bounce_depth) {
+          //    console.log("ENTRO");
+            current_bounce++;
+
+            //************************************************/
+            //Reflect Ray
+
+            let local_normal=glMatrix.vec3.clone(intercepted_shape.normal);
+            
+
+            let double_d_MUL_n = 2 * glMatrix.vec3.dot(ray.direction, local_normal);
+            let scaled_n = glMatrix.vec3.create();
+
+            if (glMatrix.vec3.dot(ray.direction, intercepted_shape.normal) > rad(90)) //NON SO IL VERSO DELLA NORMALE QUINDI LO ADATTO ALLA POS DELLA CAMERA
+            glMatrix.vec3.negate(local_normal, local_normal);
+            
+            glMatrix.vec3.scale(scaled_n, local_normal, double_d_MUL_n);
+            let bounced_ray_direction = glMatrix.vec3.create();
+            glMatrix.vec3.subtract(bounced_ray_direction, ray.direction, scaled_n);
+            Recorded_color = computePixel(new Ray(bounced_ray_direction, intercepted_shape.interception_point, Number.POSITIVE_INFINITY, shadow_bias), current_bounce);
+
+
+            
+
+            color[0] = color[0] + materials[intercepted_shape.material].kr[0] * Recorded_color[0];
+            color[1] = color[1] + materials[intercepted_shape.material].kr[1] * Recorded_color[1];
+            color[2] = color[2] + materials[intercepted_shape.material].kr[2] * Recorded_color[2];
+
+
+
+
+            //************************************************/
+
+
+        }
+    }
+
 
     return color;
 }
+
+
 
 
 
@@ -384,14 +438,14 @@ function loadSceneFile(filepath) {
  * Funzione di rendering del canvas.
  */
 function render() {
-    let counter;
+    let current_bounce;
     let start = Date.now(); //for logging
 
     if (cropped) {
-        mincoloumn = 180;
-        maxcoloumn = 181;
-        minrow = 320;
-        maxrow = 321;
+        mincoloumn = 303;
+        maxcoloumn = 304;
+        minrow = 399;
+        maxrow = 400;
     } else {
         mincoloumn = 0;
         maxcoloumn = 512;
@@ -405,9 +459,11 @@ function render() {
         for (let row = minrow; row < maxrow; row++) {
             //TODO - fire a ray though each pixel
 
+            current_bounce = 0;
+
             ray = camera.castRay(coloumn, row);
 
-            setPixel(coloumn, row, computePixel(ray));
+            setPixel(coloumn, row, computePixel(ray, current_bounce));
 
             surfaces.forEach(function (element) {
                     element.initInterception();
@@ -420,16 +476,7 @@ function render() {
     //render the pixels that have been set
     context.putImageData(imageBuffer, 0, 0);
 
-    /*
-        if (save) {
-            var canvas = document.getElementById("canvas");
-            // draw to canvas...
-            canvas.toBlob(function (blob) {
-                saveAs(blob, "frame.png");
-            });
 
-        }
-    */
     var canvas = document.getElementById('canvas');
     var fullQuality = canvas.toDataURL('image/jpeg', 1.0);
 
