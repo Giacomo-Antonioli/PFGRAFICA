@@ -17,7 +17,10 @@ class Figure {
         this._normal = 0;
         this._material = material;
         this._index = index;
+
     }
+
+
 
 
     //____________________________________________________________________________________________________
@@ -124,6 +127,7 @@ class Figure {
         else
             return false;
     }
+
 
     RestoreSDR() {
         let retransformed_point = glMatrix.vec3.create();

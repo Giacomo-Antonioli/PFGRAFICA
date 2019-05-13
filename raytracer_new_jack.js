@@ -11,7 +11,19 @@ let maxrow;
 let cropped = false;
 let animate = false;
 //##################################################################
+
+// let file_path = "assets/TriangleTest.json";
+// let file_path = "assets/TriangleShadingTest.json";
+// let file_path = "assets/TransformationTest.json";
+// let file_path = "assets/SphereShadingTest2.json";
+// let file_path = "assets/SphereTest.json";
 let file_path = "assets/CornellBox.json";
+// let file_path = "assets/RecursiveTest.json";
+// let file_path = "assets/ShadowTest1.json";
+// let file_path = "assets/ShadowTest2.json";
+// let file_path = "assets/SphereShadingTest1.json";
+// let file_path = "assets/FullTest.json";
+
 //####################GLOBAL VALUES#################################
 let scene;
 let camera;
@@ -31,8 +43,20 @@ if (animate) {
     FRAMES = 0;
 }
 
+if (cropped) {
+    mincoloumn = 164;
+    maxcoloumn = 165;
+    minrow = 430;
+    maxrow = 431;
+} else {
+    mincoloumn = 0;
+    maxcoloumn = 512;
+    minrow = 0;
+    maxrow = 512;
+}
+
 let cycletime = 500 / FRAMES;
-let cycle_delay = 5000
+let cycle_delay = 5000;
 
 let IMMAGEARRAY = [];
 //_:::::::::::::::::::::::::::::::::::::::::::::::
@@ -55,7 +79,9 @@ function ClearALL() {
  */
 $(document).ready(function () {
 
+    let start = Date.now(); //for logging
     for (countRepetitionsGif = 0; countRepetitionsGif < FRAMES + 1; countRepetitionsGif++) {
+
         init();
         if (animate) {
             if (countRepetitionsGif < 5)
@@ -72,7 +98,9 @@ $(document).ready(function () {
         let filepath = 'assets/' + $('#scene_file_input').val() + '.json';
         loadSceneFile(filepath);
     });
-
+    let end = Date.now(); //for logging
+    $('#log').html("rendered in: " + (end - start) + "ms");
+    console.log("rendered in: " + (end - start) + "ms");
     if (animate)
         showImagesLikeVideo(0);
 
@@ -128,38 +156,46 @@ function computePixel(ray, current_bounce) {
         }
     });
 
-    let intercepted_shape = surfaces[ray.NearestObject];
-    if (intercepted_shape.hasTransformationMatrix)
-        intercepted_shape.RestoreSDR();
-
     if (Recorded_HIT) {
-       // console.log("HIT");
+
+        let intercepted_shape = surfaces[ray.NearestObject];
+        if (intercepted_shape.hasTransformationMatrix)
+            intercepted_shape.RestoreSDR();
+      //  console.log("Nearest Object: "+intercepted_shape.name);
+       // console.log("HITTED POINT:");
+        //console.log(intercepted_shape.interception_point);
+
+        //console.log("HIT");
         color = getPixelColor(ray, surfaces[ray.NearestObject]);
+
 
         //console.log(color);
         if (current_bounce < bounce_depth) {
-          //    console.log("ENTRO");
+            //    console.log("ENTRO");
             current_bounce++;
 
             //************************************************/
             //Reflect Ray
 
-            let local_normal=glMatrix.vec3.clone(intercepted_shape.normal);
-            
+            let local_normal = glMatrix.vec3.clone(intercepted_shape.normal);
+            glMatrix.vec3.normalize(local_normal, local_normal);
 
             let double_d_MUL_n = 2 * glMatrix.vec3.dot(ray.direction, local_normal);
             let scaled_n = glMatrix.vec3.create();
 
             if (glMatrix.vec3.dot(ray.direction, intercepted_shape.normal) > rad(90)) //NON SO IL VERSO DELLA NORMALE QUINDI LO ADATTO ALLA POS DELLA CAMERA
-            glMatrix.vec3.negate(local_normal, local_normal);
-            
+                glMatrix.vec3.negate(local_normal, local_normal);
+
             glMatrix.vec3.scale(scaled_n, local_normal, double_d_MUL_n);
             let bounced_ray_direction = glMatrix.vec3.create();
             glMatrix.vec3.subtract(bounced_ray_direction, ray.direction, scaled_n);
-            Recorded_color = computePixel(new Ray(bounced_ray_direction, intercepted_shape.interception_point, Number.POSITIVE_INFINITY, shadow_bias), current_bounce);
+
+            let newBouncedRay = new Ray(bounced_ray_direction, intercepted_shape.interception_point, Number.POSITIVE_INFINITY, shadow_bias);
+            newBouncedRay.isBounced = true;
+            Recorded_color = computePixel(newBouncedRay, current_bounce);
 
 
-            
+
 
             color[0] = color[0] + materials[intercepted_shape.material].kr[0] * Recorded_color[0];
             color[1] = color[1] + materials[intercepted_shape.material].kr[1] * Recorded_color[1];
@@ -268,17 +304,32 @@ function getPixelColor(ray, element) {
         if (lights[i] instanceof PointLight) {
             glMatrix.vec3.subtract(L, element.interception_point, lights[i].position); //L
             maxdistance = glMatrix.vec3.distance(element.interception_point, lights[i].position);
+                /*
+                * p(t)=lights[i].position
+                * e=element.interception_point
+                * d=negativeL
+                * p(t)=e+td
+                *
+                * t=(p(t)-e)/d
+                *
+                *
+                *
+                * */
         } else {
             L = glMatrix.vec3.clone(lights[i].direction);
             maxdistance = Number.POSITIVE_INFINITY;
         }
         ///FUNZIONE CASTING OMBRA
-
-
         glMatrix.vec3.negate(negativeL, L);
 
+//console.log("SHADOW CASTER: "+element.name);
+
+
+   // console.log("NEGATIVE L :"+ negativeL);
+   // console.log(maxdistance);
 
         shadowHit = ShadowCast(new Ray(negativeL, element.interception_point, maxdistance, shadow_bias), element);
+        //console.log(shadowHit);
         if (!shadowHit) {
             ///FINE FUNZIONE CASTING OMBRA
             glMatrix.vec3.normalize(L, L); // normalizzo L
@@ -307,8 +358,13 @@ function getPixelColor(ray, element) {
             glMatrix.vec3.subtract(R, R, L); //(2(L * N) * N) - L
             glMatrix.vec3.normalize(R, R); // normalizzo R
 
-            glMatrix.vec3.subtract(V, element.interception_point, camera.eye); //V
-            glMatrix.vec3.normalize(V, V); // normalizzo V
+            if (ray.isBounced) { // se il raggio e' un raggio di riflessione, calcolo V dalla sua origine (ovvero dalla superficie riflettente) anziche' dalla camera
+                glMatrix.vec3.subtract(V, element.interception_point, ray.origin); //V
+                glMatrix.vec3.normalize(V, V); // normalizzo V
+            } else {
+                glMatrix.vec3.subtract(V, element.interception_point, camera.eye); //V
+                glMatrix.vec3.normalize(V, V); // normalizzo V
+            }
 
             maxdot_specular_powered = Math.pow(Math.max(0.0, glMatrix.vec3.dot(R, V)), alpha);
             glMatrix.vec3.multiply(Ks_MUL_I, Ks, I);
@@ -338,14 +394,22 @@ function getPixelColor(ray, element) {
  */
 function ShadowCast(castedRay, element) {
 
+    //console.log("SHADOWFUNCTION");
     let tempRay;
     for (var i = 0; i < surfaces.length; i++) {
         if (!element.isTheSame(surfaces[i])) {
+           //
+            //
+            //console.log(surfaces[i].name);
             tempRay = transformRay(castedRay, surfaces[i]);
-            if (surfaces[i].intersection(tempRay)) return true;
-
+            //console.log("RAYMAX: "+castedRay.tMax);
+            if (surfaces[i].intersection(tempRay)) {
+                //console.log("END SHADOWFUNCTION");
+                return true;
+            }
         }
     }
+    //console.log("END SHADOWFUNCTION");
     return false;
 }
 
@@ -401,10 +465,10 @@ function loadSceneFile(filepath) {
 
 
         if (element.shape == "Sphere")
-            currentObject = new Sphere(element.center, element.radius, element.material, counter);
+            currentObject = new Sphere(element.center, element.radius, element.material, counter,element.name);
 
         if (element.shape == "Triangle")
-            currentObject = new Triangle(element.p1, element.p2, element.p3, element.material, counter);
+            currentObject = new Triangle(element.p1, element.p2, element.p3, element.material, counter,element.name);
 
         counter++;
         if (element.transforms != undefined) {
@@ -439,19 +503,7 @@ function loadSceneFile(filepath) {
  */
 function render() {
     let current_bounce;
-    let start = Date.now(); //for logging
 
-    if (cropped) {
-        mincoloumn = 303;
-        maxcoloumn = 304;
-        minrow = 399;
-        maxrow = 400;
-    } else {
-        mincoloumn = 0;
-        maxcoloumn = 512;
-        minrow = 0;
-        maxrow = 512;
-    }
 
 
     //Faccio un doppio for per prendere tutti i pixel del canvas
@@ -481,9 +533,7 @@ function render() {
     var fullQuality = canvas.toDataURL('image/jpeg', 1.0);
 
     IMMAGEARRAY.push(fullQuality);
-    let end = Date.now(); //for logging
-    $('#log').html("rendered in: " + (end - start) + "ms");
-    console.log("rendered in: " + (end - start) + "ms");
+
 
 
 }

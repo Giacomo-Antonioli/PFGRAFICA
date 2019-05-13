@@ -9,14 +9,24 @@ class Triangle extends Figure {
      * @param {Array} p3 Terzo vertice
      * @param {Integer} material Indice della lista di materiali di cui è costituito l'oggetto
      */
-    constructor(p1, p2, p3, material, index) {
+    constructor(p1, p2, p3, material, index, name) {
         super(material, index);
         this._p1 = glMatrix.vec3.fromValues(p1[0], p1[1], p1[2]);
         this._p2 = glMatrix.vec3.fromValues(p2[0], p2[1], p2[2]);
         this._p3 = glMatrix.vec3.fromValues(p3[0], p3[1], p3[2]);
+        this._name = name;
     }
 
-    //____________________________________________________________________________________________________
+
+    get name() {
+        return this._name;
+    }
+
+    set name(value) {
+        this._name = value;
+    }
+
+//____________________________________________________________________________________________________
 
     /*
 
@@ -29,6 +39,110 @@ class Triangle extends Figure {
 ##     ## ########    ##    ##     ##  #######  ########   ######
 
 */
+
+    get material() {
+        return super.material;
+    }
+
+    /** */
+    set material(value) {
+        super.material = value;
+    }
+
+    get index() {
+        return super.index;
+    }
+
+    /** */
+    set index(value) {
+        super.index = value;
+    }
+
+    get TransformationMatrix() {
+        return super.TransformationMatrix;
+    }
+
+    /** */
+    set TransformationMatrix(value) {
+        super.TransformationMatrix = value;
+    }
+
+    get inverseTransformationMatrix() {
+        return super.inverseTransformationMatrix;
+    }
+
+    /** */
+    set inverseTransformationMatrix(value) {
+        super.inverseTransformationMatrix = value;
+    }
+
+    get transposedInverseTransformationMatrix() {
+        return super.transposedInverseTransformationMatrix;
+    }
+
+    /** */
+    set transposedInverseTransformationMatrix(value) {
+        super.transposedInverseTransformationMatrix = value;
+    }
+
+    get hasTransformationMatrix() {
+        return super.hasTransformationMatrix;
+    }
+
+    /** */
+    set hasTransformationMatrix(value) {
+        super.hasTransformationMatrix = value;
+    }
+
+    get t() {
+        return super.t;
+    }
+
+//____________________________________________________________________________________________________
+    /*
+        ######  ######## ######## ######## ######## ########   ######  
+        ##    ## ##          ##       ##    ##       ##     ## ##    ## 
+        ##       ##          ##       ##    ##       ##     ## ##       
+         ######  ######      ##       ##    ######   ########   ######  
+              ## ##          ##       ##    ##       ##   ##         ## 
+        ##    ## ##          ##       ##    ##       ##    ##  ##    ## 
+         ######  ########    ##       ##    ######## ##     ##  ######  
+    */
+
+    /** */
+    set t(value) {
+        super.t = value;
+    }
+
+    get interception_point() {
+        return super.interception_point;
+    }
+
+    /** */
+    set interception_point(value) {
+        super.interception_point = value;
+    }
+
+    get normal() {
+        return super.normal;
+    }
+
+    /** */
+    set normal(value) {
+        super.normal = value;
+    }
+
+    get p1() {
+        return this._p1;
+    }
+
+    get p2() {
+        return this._p2;
+    }
+
+    get p3() {
+        return this._p3;
+    }
 
     /**
      * Funzione che calcola il punto di intersezione tra un raggio e l'oggetto.
@@ -51,6 +165,7 @@ class Triangle extends Figure {
         //[beta,gamma,t]trasposta
 
         //TODO epsilon per +/- 0 e 1
+        //console.log(solutions[2]);
 
         //if (beta>0 && gamma>0 &&(beta+gamma)<1 ) --> HIT!
         if (solutions[0] > -EPSILON && solutions[1] > -EPSILON && (solutions[0] + solutions[1]) < 1 && solutions[2] > ray.tMin) {
@@ -67,118 +182,20 @@ class Triangle extends Figure {
             glMatrix.vec3.cross(normal, lato1, lato2); //prodotto vettoriale dei due lati, normale per definizione
 
             //spotata in ray_Intersect
-            //   console.log("normalo: "+normal);
-            this.setInterception(solutions[2], point, normal, ray.direction);
-            return true;
+
+           // console.log(ray.tMax);
+           // console.log(glMatrix.vec3.distance(point, ray.origin));
+            if ((glMatrix.vec3.distance(point, ray.origin) - ray.tMax)< shadow_bias ) {
+                //console.log("HEY");
+                this.setInterception(solutions[2], point, normal, ray.direction);
+                return true;
+            } else
+                return false;
 
         } else
             return false;
     }
 
-    /** */
-    setTranslation(TransaltionVector) {
-        super.setTranslation(TransaltionVector);
-    }
-    /** */
-    setRotation(RotationVector) {
-        super.setRotation(RotationVector);
-    }
-    /** */
-    setScaling(ScalingVector) {
-        super.setScaling(ScalingVector);
-    }
-    /** */
-    invertMatrix() {
-        super.invertMatrix();
-    }
-    /** */
-    transposeInvertedMatrix() {
-        super.transposeInvertedMatrix();
-    }
-    /** */
-    setTransformationMatrixValue() {
-        super.setTransformationMatrixValue();
-    }
-    /** */
-    initInterception() {
-        super.initInterception();
-    }
-    /** */
-    setInterception(t, interception_point, normal, direction) {
-        super.setInterception(t, interception_point, normal, direction);
-    }
-
-    /**
-     * Funzione che mostra il tipo di oggetto corrente (Sfera).
-     */
-    me() {
-        console.log("TRIANGLE");
-    }
-    /** */
-    showTransformationMatrix() {
-        super.showTransformationMatrix();
-    }
-
-
-    /** */
-    isTheSame(secondObject) {
-        return super.isTheSame(secondObject);
-    }
-
-    /** */
-    RestoreSDR() {
-        super.RestoreSDR();
-    }
-
-//____________________________________________________________________________________________________
-    /*
-        ######  ######## ######## ######## ######## ########   ######  
-        ##    ## ##          ##       ##    ##       ##     ## ##    ## 
-        ##       ##          ##       ##    ##       ##     ## ##       
-         ######  ######      ##       ##    ######   ########   ######  
-              ## ##          ##       ##    ##       ##   ##         ## 
-        ##    ## ##          ##       ##    ##       ##    ##  ##    ## 
-         ######  ########    ##       ##    ######## ##     ##  ######  
-    */
-
-
-
-    /** */
-    set material(value) {
-        super.material = value;
-    }
-    /** */
-    set index(value) {
-        super.index = value;
-    }
-    /** */
-    set TransformationMatrix(value) {
-        super.TransformationMatrix = value;
-    }
-    /** */
-    set inverseTransformationMatrix(value) {
-        super.inverseTransformationMatrix = value;
-    }
-    /** */
-    set transposedInverseTransformationMatrix(value) {
-        super.transposedInverseTransformationMatrix = value;
-    }
-    /** */
-    set hasTransformationMatrix(value) {
-        super.hasTransformationMatrix = value;
-    }
-    /** */
-    set t(value) {
-        super.t = value;
-    }
-    /** */
-    set interception_point(value) {
-        super.interception_point = value;
-    }
-    /** */
-    set normal(value) {
-        super.normal = value;
-    }
     //____________________________________________________________________________________________________
     /*
 
@@ -192,56 +209,71 @@ class Triangle extends Figure {
 
 */
 
-    get material() {
-        return super.material;
+    /** */
+    setTranslation(TransaltionVector) {
+        super.setTranslation(TransaltionVector);
     }
 
-    get index() {
-        return super.index;
+    /** */
+    setRotation(RotationVector) {
+        super.setRotation(RotationVector);
     }
 
-    get TransformationMatrix() {
-        return super.TransformationMatrix;
+    /** */
+    setScaling(ScalingVector) {
+        super.setScaling(ScalingVector);
     }
 
-    get inverseTransformationMatrix() {
-        return super.inverseTransformationMatrix;
+    /** */
+    invertMatrix() {
+        super.invertMatrix();
     }
 
-    get transposedInverseTransformationMatrix() {
-        return super.transposedInverseTransformationMatrix;
+    /** */
+    transposeInvertedMatrix() {
+        super.transposeInvertedMatrix();
     }
 
-    get hasTransformationMatrix() {
-        return super.hasTransformationMatrix;
+    /** */
+    setTransformationMatrixValue() {
+        super.setTransformationMatrixValue();
     }
 
-    get t() {
-        return super.t;
+    /** */
+    initInterception() {
+        super.initInterception();
     }
 
-    get interception_point() {
-        return super.interception_point;
+    /** */
+    setInterception(t, interception_point, normal, direction) {
+        super.setInterception(t, interception_point, normal, direction);
     }
 
-    get normal() {
-        return super.normal;
+    /**
+     * Funzione che mostra il tipo di oggetto corrente (Sfera).
+     */
+    me() {
+        console.log("TRIANGLE");
     }
 
-    get p1() {
-        return this._p1;
+    /** */
+    showTransformationMatrix() {
+        super.showTransformationMatrix();
     }
 
-    get p2() {
-        return this._p2;
+    /** */
+    isTheSame(secondObject) {
+        return super.isTheSame(secondObject);
     }
 
-    get p3() {
-        return this._p3;
+    /** */
+    RestoreSDR() {
+        super.RestoreSDR();
     }
 
 
 }
+
 //____________________________________________________________________________________________________
 /*
     ######## ##     ## ##    ##  ######  ######## ####  #######  ##    ##  ######  

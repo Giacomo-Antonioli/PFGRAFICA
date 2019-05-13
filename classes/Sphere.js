@@ -8,14 +8,24 @@ class Sphere extends Figure {
      * @param {Float} radius Raggio della sfera
      * @param {Integer} material Indice della lista di materiali di cui è costituito l'oggetto
      */
-    constructor(center, radius, material, index) {
+    constructor(center, radius, material, index,name) {
         super(material, index);
         this._center = glMatrix.vec3.fromValues(center[0], center[1], center[2]);
         this._radius = radius;
+        this._name=name;
 
     }
 
-    //____________________________________________________________________________________________________
+
+    get name() {
+        return this._name;
+    }
+
+    set name(value) {
+        this._name = value;
+    }
+
+//____________________________________________________________________________________________________
     /*
 
     ##     ## ######## ######## ##     ##  #######  ########   ######
@@ -96,6 +106,8 @@ class Sphere extends Figure {
         } else {
             let point = glMatrix.vec3.create();
             glMatrix.vec3.scaleAndAdd(point, ray.origin, ray.direction, t);
+            if((glMatrix.vec3.distance(point, ray.origin) - ray.tMax )>= shadow_bias)
+                return false;
             let normal = glMatrix.vec3.create();
             glMatrix.vec3.subtract(normal, point, this._center);
             let unitNormal = glMatrix.vec3.create();

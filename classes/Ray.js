@@ -16,7 +16,7 @@ class Ray {
         this._tMin = tMin;
         this._direction = direction;
         this._origin = origin;
-
+        this._isBounced;
     }
 
     //____________________________________________________________________________________________________
@@ -103,6 +103,10 @@ class Ray {
     set tMin(value) {
         this._tMin = value;
     }
+
+    set isBounced(value) {
+        this._isBounced = value;
+    }
     //____________________________________________________________________________________________________
     /*
 
@@ -137,6 +141,10 @@ class Ray {
     }
     get tMin() {
         return this._tMin;
+    }
+
+    get isBounced() {
+        return this._isBounced;
     }
 
 }
