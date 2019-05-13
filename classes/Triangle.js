@@ -1,69 +1,295 @@
+/**
+ * Classe che rappresenta un generico triangolo.
+ */
+class Triangle extends Figure {
+    /**
+     * @constructor
+     * @param {Array} p1 Primo vertice
+     * @param {Array} p2 Secondo vertice
+     * @param {Array} p3 Terzo vertice
+     * @param {Integer} material Indice della lista di materiali di cui è costituito l'oggetto
+     */
+    constructor(p1, p2, p3, material, index, name) {
+        super(material, index);
+        this._p1 = glMatrix.vec3.fromValues(p1[0], p1[1], p1[2]);
+        this._p2 = glMatrix.vec3.fromValues(p2[0], p2[1], p2[2]);
+        this._p3 = glMatrix.vec3.fromValues(p3[0], p3[1], p3[2]);
+        this._name = name;
+    }
 
-class Triangle {
-    constructor(p1,p2,p3,material)
-    {
-        this.p1 = glMatrix.vec3.fromValues(p1[0], p1[1], p1[2]);
-        this.p2 = glMatrix.vec3.fromValues(p2[0], p2[1], p2[2]);
-        this.p3 = glMatrix.vec3.fromValues(p3[0], p3[1], p3[2]);
-        this.material=material;
-    };
 
-    intersection (ray) {
-        /* *
-         * Funzione per il calcolo delle intersezioni del raggio di luce con la sfera
-         * INPUT
-         * Ray (struct) --> ottenuto dal castray della camera
-         * OUTPUT
-         * t (array) --> array di punti di intersezione con l'oggetto
-         * Funzionamento
-         *
-         *
-         * */
-        let solutions ;
+    get name() {
+        return this._name;
+    }
+
+    set name(value) {
+        this._name = value;
+    }
+
+//____________________________________________________________________________________________________
+
+    /*
+
+##     ## ######## ######## ##     ##  #######  ########   ######
+###   ### ##          ##    ##     ## ##     ## ##     ## ##    ##
+#### #### ##          ##    ##     ## ##     ## ##     ## ##
+## ### ## ######      ##    ######### ##     ## ##     ##  ######
+##     ## ##          ##    ##     ## ##     ## ##     ##       ##
+##     ## ##          ##    ##     ## ##     ## ##     ## ##    ##
+##     ## ########    ##    ##     ##  #######  ########   ######
+
+*/
+
+    get material() {
+        return super.material;
+    }
+
+    /** */
+    set material(value) {
+        super.material = value;
+    }
+
+    get index() {
+        return super.index;
+    }
+
+    /** */
+    set index(value) {
+        super.index = value;
+    }
+
+    get TransformationMatrix() {
+        return super.TransformationMatrix;
+    }
+
+    /** */
+    set TransformationMatrix(value) {
+        super.TransformationMatrix = value;
+    }
+
+    get inverseTransformationMatrix() {
+        return super.inverseTransformationMatrix;
+    }
+
+    /** */
+    set inverseTransformationMatrix(value) {
+        super.inverseTransformationMatrix = value;
+    }
+
+    get transposedInverseTransformationMatrix() {
+        return super.transposedInverseTransformationMatrix;
+    }
+
+    /** */
+    set transposedInverseTransformationMatrix(value) {
+        super.transposedInverseTransformationMatrix = value;
+    }
+
+    get hasTransformationMatrix() {
+        return super.hasTransformationMatrix;
+    }
+
+    /** */
+    set hasTransformationMatrix(value) {
+        super.hasTransformationMatrix = value;
+    }
+
+    get t() {
+        return super.t;
+    }
+
+//____________________________________________________________________________________________________
+    /*
+        ######  ######## ######## ######## ######## ########   ######  
+        ##    ## ##          ##       ##    ##       ##     ## ##    ## 
+        ##       ##          ##       ##    ##       ##     ## ##       
+         ######  ######      ##       ##    ######   ########   ######  
+              ## ##          ##       ##    ##       ##   ##         ## 
+        ##    ## ##          ##       ##    ##       ##    ##  ##    ## 
+         ######  ########    ##       ##    ######## ##     ##  ######  
+    */
+
+    /** */
+    set t(value) {
+        super.t = value;
+    }
+
+    get interception_point() {
+        return super.interception_point;
+    }
+
+    /** */
+    set interception_point(value) {
+        super.interception_point = value;
+    }
+
+    get normal() {
+        return super.normal;
+    }
+
+    /** */
+    set normal(value) {
+        super.normal = value;
+    }
+
+    get p1() {
+        return this._p1;
+    }
+
+    get p2() {
+        return this._p2;
+    }
+
+    get p3() {
+        return this._p3;
+    }
+
+    /**
+     * Funzione che calcola il punto di intersezione tra un raggio e l'oggetto.
+     * @param {Ray} ray Raggio
+     * @returns {Boolean} Hit Dice se il raggio interseca l'oggetto.
+     */
+    intersection(ray) {
+        let solutions;
+
         let A = [
-            [this.p1[0] - this.p2[0], this.p1[0] - this.p3[0], ray.direction[0], this.p1[0] - ray.origin[0]],
-            [this.p1[1] - this.p2[1], this.p1[1] - this.p3[1], ray.direction[1], this.p1[1] - ray.origin[1]],
-            [this.p1[2] - this.p2[2], this.p1[2] - this.p3[2], ray.direction[2], this.p1[2] - ray.origin[2]],
+            [this._p1[0] - this._p2[0], this._p1[0] - this._p3[0], ray.direction[0], this._p1[0] - ray.origin[0]],
+            [this._p1[1] - this._p2[1], this._p1[1] - this._p3[1], ray.direction[1], this._p1[1] - ray.origin[1]],
+            [this._p1[2] - this._p2[2], this._p1[2] - this._p3[2], ray.direction[2], this._p1[2] - ray.origin[2]],
         ];
 
-        solutions = (gauss(A));//Calcola il vettore contenente la soluzione delle tre equazioni necessarie
+        solutions = (gauss(A)); //Calcola il vettore contenente la soluzione delle tre equazioni necessarie
         //per identificare intersezione triangolo-raggio
 
 
         //[beta,gamma,t]trasposta
 
         //TODO epsilon per +/- 0 e 1
-        
+        //console.log(solutions[2]);
+
         //if (beta>0 && gamma>0 &&(beta+gamma)<1 ) --> HIT!
-        if (solutions[0] > -EPSILON && solutions[1] > -EPSILON && (solutions[0] + solutions[1]) < 1 && solutions[2]>ray.tMin) {
+        if (solutions[0] > -EPSILON && solutions[1] > -EPSILON && (solutions[0] + solutions[1]) < 1 && solutions[2] > ray.tMin) {
             let point = glMatrix.vec3.create();
             glMatrix.vec3.scaleAndAdd(point, ray.origin, ray.direction, solutions[2]); // calcolo punto di intersezione
-            
+
             let lato1 = glMatrix.vec3.create(); // vettore appoggio lato1 triangolo
             let lato2 = glMatrix.vec3.create(); // vettore appoggio lato2 triangolo
-            glMatrix.vec3.subtract(lato1, this.p2, this.p1);// calcolo lato1 triangolo 
-            glMatrix.vec3.subtract(lato2, this.p3, this.p2);// calcolo lato2 triangolo 
-
+            glMatrix.vec3.subtract(lato1, this._p2, this._p1); // calcolo lato1 triangolo
+            glMatrix.vec3.subtract(lato2, this._p3, this._p2); // calcolo lato2 triangolo
+            //   console.log("lato 1: " +lato1);
+            //   console.log("lato 2: " +lato2);
             let normal = glMatrix.vec3.create();
             glMatrix.vec3.cross(normal, lato1, lato2); //prodotto vettoriale dei due lati, normale per definizione
-            //if (glMatrix.vec3.dot(normal, ray.direction)>rad(90))//NON SO IL VERSO DELLA NORMALE QUINDI LO ADATTO ALLA POS DELLA CAMERA
-              //  glMatrix.vec3.negate(normal, normal);
+
             //spotata in ray_Intersect
-            ray.ray_Intersect(solutions[2], point, normal);
-            return true;
 
-        }
-        else
+           // console.log(ray.tMax);
+           // console.log(glMatrix.vec3.distance(point, ray.origin));
+            if ((glMatrix.vec3.distance(point, ray.origin) - ray.tMax)< shadow_bias ) {
+                //console.log("HEY");
+                this.setInterception(solutions[2], point, normal, ray.direction);
+                return true;
+            } else
+                return false;
+
+        } else
             return false;
-    };
+    }
 
-    me()
-    {
+    //____________________________________________________________________________________________________
+    /*
+
+    ######   ######## ######## ######## ######## ########   ######
+    ##    ##  ##          ##       ##    ##       ##     ## ##    ##
+    ##        ##          ##       ##    ##       ##     ## ##
+    ##   #### ######      ##       ##    ######   ########   ######
+    ##    ##  ##          ##       ##    ##       ##   ##         ##
+    ##    ##  ##          ##       ##    ##       ##    ##  ##    ##
+     ######   ########    ##       ##    ######## ##     ##  ######
+
+*/
+
+    /** */
+    setTranslation(TransaltionVector) {
+        super.setTranslation(TransaltionVector);
+    }
+
+    /** */
+    setRotation(RotationVector) {
+        super.setRotation(RotationVector);
+    }
+
+    /** */
+    setScaling(ScalingVector) {
+        super.setScaling(ScalingVector);
+    }
+
+    /** */
+    invertMatrix() {
+        super.invertMatrix();
+    }
+
+    /** */
+    transposeInvertedMatrix() {
+        super.transposeInvertedMatrix();
+    }
+
+    /** */
+    setTransformationMatrixValue() {
+        super.setTransformationMatrixValue();
+    }
+
+    /** */
+    initInterception() {
+        super.initInterception();
+    }
+
+    /** */
+    setInterception(t, interception_point, normal, direction) {
+        super.setInterception(t, interception_point, normal, direction);
+    }
+
+    /**
+     * Funzione che mostra il tipo di oggetto corrente (Sfera).
+     */
+    me() {
         console.log("TRIANGLE");
+    }
+
+    /** */
+    showTransformationMatrix() {
+        super.showTransformationMatrix();
+    }
+
+    /** */
+    isTheSame(secondObject) {
+        return super.isTheSame(secondObject);
+    }
+
+    /** */
+    RestoreSDR() {
+        super.RestoreSDR();
     }
 
 
 }
+
+//____________________________________________________________________________________________________
+/*
+    ######## ##     ## ##    ##  ######  ######## ####  #######  ##    ##  ######  
+    ##       ##     ## ###   ## ##    ##    ##     ##  ##     ## ###   ## ##    ## 
+    ##       ##     ## ####  ## ##          ##     ##  ##     ## ####  ## ##       
+    ######   ##     ## ## ## ## ##          ##     ##  ##     ## ## ## ##  ######  
+    ##       ##     ## ##  #### ##          ##     ##  ##     ## ##  ####       ## 
+    ##       ##     ## ##   ### ##    ##    ##     ##  ##     ## ##   ### ##    ## 
+    ##        #######  ##    ##  ######     ##    ####  #######  ##    ##  ###### 
+*/
+
+/**
+ * Fattorizzazzione di Gauss con pivoting parziale per la risoluzione di un sistema lineare di dimensione pari al numero di colonne di A.
+ * A deve essere quadrata.
+ * @param {Array} A Matrice associata al sistema
+ */
 function gauss(A) {
     let n = A.length;
 
@@ -108,4 +334,3 @@ function gauss(A) {
     }
     return x;
 }
-

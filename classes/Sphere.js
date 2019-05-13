@@ -1,15 +1,47 @@
-class Sphere {
-
-    constructor(center, radius, material) {
-        this.center = glMatrix.vec3.fromValues(center[0], center[1], center[2]);
-        this.radius = radius;
-        this.material = material; //Indica l'indice all'interno dell'array materiali da applicare alla figura
+/**
+ * Classe che rappresenta una generica sfera.
+ */
+class Sphere extends Figure {
+    /**
+     * @constructor
+     * @param {Array} center Centro della sfera
+     * @param {Float} radius Raggio della sfera
+     * @param {Integer} material Indice della lista di materiali di cui è costituito l'oggetto
+     */
+    constructor(center, radius, material, index,name) {
+        super(material, index);
+        this._center = glMatrix.vec3.fromValues(center[0], center[1], center[2]);
+        this._radius = radius;
+        this._name=name;
 
     }
 
-    me()
-    {console.log("SPHERE");}
 
+    get name() {
+        return this._name;
+    }
+
+    set name(value) {
+        this._name = value;
+    }
+
+//____________________________________________________________________________________________________
+    /*
+
+    ##     ## ######## ######## ##     ##  #######  ########   ######
+    ###   ### ##          ##    ##     ## ##     ## ##     ## ##    ##
+    #### #### ##          ##    ##     ## ##     ## ##     ## ##
+    ## ### ## ######      ##    ######### ##     ## ##     ##  ######
+    ##     ## ##          ##    ##     ## ##     ## ##     ##       ##
+    ##     ## ##          ##    ##     ## ##     ## ##     ## ##    ##
+    ##     ## ########    ##    ##     ##  #######  ########   ######
+
+*/
+    /**
+     * Funzione che calcola il punto di intersezione tra un raggio e l'oggetto.
+     * @param {Ray} ray Raggio
+     * @returns {Boolean} Hit Dice se il raggio interseca l'oggetto.
+     */
     intersection(ray) {
         /* *
          * Funzione per il calcolo delle intersezioni del raggio di luce con la sfera
@@ -34,12 +66,12 @@ class Sphere {
         let direction_euclidean_norm_squared; // f=d*d
         let origin_center_sub_euclidean_norm_squared; // a^2
 
-        glMatrix.vec3.subtract(origin_center_sub, ray.origin, this.center); // a
+        glMatrix.vec3.subtract(origin_center_sub, ray.origin, this._center); // a
         direction_times_origin_center_sub = glMatrix.vec3.dot(ray.direction, origin_center_sub); // b
         direction_euclidean_norm_squared = glMatrix.vec3.dot(ray.direction, ray.direction); // f
         origin_center_sub_euclidean_norm_squared = glMatrix.vec3.dot(origin_center_sub, origin_center_sub);
 
-        let discriminant = Math.pow(direction_times_origin_center_sub, 2) - direction_euclidean_norm_squared * (origin_center_sub_euclidean_norm_squared - Math.pow(this.radius, 2));
+        let discriminant = Math.pow(direction_times_origin_center_sub, 2) - direction_euclidean_norm_squared * (origin_center_sub_euclidean_norm_squared - Math.pow(this._radius, 2));
 
         // -b + sqrt(b^2 - f*(a^2) - R^2) / f
         flag_t1 = (-direction_times_origin_center_sub + Math.sqrt(discriminant)) / direction_euclidean_norm_squared;
@@ -69,21 +101,189 @@ class Sphere {
 
             }
         }
-        if (t === -1 | t<=ray.tMin) {
+        if (t === -1 || t <= ray.tMin) {
             return false;
         } else {
             let point = glMatrix.vec3.create();
             glMatrix.vec3.scaleAndAdd(point, ray.origin, ray.direction, t);
+            if((glMatrix.vec3.distance(point, ray.origin) - ray.tMax )>= shadow_bias)
+                return false;
             let normal = glMatrix.vec3.create();
-            glMatrix.vec3.subtract(normal, point, this.center);
+            glMatrix.vec3.subtract(normal, point, this._center);
             let unitNormal = glMatrix.vec3.create();
-            glMatrix.vec3.scale(unitNormal, normal, 1 / this.radius);
-            ray.ray_Intersect(t, point, unitNormal);
+            glMatrix.vec3.scale(unitNormal, normal, 1 / this._radius);
+            this.setInterception(t, point, unitNormal, ray.direction);
 
             return true;
         }
 
 
     }
-}
 
+    isTheSame(secondObject) {
+        return super.isTheSame(secondObject);
+    }
+
+
+    /**
+     * Funzione che mostra il tipo di oggettto corrente (Sfera).
+     */
+    me() {
+        console.log("SPHERE");
+    }
+    /** */
+    showTransformationMatrix() {
+        super.showTransformationMatrix();
+    }
+    /** */
+    setTranslation(TransaltionVector) {
+        super.setTranslation(TransaltionVector);
+    }
+    /** */
+    setRotation(RotationVector) {
+        super.setRotation(RotationVector);
+    }
+    /** */
+    setScaling(ScalingVector) {
+        super.setScaling(ScalingVector);
+    }
+    /** */
+    invertMatrix() {
+        super.invertMatrix();
+    }
+    /** */
+    transposeInvertedMatrix() {
+        super.transposeInvertedMatrix();
+    }
+    /** */
+    setTransformationMatrixValue() {
+        super.setTransformationMatrixValue();
+    }
+    /** */
+    initInterception() {
+        super.initInterception();
+    }
+    /** */
+    setInterception(t, interception_point, normal, direction) {
+        super.setInterception(t, interception_point, normal, direction);
+    }
+
+    /** */
+    RestoreSDR() {
+        super.RestoreSDR();
+    }
+
+    setcenter(center)
+    {
+        this._center = glMatrix.vec3.fromValues(center[0], center[1], center[2]);
+    }
+
+//____________________________________________________________________________________________________
+    /*
+        ######  ######## ######## ######## ######## ########   ######  
+        ##    ## ##          ##       ##    ##       ##     ## ##    ## 
+        ##       ##          ##       ##    ##       ##     ## ##       
+         ######  ######      ##       ##    ######   ########   ######  
+              ## ##          ##       ##    ##       ##   ##         ## 
+        ##    ## ##          ##       ##    ##       ##    ##  ##    ## 
+         ######  ########    ##       ##    ######## ##     ##  ######  
+    */
+
+    /** */
+    set material(value) {
+        super.material = value;
+    }
+    /** */
+    set index(value) {
+        super.index = value;
+    }
+    /** */
+    set TransformationMatrix(value) {
+        super.TransformationMatrix = value;
+    }
+    /** */
+    set inverseTransformationMatrix(value) {
+        super.inverseTransformationMatrix = value;
+    }
+    /** */
+    set transposedInverseTransformationMatrix(value) {
+        super.transposedInverseTransformationMatrix = value;
+    }
+    /** */
+    set hasTransformationMatrix(value) {
+        super.hasTransformationMatrix = value;
+    }
+    /** */
+    set t(value) {
+        super.t = value;
+    }
+    /** */
+    set interception_point(value) {
+        super.interception_point = value;
+    }
+    /** */
+    set normal(value) {
+        super.normal = value;
+    }
+    /** */
+    set radius(value) {
+        this._radius = value;
+    }
+
+    //____________________________________________________________________________________________________
+    /*
+
+     ######   ######## ######## ######## ######## ########   ######
+    ##    ##  ##          ##       ##    ##       ##     ## ##    ##
+    ##        ##          ##       ##    ##       ##     ## ##
+    ##   #### ######      ##       ##    ######   ########   ######
+    ##    ##  ##          ##       ##    ##       ##   ##         ##
+    ##    ##  ##          ##       ##    ##       ##    ##  ##    ##
+     ######   ########    ##       ##    ######## ##     ##  ######
+
+    */
+
+    get material() {
+        return super.material;
+    }
+
+    get index() {
+        return super.index;
+    }
+
+    get TransformationMatrix() {
+        return super.TransformationMatrix;
+    }
+
+    get inverseTransformationMatrix() {
+        return super.inverseTransformationMatrix;
+    }
+
+    get transposedInverseTransformationMatrix() {
+        return super.transposedInverseTransformationMatrix;
+    }
+
+    get hasTransformationMatrix() {
+        return super.hasTransformationMatrix;
+    }
+
+    get t() {
+        return super.t;
+    }
+
+    get interception_point() {
+        return super.interception_point;
+    }
+
+    get normal() {
+        return super.normal;
+    }
+
+    get center() {
+        return this._center;
+    }
+
+    get radius() {
+        return this._radius;
+    }
+}
