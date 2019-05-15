@@ -14,8 +14,6 @@ class Ray {
         this._NearestObject = 0;
         this._tMax = tMax;
         this._tMin = tMin;
-        this._direction = direction;
-        this._origin = origin;
         this._isBounced;
     }
 

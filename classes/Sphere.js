@@ -16,15 +16,6 @@ class Sphere extends Figure {
 
     }
 
-
-    get name() {
-        return this._name;
-    }
-
-    set name(value) {
-        this._name = value;
-    }
-
 //____________________________________________________________________________________________________
     /*
 
@@ -230,6 +221,10 @@ class Sphere extends Figure {
         this._radius = value;
     }
 
+    set name(value) {
+        this._name = value;
+    }
+
     //____________________________________________________________________________________________________
     /*
 
@@ -285,5 +280,9 @@ class Sphere extends Figure {
 
     get radius() {
         return this._radius;
+    }
+
+    get name() {
+        return this._name;
     }
 }

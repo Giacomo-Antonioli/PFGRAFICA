@@ -22,7 +22,7 @@ function init() {
     canvas = $('#canvas')[0];
     context = canvas.getContext("2d");
     imageBuffer = context.createImageData(canvas.width, canvas.height); //buffer for pixels
-    loadSceneFile("assets/SphereShadingTest1.json");
+    loadSceneFile("assets/SphereTest.json");
 }
 
 

@@ -17,13 +17,13 @@ let AntialiasDepth = 5;
 // let file_path = "assets/TriangleShadingTest.json";
 // let file_path = "assets/TransformationTest.json";
 // let file_path = "assets/SphereShadingTest2.json";
-// let file_path = "assets/SphereTest.json";
+let file_path = "assets/SphereTest.json";
 // let file_path = "assets/CornellBox.json";
 // let file_path = "assets/RecursiveTest.json";
 // let file_path = "assets/ShadowTest1.json";
 // let file_path = "assets/ShadowTest2.json";
 // let file_path = "assets/SphereShadingTest1.json";
-let file_path = "assets/FullTest.json";
+// let file_path = "assets/FullTest.json";
 
 //####################GLOBAL VALUES#################################
 let scene;
@@ -58,6 +58,8 @@ if (cropped) {
 
 let cycletime = 500 / FRAMES;
 let cycle_delay = 5000;
+const gpu = new GPU();
+
 
 let IMMAGEARRAY = [];
 //_:::::::::::::::::::::::::::::::::::::::::::::::
@@ -104,15 +106,6 @@ $(document).ready(function () {
     console.log("rendered in: " + (end - start) + "ms");
     if (animate)
         showImagesLikeVideo(0);
-
-    //debugging - cast a ray through the clicked pixel with DEBUG messaging on
-    /* $('#canvas').click(function (e) {
-         let x = e.pageX - $('#canvas').offset().left;
-         let y = e.pageY - $('#canvas').offset().top;
-         DEBUG = true;
-         camera.castRay(x, y); //cast a ray through the point
-         DEBUG = false;
-     });*/
 
 });
 
@@ -169,7 +162,7 @@ function computePixel(ray, current_bounce) {
         //console.log("HIT");
         color = getPixelColor(ray, surfaces[ray.NearestObject]);
 
-
+        bounce_depth = -1; //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         //console.log(color);
         if (current_bounce < bounce_depth) {
             //    console.log("ENTRO");
@@ -328,7 +321,8 @@ function getPixelColor(ray, element) {
         // console.log("NEGATIVE L :"+ negativeL);
         // console.log(maxdistance);
 
-        shadowHit = ShadowCast(new Ray(negativeL, element.interception_point, maxdistance, shadow_bias), element);
+        shadowHit = false;
+        // shadowHit = ShadowCast(new Ray(negativeL, element.interception_point, maxdistance, shadow_bias), element);
         //console.log(shadowHit);
         if (!shadowHit) {
             ///FINE FUNZIONE CASTING OMBRA
@@ -501,95 +495,114 @@ function loadSceneFile(filepath) {
 /**
  * Funzione di rendering del canvas.
  */
+
+
+
 function render() {
     let current_bounce;
     let colormean = [0, 0, 0];
     let tempcolor = colormean;
 
+    //#############################################
+    //SENZA ANTIALIASING
 
+    const multiplyMatrix = gpu.createKernel(function (coloumn, row) {
+
+        let colorgpu = [0, 0, 0];
+        current_bounce = 0;
+
+        ray = camera.castRay(coloumn, row);
+
+        colorgpu = computePixel(ray, current_bounce);
+
+
+        return colorgpu;
+    }).setOutput([1]);
+
+    
+    let megamatrix = [];
     // //Faccio un doppio for per prendere tutti i pixel del canvas
+    for (let coloumn = mincoloumn; coloumn < maxcoloumn; coloumn++) {
+        for (let row = minrow; row < maxrow; row++) {
+            //TODO - fire a ray though each pixel
+
+
+            megamatrix.push(multiplyMatrix(coloumn, row));
+
+        }
+    }
+
+
+
+    for (let coloumn = mincoloumn; coloumn < maxcoloumn; coloumn++) {
+        for (let row = minrow; row < maxrow; row++) {
+            setPixel(x, y, megamatrix.pop());
+        }
+    }
+    //#############################################
+
+    //#############################################
+    //CON ANTIALIASING
+    //Faccio un doppio for per prendere tutti i pixel del canvas
     // for (let coloumn = mincoloumn; coloumn < maxcoloumn; coloumn++) {
     //     for (let row = minrow; row < maxrow; row++) {
-    //         //TODO - fire a ray though each pixel
 
     //         current_bounce = 0;
 
-    //         ray = camera.castRay(coloumn, row);
+    //         let xOffset, yOffset;
 
-    //         setPixel(coloumn, row, computePixel(ray, current_bounce));
+    //         for (let xDepth = 0; xDepth < AntialiasDepth; xDepth++)
+    //             for (let yDepth = 0; yDepth < AntialiasDepth; yDepth++) {
 
-    //         surfaces.forEach(function (element) {
-    //                 element.initInterception();
-    //             } // azzera i campi
-    //         );
+    //                 xOffset = (xDepth / AntialiasDepth) - (1 / (2 * AntialiasDepth));
+    //                 yOffset = (yDepth / AntialiasDepth) - (1 / (2 * AntialiasDepth));
+
+    //                 xOffset += Math.random() * (1 / AntialiasDepth);
+    //                 yOffset += Math.random() * (1 / AntialiasDepth);
+
+
+    //                 ray = camera.castRay(coloumn + xOffset, row + yOffset);
+    //                 tempcolor = computePixel(ray, current_bounce);
+
+    //                 colormean[0] += tempcolor[0];
+    //                 colormean[1] += tempcolor[1];
+    //                 colormean[2] += tempcolor[2];
+
+    //                 surfaces.forEach(function (element) {
+    //                         element.initInterception();
+    //                     } // azzera i campi
+    //                 );
+    //             }
+
+
+
+
+    //         colormean[0] = colormean[0] / (AntialiasDepth * AntialiasDepth);
+    //         colormean[1] = colormean[1] / (AntialiasDepth * AntialiasDepth);
+    //         colormean[2] = colormean[2] / (AntialiasDepth * AntialiasDepth);
+    //         // }
+    //         setPixel(coloumn, row, colormean);
+    //         colormean[0] = 0;
+    //         colormean[1] = 0;
+    //         colormean[2] = 0;
     //     }
     // }
+    //#############################################
 
-    //Faccio un doppio for per prendere tutti i pixel del canvas
-    for (let coloumn = mincoloumn; coloumn < maxcoloumn; coloumn++) {
-        for (let row = minrow; row < maxrow; row++) {
-
-            current_bounce = 0;
-
-            let xOffset, yOffset;
-
-            for (let xDepth = 0; xDepth < AntialiasDepth; xDepth++)
-                for (let yDepth = 0; yDepth < AntialiasDepth; yDepth++) {
-
-                    xOffset = (xDepth / AntialiasDepth) - (1 / (2 * AntialiasDepth));
-                    yOffset = (yDepth / AntialiasDepth) - (1 / (2 * AntialiasDepth));
-
-                    xOffset += Math.random() * (1 / AntialiasDepth);
-                    yOffset += Math.random() * (1 / AntialiasDepth);
-
-
-                    ray = camera.castRay(coloumn + xOffset, row + yOffset);
-                    tempcolor = computePixel(ray, current_bounce);
-
-                    colormean[0] += tempcolor[0];
-                    colormean[1] += tempcolor[1];
-                    colormean[2] += tempcolor[2];
-
-                    surfaces.forEach(function (element) {
-                            element.initInterception();
-                        } // azzera i campi
-                    );
-                }
-
-
-
-
-            colormean[0] = colormean[0] / (AntialiasDepth * AntialiasDepth);
-            colormean[1] = colormean[1] / (AntialiasDepth * AntialiasDepth);
-            colormean[2] = colormean[2] / (AntialiasDepth * AntialiasDepth);
-            // }
-            setPixel(coloumn, row, colormean);
-            colormean[0] = 0;
-            colormean[1] = 0;
-            colormean[2] = 0;
-        }
-    }
 
     //render the pixels that have been set
     context.putImageData(imageBuffer, 0, 0);
 
 
-    var canvas = document.getElementById('canvas');
-    var fullQuality = canvas.toDataURL('image/jpeg', 1.0);
-
-    IMMAGEARRAY.push(fullQuality);
+    //var canvas = document.getElementById('canvas');
+    //var fullQuality = canvas.toDataURL('image/jpeg', 1.0);
+    //IMMAGEARRAY.push(fullQuality);
 
 
 
 }
 
-// function download() {
-//     var download = document.getElementById("download");
-//     var image = document.getElementById("canvas").toDataURL("image/png")
-//         .replace("image/png", "image/octet-stream");
-//     download.setAttribute("href", image);
 
-// }
 
 /**
  * Funzione di assegnazione del colore ad ogni singolo elemento del canvas.

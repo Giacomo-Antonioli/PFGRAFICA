@@ -17,16 +17,7 @@ class Triangle extends Figure {
         this._name = name;
     }
 
-
-    get name() {
-        return this._name;
-    }
-
-    set name(value) {
-        this._name = value;
-    }
-
-//____________________________________________________________________________________________________
+    //____________________________________________________________________________________________________
 
     /*
 
@@ -39,110 +30,6 @@ class Triangle extends Figure {
 ##     ## ########    ##    ##     ##  #######  ########   ######
 
 */
-
-    get material() {
-        return super.material;
-    }
-
-    /** */
-    set material(value) {
-        super.material = value;
-    }
-
-    get index() {
-        return super.index;
-    }
-
-    /** */
-    set index(value) {
-        super.index = value;
-    }
-
-    get TransformationMatrix() {
-        return super.TransformationMatrix;
-    }
-
-    /** */
-    set TransformationMatrix(value) {
-        super.TransformationMatrix = value;
-    }
-
-    get inverseTransformationMatrix() {
-        return super.inverseTransformationMatrix;
-    }
-
-    /** */
-    set inverseTransformationMatrix(value) {
-        super.inverseTransformationMatrix = value;
-    }
-
-    get transposedInverseTransformationMatrix() {
-        return super.transposedInverseTransformationMatrix;
-    }
-
-    /** */
-    set transposedInverseTransformationMatrix(value) {
-        super.transposedInverseTransformationMatrix = value;
-    }
-
-    get hasTransformationMatrix() {
-        return super.hasTransformationMatrix;
-    }
-
-    /** */
-    set hasTransformationMatrix(value) {
-        super.hasTransformationMatrix = value;
-    }
-
-    get t() {
-        return super.t;
-    }
-
-//____________________________________________________________________________________________________
-    /*
-        ######  ######## ######## ######## ######## ########   ######  
-        ##    ## ##          ##       ##    ##       ##     ## ##    ## 
-        ##       ##          ##       ##    ##       ##     ## ##       
-         ######  ######      ##       ##    ######   ########   ######  
-              ## ##          ##       ##    ##       ##   ##         ## 
-        ##    ## ##          ##       ##    ##       ##    ##  ##    ## 
-         ######  ########    ##       ##    ######## ##     ##  ######  
-    */
-
-    /** */
-    set t(value) {
-        super.t = value;
-    }
-
-    get interception_point() {
-        return super.interception_point;
-    }
-
-    /** */
-    set interception_point(value) {
-        super.interception_point = value;
-    }
-
-    get normal() {
-        return super.normal;
-    }
-
-    /** */
-    set normal(value) {
-        super.normal = value;
-    }
-
-    get p1() {
-        return this._p1;
-    }
-
-    get p2() {
-        return this._p2;
-    }
-
-    get p3() {
-        return this._p3;
-    }
 
     /**
      * Funzione che calcola il punto di intersezione tra un raggio e l'oggetto.
@@ -183,9 +70,9 @@ class Triangle extends Figure {
 
             //spotata in ray_Intersect
 
-           // console.log(ray.tMax);
-           // console.log(glMatrix.vec3.distance(point, ray.origin));
-            if ((glMatrix.vec3.distance(point, ray.origin) - ray.tMax)< shadow_bias ) {
+            // console.log(ray.tMax);
+            // console.log(glMatrix.vec3.distance(point, ray.origin));
+            if ((glMatrix.vec3.distance(point, ray.origin) - ray.tMax) < shadow_bias) {
                 //console.log("HEY");
                 this.setInterception(solutions[2], point, normal, ray.direction);
                 return true;
@@ -196,18 +83,6 @@ class Triangle extends Figure {
             return false;
     }
 
-    //____________________________________________________________________________________________________
-    /*
-
-    ######   ######## ######## ######## ######## ########   ######
-    ##    ##  ##          ##       ##    ##       ##     ## ##    ##
-    ##        ##          ##       ##    ##       ##     ## ##
-    ##   #### ######      ##       ##    ######   ########   ######
-    ##    ##  ##          ##       ##    ##       ##   ##         ##
-    ##    ##  ##          ##       ##    ##       ##    ##  ##    ##
-     ######   ########    ##       ##    ######## ##     ##  ######
-
-*/
 
     /** */
     setTranslation(TransaltionVector) {
@@ -269,6 +144,132 @@ class Triangle extends Figure {
     /** */
     RestoreSDR() {
         super.RestoreSDR();
+    }
+
+
+    //____________________________________________________________________________________________________
+    /*
+        ######  ######## ######## ######## ######## ########   ######  
+        ##    ## ##          ##       ##    ##       ##     ## ##    ## 
+        ##       ##          ##       ##    ##       ##     ## ##       
+         ######  ######      ##       ##    ######   ########   ######  
+              ## ##          ##       ##    ##       ##   ##         ## 
+        ##    ## ##          ##       ##    ##       ##    ##  ##    ## 
+         ######  ########    ##       ##    ######## ##     ##  ######  
+    */
+
+    /** */
+    set t(value) {
+        super.t = value;
+    }
+
+    /** */
+    set interception_point(value) {
+        super.interception_point = value;
+    }
+
+    /** */
+    set normal(value) {
+        super.normal = value;
+    }
+
+    set name(value) {
+        this._name = value;
+    }
+
+    /** */
+    set material(value) {
+        super.material = value;
+    }
+
+    /** */
+    set index(value) {
+        super.index = value;
+    }
+
+    /** */
+    set TransformationMatrix(value) {
+        super.TransformationMatrix = value;
+    }
+
+    /** */
+    set inverseTransformationMatrix(value) {
+        super.inverseTransformationMatrix = value;
+    }
+
+    /** */
+    set transposedInverseTransformationMatrix(value) {
+        super.transposedInverseTransformationMatrix = value;
+    }
+
+    /** */
+    set hasTransformationMatrix(value) {
+        super.hasTransformationMatrix = value;
+    }
+
+    //____________________________________________________________________________________________________
+    /*
+
+    ######   ######## ######## ######## ######## ########   ######
+    ##    ##  ##          ##       ##    ##       ##     ## ##    ##
+    ##        ##          ##       ##    ##       ##     ## ##
+    ##   #### ######      ##       ##    ######   ########   ######
+    ##    ##  ##          ##       ##    ##       ##   ##         ##
+    ##    ##  ##          ##       ##    ##       ##    ##  ##    ##
+     ######   ########    ##       ##    ######## ##     ##  ######
+
+*/
+
+    get interception_point() {
+        return super.interception_point;
+    }
+
+    get normal() {
+        return super.normal;
+    }
+
+    get p1() {
+        return this._p1;
+    }
+
+    get p2() {
+        return this._p2;
+    }
+
+    get p3() {
+        return this._p3;
+    }
+
+    get material() {
+        return super.material;
+    }
+
+    get index() {
+        return super.index;
+    }
+
+    get TransformationMatrix() {
+        return super.TransformationMatrix;
+    }
+
+    get inverseTransformationMatrix() {
+        return super.inverseTransformationMatrix;
+    }
+
+    get transposedInverseTransformationMatrix() {
+        return super.transposedInverseTransformationMatrix;
+    }
+
+    get hasTransformationMatrix() {
+        return super.hasTransformationMatrix;
+    }
+
+    get t() {
+        return super.t;
+    }
+
+    get name() {
+        return this._name;
     }
 
 
