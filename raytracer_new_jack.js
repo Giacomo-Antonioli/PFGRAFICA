@@ -10,6 +10,7 @@ let minrow;
 let maxrow;
 let cropped = false;
 let animate = false;
+let AntialiasDepth = 5;
 //##################################################################
 
 // let file_path = "assets/TriangleTest.json";
@@ -161,8 +162,8 @@ function computePixel(ray, current_bounce) {
         let intercepted_shape = surfaces[ray.NearestObject];
         if (intercepted_shape.hasTransformationMatrix)
             intercepted_shape.RestoreSDR();
-      //  console.log("Nearest Object: "+intercepted_shape.name);
-       // console.log("HITTED POINT:");
+        //  console.log("Nearest Object: "+intercepted_shape.name);
+        // console.log("HITTED POINT:");
         //console.log(intercepted_shape.interception_point);
 
         //console.log("HIT");
@@ -176,32 +177,31 @@ function computePixel(ray, current_bounce) {
 
             //************************************************/
             //Reflect Ray
+            if (materials[intercepted_shape.material].kr[0] != 0 && materials[intercepted_shape.material].kr[1] != 0 && materials[intercepted_shape.material].kr[2] != 0) {
 
-            let local_normal = glMatrix.vec3.clone(intercepted_shape.normal);
-            glMatrix.vec3.normalize(local_normal, local_normal);
+                let local_normal = glMatrix.vec3.clone(intercepted_shape.normal);
+                glMatrix.vec3.normalize(local_normal, local_normal);
 
-            let double_d_MUL_n = 2 * glMatrix.vec3.dot(ray.direction, local_normal);
-            let scaled_n = glMatrix.vec3.create();
+                let double_d_MUL_n = 2 * glMatrix.vec3.dot(ray.direction, local_normal);
+                let scaled_n = glMatrix.vec3.create();
 
-            if (glMatrix.vec3.dot(ray.direction, intercepted_shape.normal) > rad(90)) //NON SO IL VERSO DELLA NORMALE QUINDI LO ADATTO ALLA POS DELLA CAMERA
-                glMatrix.vec3.negate(local_normal, local_normal);
+                if (glMatrix.vec3.dot(ray.direction, intercepted_shape.normal) > rad(90)) //NON SO IL VERSO DELLA NORMALE QUINDI LO ADATTO ALLA POS DELLA CAMERA
+                    glMatrix.vec3.negate(local_normal, local_normal);
 
-            glMatrix.vec3.scale(scaled_n, local_normal, double_d_MUL_n);
-            let bounced_ray_direction = glMatrix.vec3.create();
-            glMatrix.vec3.subtract(bounced_ray_direction, ray.direction, scaled_n);
+                glMatrix.vec3.scale(scaled_n, local_normal, double_d_MUL_n);
+                let bounced_ray_direction = glMatrix.vec3.create();
+                glMatrix.vec3.subtract(bounced_ray_direction, ray.direction, scaled_n);
 
-            let newBouncedRay = new Ray(bounced_ray_direction, intercepted_shape.interception_point, Number.POSITIVE_INFINITY, shadow_bias);
-            newBouncedRay.isBounced = true;
-            Recorded_color = computePixel(newBouncedRay, current_bounce);
-
-
-
-
-            color[0] = color[0] + materials[intercepted_shape.material].kr[0] * Recorded_color[0];
-            color[1] = color[1] + materials[intercepted_shape.material].kr[1] * Recorded_color[1];
-            color[2] = color[2] + materials[intercepted_shape.material].kr[2] * Recorded_color[2];
+                let newBouncedRay = new Ray(bounced_ray_direction, intercepted_shape.interception_point, Number.POSITIVE_INFINITY, shadow_bias);
+                newBouncedRay.isBounced = true;
+                Recorded_color = computePixel(newBouncedRay, current_bounce);
 
 
+                color[0] = color[0] + materials[intercepted_shape.material].kr[0] * Recorded_color[0];
+                color[1] = color[1] + materials[intercepted_shape.material].kr[1] * Recorded_color[1];
+                color[2] = color[2] + materials[intercepted_shape.material].kr[2] * Recorded_color[2];
+
+            }
 
 
             //************************************************/
@@ -304,17 +304,17 @@ function getPixelColor(ray, element) {
         if (lights[i] instanceof PointLight) {
             glMatrix.vec3.subtract(L, element.interception_point, lights[i].position); //L
             maxdistance = glMatrix.vec3.distance(element.interception_point, lights[i].position);
-                /*
-                * p(t)=lights[i].position
-                * e=element.interception_point
-                * d=negativeL
-                * p(t)=e+td
-                *
-                * t=(p(t)-e)/d
-                *
-                *
-                *
-                * */
+            /*
+             * p(t)=lights[i].position
+             * e=element.interception_point
+             * d=negativeL
+             * p(t)=e+td
+             *
+             * t=(p(t)-e)/d
+             *
+             *
+             *
+             * */
         } else {
             L = glMatrix.vec3.clone(lights[i].direction);
             maxdistance = Number.POSITIVE_INFINITY;
@@ -322,11 +322,11 @@ function getPixelColor(ray, element) {
         ///FUNZIONE CASTING OMBRA
         glMatrix.vec3.negate(negativeL, L);
 
-//console.log("SHADOW CASTER: "+element.name);
+        //console.log("SHADOW CASTER: "+element.name);
 
 
-   // console.log("NEGATIVE L :"+ negativeL);
-   // console.log(maxdistance);
+        // console.log("NEGATIVE L :"+ negativeL);
+        // console.log(maxdistance);
 
         shadowHit = ShadowCast(new Ray(negativeL, element.interception_point, maxdistance, shadow_bias), element);
         //console.log(shadowHit);
@@ -398,7 +398,7 @@ function ShadowCast(castedRay, element) {
     let tempRay;
     for (var i = 0; i < surfaces.length; i++) {
         if (!element.isTheSame(surfaces[i])) {
-           //
+            //
             //
             //console.log(surfaces[i].name);
             tempRay = transformRay(castedRay, surfaces[i]);
@@ -465,10 +465,10 @@ function loadSceneFile(filepath) {
 
 
         if (element.shape == "Sphere")
-            currentObject = new Sphere(element.center, element.radius, element.material, counter,element.name);
+            currentObject = new Sphere(element.center, element.radius, element.material, counter, element.name);
 
         if (element.shape == "Triangle")
-            currentObject = new Triangle(element.p1, element.p2, element.p3, element.material, counter,element.name);
+            currentObject = new Triangle(element.p1, element.p2, element.p3, element.material, counter, element.name);
 
         counter++;
         if (element.transforms != undefined) {
@@ -503,27 +503,72 @@ function loadSceneFile(filepath) {
  */
 function render() {
     let current_bounce;
+    let colormean = [0, 0, 0];
+    let tempcolor = colormean;
 
 
+    // //Faccio un doppio for per prendere tutti i pixel del canvas
+    // for (let coloumn = mincoloumn; coloumn < maxcoloumn; coloumn++) {
+    //     for (let row = minrow; row < maxrow; row++) {
+    //         //TODO - fire a ray though each pixel
+
+    //         current_bounce = 0;
+
+    //         ray = camera.castRay(coloumn, row);
+
+    //         setPixel(coloumn, row, computePixel(ray, current_bounce));
+
+    //         surfaces.forEach(function (element) {
+    //                 element.initInterception();
+    //             } // azzera i campi
+    //         );
+    //     }
+    // }
 
     //Faccio un doppio for per prendere tutti i pixel del canvas
     for (let coloumn = mincoloumn; coloumn < maxcoloumn; coloumn++) {
         for (let row = minrow; row < maxrow; row++) {
-            //TODO - fire a ray though each pixel
 
             current_bounce = 0;
 
-            ray = camera.castRay(coloumn, row);
+            let xOffset, yOffset;
 
-            setPixel(coloumn, row, computePixel(ray, current_bounce));
+            for (let xDepth = 0; xDepth < AntialiasDepth; xDepth++)
+                for (let yDepth = 0; yDepth < AntialiasDepth; yDepth++) {
 
-            surfaces.forEach(function (element) {
-                    element.initInterception();
-                } // azzera i campi
-            );
+                    xOffset = (xDepth / AntialiasDepth) - (1 / (2 * AntialiasDepth));
+                    yOffset = (yDepth / AntialiasDepth) - (1 / (2 * AntialiasDepth));
+
+                    xOffset += Math.random() * (1 / AntialiasDepth);
+                    yOffset += Math.random() * (1 / AntialiasDepth);
+
+
+                    ray = camera.castRay(coloumn + xOffset, row + yOffset);
+                    tempcolor = computePixel(ray, current_bounce);
+
+                    colormean[0] += tempcolor[0];
+                    colormean[1] += tempcolor[1];
+                    colormean[2] += tempcolor[2];
+
+                    surfaces.forEach(function (element) {
+                            element.initInterception();
+                        } // azzera i campi
+                    );
+                }
+
+
+
+
+            colormean[0] = colormean[0] / (AntialiasDepth * AntialiasDepth);
+            colormean[1] = colormean[1] / (AntialiasDepth * AntialiasDepth);
+            colormean[2] = colormean[2] / (AntialiasDepth * AntialiasDepth);
+            // }
+            setPixel(coloumn, row, colormean);
+            colormean[0] = 0;
+            colormean[1] = 0;
+            colormean[2] = 0;
         }
     }
-
 
     //render the pixels that have been set
     context.putImageData(imageBuffer, 0, 0);
