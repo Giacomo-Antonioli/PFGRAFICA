@@ -8,24 +8,10 @@ let mincoloumn;
 let maxcoloumn;
 let minrow;
 let maxrow;
-let cropped = false;
+let cropped = true;
 let animate = false;
 let AntialiasDepth = 5;
-//##################################################################
 
-// let file_path = "assets/TriangleTest.json";
-// let file_path = "assets/TriangleShadingTest.json";
-// let file_path = "assets/TransformationTest.json";
-// let file_path = "assets/SphereShadingTest2.json";
-let file_path = "assets/SphereTest.json";
-// let file_path = "assets/CornellBox.json";
-// let file_path = "assets/RecursiveTest.json";
-// let file_path = "assets/ShadowTest1.json";
-// let file_path = "assets/ShadowTest2.json";
-// let file_path = "assets/SphereShadingTest1.json";
-// let file_path = "assets/FullTest.json";
-
-//####################GLOBAL VALUES#################################
 let scene;
 let camera;
 let surfaces = [];
@@ -36,7 +22,8 @@ let shadow_bias;
 let counterflag = 0;
 let countRepetitionsGif;
 let FRAMES;
-
+let cycletime = 500 / FRAMES;
+let cycle_delay = 5000;
 
 if (animate) {
     FRAMES = 8;
@@ -56,17 +43,39 @@ if (cropped) {
     maxrow = 512;
 }
 
-let cycletime = 500 / FRAMES;
-let cycle_delay = 5000;
 const gpu = new GPU();
-
-
 let IMMAGEARRAY = [];
-//_:::::::::::::::::::::::::::::::::::::::::::::::
 
-//etc...
-//####################GLOBAL VALUES#################################
-//ProvaBranch
+
+
+//################################################################################################
+
+// let file_path = "assets/TriangleTest.json";
+// let file_path = "assets/TriangleShadingTest.json";
+// let file_path = "assets/TransformationTest.json";
+// let file_path = "assets/SphereShadingTest2.json";
+let file_path = "assets/SphereTest.json";
+// let file_path = "assets/CornellBox.json";
+// let file_path = "assets/RecursiveTest.json";
+// let file_path = "assets/ShadowTest1.json";
+// let file_path = "assets/ShadowTest2.json";
+// let file_path = "assets/SphereShadingTest1.json";
+// let file_path = "assets/FullTest.json";
+
+//################################################################################################
+
+/*
+    ######## ##     ## ##    ##  ######  ######## ####  #######  ##    ##  ######  
+    ##       ##     ## ###   ## ##    ##    ##     ##  ##     ## ###   ## ##    ## 
+    ##       ##     ## ####  ## ##          ##     ##  ##     ## ####  ## ##       
+    ######   ##     ## ## ## ## ##          ##     ##  ##     ## ## ## ##  ######  
+    ##       ##     ## ##  #### ##          ##     ##  ##     ## ##  ####       ## 
+    ##       ##     ## ##   ### ##    ##    ##     ##  ##     ## ##   ### ##    ## 
+    ##        #######  ##    ##  ######     ##    ####  #######  ##    ##  ###### 
+*/
+
+//_______________________________________________________________________________________________________________________
+
 function ClearALL() {
     let camera;
     surfaces = [];
@@ -76,6 +85,7 @@ function ClearALL() {
     shadow_bias = 0;
     counterflag = 0;
 }
+//_______________________________________________________________________________________________________________________
 
 /**
  * Funzione di inizializzazione a documento pronto.
@@ -86,6 +96,8 @@ $(document).ready(function () {
     for (countRepetitionsGif = 0; countRepetitionsGif < FRAMES + 1; countRepetitionsGif++) {
 
         init();
+
+        //render the pixels that have been set
         if (animate) {
             if (countRepetitionsGif < 5)
                 surfaces[0].setcenter([1, 1.5 * Math.sin(countRepetitionsGif * Math.PI / (FRAMES - 3)), -1]);
@@ -108,7 +120,7 @@ $(document).ready(function () {
         showImagesLikeVideo(0);
 
 });
-
+//_______________________________________________________________________________________________________________________
 
 function showImagesLikeVideo(index) {
     if (index < IMMAGEARRAY.length) {
@@ -117,8 +129,7 @@ function showImagesLikeVideo(index) {
     } else
         setTimeout(showImagesLikeVideo.bind(null, 0), cycletime + cycle_delay);
 }
-//____________________________________________________________________________________________________|
-
+//_______________________________________________________________________________________________________________________
 /**
  * Funzione di calcolo dei valori dello spazio RGB da applicare ai pixel.
  * @param {Ray} ray Raggio che dall'osservatore interseca gli oggetti visibili della scena e che puo' essere riflesso un numero finito di volte
@@ -206,9 +217,7 @@ function computePixel(ray, current_bounce) {
 
     return color;
 }
-
-
-
+//_______________________________________________________________________________________________________________________
 
 
 function transformRay(ray, shape) {
@@ -229,11 +238,7 @@ function transformRay(ray, shape) {
 
 }
 
-//##########################################################FUNCTIONS#####################################################
-
-
-//##########################################################DEBUG FUNCTIONS#####################################################
-
+//_______________________________________________________________________________________________________________________
 
 function getPixelColor(ray, element) {
 
@@ -380,6 +385,7 @@ function getPixelColor(ray, element) {
 
 }
 
+//_______________________________________________________________________________________________________________________
 
 /**
  * Funzione di valutazione della presenza o assenza del contributo luminoso di una data sorgente luminosa in un dato pixel.
@@ -407,6 +413,8 @@ function ShadowCast(castedRay, element) {
     return false;
 }
 
+//_______________________________________________________________________________________________________________________
+
 /**
  * Funzione di conversione in gradi del valore di un angolo espresso in radianti.
  * @param {Float} degrees Valore in gradi dell'angolo da convertire
@@ -414,6 +422,8 @@ function ShadowCast(castedRay, element) {
 function rad(degrees) {
     return degrees * Math.PI / 180;
 }
+
+//_______________________________________________________________________________________________________________________
 
 /**
  * Funzione di inizializzazione della scena.
@@ -424,6 +434,8 @@ function init() {
     imageBuffer = context.createImageData(canvas.width, canvas.height); //buffer for pixels
     loadSceneFile(file_path);
 }
+
+//_______________________________________________________________________________________________________________________
 
 /**
  * Funzione di caricamento degli elementi di ogni asset.
@@ -492,34 +504,148 @@ function loadSceneFile(filepath) {
     console.log("Computing Image Number: " + countRepetitionsGif);
 }
 
+//_______________________________________________________________________________________________________________________
+
 /**
  * Funzione di rendering del canvas.
  */
-
-
-
 function render() {
-    let current_bounce;
+    //  let current_bounce;
     let colormean = [0, 0, 0];
     let tempcolor = colormean;
+    let sphereArray = [];
+
+    //cameraArray index (0-2) eye, (3) h, (4) w, (5-8) VirtualProjectionMatrix
+    // cameraArray = [camera.eye[0], camera.eye[1], camera.eye[2], camera.h, camera.w, camera.VirtualProjectionMatrix[5], camera.VirtualProjectionMatrix[6], camera.VirtualProjectionMatrix[9], camera.VirtualProjectionMatrix[10]];
+    // canvasArray = [canvas.width, canvas.height];
 
     //#############################################
     //SENZA ANTIALIASING
+    console.log("CAMERAAAAA");
+    //console.log(cameraArray);
 
-    const multiplyMatrix = gpu.createKernel(function (coloumn, row) {
+    var options = {
+        constants: {
+            eyeX: camera.eye[0],
+            eyeY: camera.eye[1],
+            eyeZ: camera.eye[2],
+            H: camera.h,
+            W: camera.w,
+            VPM5: camera.VirtualProjectionMatrix[5],
+            VPM6: camera.VirtualProjectionMatrix[6],
+            VPM9: camera.VirtualProjectionMatrix[9],
+            VPM10: camera.VirtualProjectionMatrix[10],
+
+            canvasWidth: canvas.width,
+            canvasHeight: canvas.height
+        }
+    }
+
+
+    //Sphere (0-2) center (3-5) radius
+
+    sphereArray.push(surfaces[0].center[0]);
+    sphereArray.push(surfaces[0].center[1]);
+    sphereArray.push(surfaces[0].center[2]);
+    sphereArray.push(surfaces[0].radius[0]);
+
+
+    const gpurender = gpu.createKernel(function (coloumn, row,sphereArray) {
 
         let colorgpu = [0, 0, 0];
-        current_bounce = 0;
+        let current_bounce = 0;
 
-        ray = camera.castRay(coloumn, row);
+        //  ray = camera.castRay(coloumn, row);
+        //console.log(cameraArray);
+        //  colorgpu = computePixel(ray, current_bounce);
 
-        colorgpu = computePixel(ray, current_bounce);
 
 
-        return colorgpu;
-    }).setOutput([1]);
+        let u = (this.constants.W * this.thread.x / (this.constants.canvasWidth - 1)) - (this.constants.W / 2.0);
+        let v = (-this.constants.H * this.thread.y / (this.constants.canvasHeight - 1)) + (this.constants.H / 2.0);
+        let cameraRayDirection = [u, v * this.constants.VPM5 - this.constants.VPM6, v * this.constants.VPM9 - this.constants.VPM10];
+        let cameraRayOrigin = [this.constants.eyeX, this.constants.eyeY, this.constants.eyeZ];
+        /*saltati t_nearest nearestobject min max isbounced*/
 
-    
+        ////////////////SPHERE
+        
+
+        let flag_t1=0
+        let flag_t2=0;
+        let origin_center_sub = [0,0,0]; //a=(e-c)
+
+        let direction_times_origin_center_sub=0; // b = d*(e-c)
+        let direction_euclidean_norm_squared=0; // f=d*d
+        let origin_center_sub_euclidean_norm_squared=0; // a^2
+
+        let hit =false;
+      origin_center_sub=[cameraRayOrigin[0]-sphereArray[0],cameraRayOrigin[1]-sphereArray[1],cameraRayOrigin[2]-sphereArray[2]];//a
+        direction_times_origin_center_sub= cameraRayDirection[0]*origin_center_sub[0]+cameraRayDirection[1]*origin_center_sub[1]+cameraRayDirection[2]*origin_center_sub[2];//b
+        direction_euclidean_norm_squared=cameraRayDirection[0]*cameraRayDirection[0]+cameraRayDirection[1]*cameraRayDirection[1]+cameraRayDirection[2]*cameraRayDirection[2];//f
+        origin_center_sub_euclidean_norm_squared=origin_center_sub[0]*origin_center_sub[0]+origin_center_sub[1]*origin_center_sub[1]+origin_center_sub[2]*origin_center_sub[2];
+        let discriminant = Math.pow(direction_times_origin_center_sub, 2) - direction_euclidean_norm_squared * (origin_center_sub_euclidean_norm_squared - Math.pow(sphereArray[3], 2));
+
+
+        // -b + sqrt(b^2 - f*(a^2) - R^2) / f
+        flag_t1 = (-direction_times_origin_center_sub + Math.sqrt(discriminant)) / direction_euclidean_norm_squared;
+        // -b - sqrt(b^2 - f*(a^2) - R^2) / f
+        flag_t2 = (-direction_times_origin_center_sub - Math.sqrt(discriminant)) / direction_euclidean_norm_squared;
+
+
+        // flag_t2 = ((-direction_times_origin_center_sub - Math.sqrt(Math.pow(direction_times_origin_center_sub, 2) - direction_euclidean_norm_squared * (origin_center_sub_euclidean_norm_squared - Math.pow(this.radius, 2)))) / direction_euclidean_norm_squared);
+
+return flag_t1;
+        let t=0;
+        //Posso fare il controllo solo un flag in quanto se i punti sono coincidenti i flag sono uguali
+        // E se son diversi devono avere entrambi un valore non nullo se intersecano la sfera
+        if (flag_t1 < 0 && flag_t2 < 0 || flag_t1==NaN && flag_t2==NaN) {
+            t = -1;
+        } else if (flag_t1 < 0 && flag_t2 >= 0||flag_t1==undefined && flag_t2 >= 0) {
+            t = flag_t2;
+        } else if (flag_t1 >= 0 && flag_t2 < 0  ||flag_t2==undefined && flag_t1 >= 0) {
+            t = flag_t1;
+
+        } else {
+            if (flag_t1 > flag_t2) {
+                t = flag_t2;
+
+            } else {
+                t = flag_t1;
+
+            }
+        }
+        if (t == -1 || t <= 0.0001) {
+            hit= false;
+        } else {
+           /* let point = glMatrix.vec3.create();
+            glMatrix.vec3.scaleAndAdd(point, ray.origin, ray.direction, t);
+            if((glMatrix.vec3.distance(point, ray.origin) - ray.tMax )>= shadow_bias)
+                return false;
+            let normal = glMatrix.vec3.create();
+            glMatrix.vec3.subtract(normal, point, this._center);
+            let unitNormal = glMatrix.vec3.create();
+            glMatrix.vec3.scale(unitNormal, normal, 1 / this._radius);
+            this.setInterception(t, point, unitNormal, ray.direction);
+*/
+            hit= true;
+        }
+
+
+        if(hit)
+            colorgpu=[1,0,1];
+
+
+
+
+        ///////////////////////
+
+
+
+       this.color(colorgpu[0],colorgpu[1],colorgpu[2]);
+
+    }, options).setOutput([512,512]);//.setGraphical(true);
+
+
     let megamatrix = [];
     // //Faccio un doppio for per prendere tutti i pixel del canvas
     for (let coloumn = mincoloumn; coloumn < maxcoloumn; coloumn++) {
@@ -527,18 +653,29 @@ function render() {
             //TODO - fire a ray though each pixel
 
 
-            megamatrix.push(multiplyMatrix(coloumn, row));
-
+            //megamatrix.push(gpurender(coloumn, row,cameraArray));
+            megamatrix = gpurender(coloumn, row,sphereArray);
+            console.log(megamatrix);
         }
     }
 
 
+    const canvasmy = gpurender.canvas;
+    document.getElementsByTagName('body')[0].appendChild(canvasmy);
 
-    for (let coloumn = mincoloumn; coloumn < maxcoloumn; coloumn++) {
+
+  /*  for (let coloumn = mincoloumn; coloumn < maxcoloumn; coloumn++) {
         for (let row = minrow; row < maxrow; row++) {
-            setPixel(x, y, megamatrix.pop());
+        if(megamatrix[row][coloumn]===[1,1,1])
+            console.log("BUUUU");
         }
     }
+
+    /*  for (let coloumn = mincoloumn; coloumn < maxcoloumn; coloumn++) {
+          for (let row = minrow; row < maxrow; row++) {
+              setPixel(x, y, megamatrix.pop());
+          }
+      }*/
     //#############################################
 
     //#############################################
@@ -590,7 +727,6 @@ function render() {
     //#############################################
 
 
-    //render the pixels that have been set
     context.putImageData(imageBuffer, 0, 0);
 
 
@@ -602,7 +738,7 @@ function render() {
 
 }
 
-
+//_______________________________________________________________________________________________________________________
 
 /**
  * Funzione di assegnazione del colore ad ogni singolo elemento del canvas.
@@ -618,8 +754,7 @@ function setPixel(x, y, color) {
     imageBuffer.data[i + 3] = 255; //(color[3]*255) | 0; //switch to include transparency
 }
 
-//##########################################################FUNCTIONS#####################################################
-
+//_______________________________________________________________________________________________________________________
 
 //##########################################################DEBUG FUNCTIONS#####################################################
 /**
