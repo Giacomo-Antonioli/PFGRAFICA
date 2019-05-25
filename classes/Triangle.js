@@ -9,12 +9,12 @@ class Triangle extends Figure {
      * @param {Array} p3 Terzo vertice
      * @param {Integer} material Indice della lista di materiali di cui è costituito l'oggetto
      */
-    constructor(p1, p2, p3, material, index, name) {
+    constructor(p1, p2, p3, material, index) {
         super(material, index);
         this._p1 = glMatrix.vec3.fromValues(p1[0], p1[1], p1[2]);
         this._p2 = glMatrix.vec3.fromValues(p2[0], p2[1], p2[2]);
         this._p3 = glMatrix.vec3.fromValues(p3[0], p3[1], p3[2]);
-        this._name = name;
+       
     }
 
     //____________________________________________________________________________________________________
@@ -45,7 +45,7 @@ class Triangle extends Figure {
             [this._p1[2] - this._p2[2], this._p1[2] - this._p3[2], ray.direction[2], this._p1[2] - ray.origin[2]],
         ];
 
-        solutions = (gauss(A)); //Calcola il vettore contenente la soluzione delle tre equazioni necessarie
+        solutions = triangleSolutions(A); //Calcola il vettore contenente la soluzione delle tre equazioni necessarie
         //per identificare intersezione triangolo-raggio
 
 
@@ -161,9 +161,7 @@ class Triangle extends Figure {
         super.normal = value;
     }
 
-    set name(value) {
-        this._name = value;
-    }
+
 
     /** */
     set material(value) {
@@ -256,9 +254,6 @@ class Triangle extends Figure {
         return super.t;
     }
 
-    get name() {
-        return this._name;
-    }
 
 
 }
@@ -275,51 +270,16 @@ class Triangle extends Figure {
 */
 
 /**
- * Fattorizzazzione di Gauss con pivoting parziale per la risoluzione di un sistema lineare di dimensione pari al numero di colonne di A.
- * A deve essere quadrata.
+ * applicazione metodo di cramer per la risoluzione di sistemi lineari
  * @param {Array} A Matrice associata al sistema
+ * @return {Array} array delle soluzioni
  */
-function gauss(A) {
-    let n = A.length;
+function triangleSolutions(A) {
+    let M = A[0][0] * (A[1][1] * A[2][2] - A[1][2] * A[2][1]) + A[1][0] * (A[0][2] * A[2][1] - A[0][1] * A[2][2]) + A[2][0] * (A[0][1] * A[1][2] - A[1][1] * A[0][2]);
+    let solutions = [];
+    solutions.push((A[0][3] * (A[1][1] * A[2][2] - A[1][2] * A[2][1]) + A[1][3] * (A[0][2] * A[2][1] - A[0][1] * A[2][2]) + A[2][3] * (A[0][1] * A[1][2] - A[1][1] * A[0][2])) / M);
+    solutions.push((A[2][2] * (A[0][0] * A[1][3] - A[0][3] * A[1][0]) + A[1][2] * (A[0][3] * A[2][0] - A[0][0] * A[2][3]) + A[0][2] * (A[1][0] * A[2][3] - A[1][3] * A[2][0])) / M);
+    solutions.push(-(A[2][1] * (A[0][0] * A[1][3] - A[0][3] * A[1][0]) + A[1][1] * (A[0][3] * A[2][0] - A[0][0] * A[2][3]) + A[0][1] * (A[1][0] * A[2][3] - A[1][3] * A[2][0])) / M);
+    return solutions;
 
-    for (let i = 0; i < n; i++) {
-        // Search for maximum in this column
-        let maxEl = Math.abs(A[i][i]);
-        let maxRow = i;
-        for (let k = i + 1; k < n; k++) {
-            if (Math.abs(A[k][i]) > maxEl) {
-                maxEl = Math.abs(A[k][i]);
-                maxRow = k;
-            }
-        }
-
-        // Swap maximum row with current row (column by column)
-        for (let k = i; k < n + 1; k++) {
-            let tmp = A[maxRow][k];
-            A[maxRow][k] = A[i][k];
-            A[i][k] = tmp;
-        }
-
-        // Make all rows below this one 0 in current column
-        for (let k = i + 1; k < n; k++) {
-            let c = -A[k][i] / A[i][i];
-            for (let j = i; j < n + 1; j++) {
-                if (i === j) {
-                    A[k][j] = 0;
-                } else {
-                    A[k][j] += c * A[i][j];
-                }
-            }
-        }
-    }
-
-    // Solve equation Ax=b for an upper triangular matrix A
-    let x = new Array(n);
-    for (let i = n - 1; i > -1; i--) {
-        x[i] = A[i][n] / A[i][i];
-        for (let k = i - 1; k > -1; k--) {
-            A[k][n] -= A[k][i] * x[i];
-        }
-    }
-    return x;
 }
