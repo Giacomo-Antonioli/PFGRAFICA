@@ -8,13 +8,12 @@ class Sphere extends Figure {
      * @param {Float} radius Raggio della sfera
      * @param {Integer} material Indice della lista di materiali di cui è costituito l'oggetto
      * @param {integer} index Indice nella lista delle superfici
-     * @param {} name
      */
-    constructor(center, radius, material, index, name) {
+    constructor(center, radius, material, index) {
         super(material, index);
         this._center = glMatrix.vec3.fromValues(center[0], center[1], center[2]);
         this._radius = radius;
-        this._name = name;
+
 
     }
 
@@ -121,38 +120,47 @@ class Sphere extends Figure {
     me() {
         console.log("SPHERE");
     }
+
     /** */
     showTransformationMatrix() {
         super.showTransformationMatrix();
     }
+
     /** */
     setTranslation(TransaltionVector) {
         super.setTranslation(TransaltionVector);
     }
+
     /** */
     setRotation(RotationVector) {
         super.setRotation(RotationVector);
     }
+
     /** */
     setScaling(ScalingVector) {
         super.setScaling(ScalingVector);
     }
+
     /** */
     invertMatrix() {
         super.invertMatrix();
     }
+
     /** */
     transposeInvertedMatrix() {
         super.transposeInvertedMatrix();
     }
+
     /** */
     setTransformationMatrixValue() {
         super.setTransformationMatrixValue();
     }
+
     /** */
     initInterception() {
         super.initInterception();
     }
+
     /** */
     setInterception(t, interception_point, normal, direction) {
         super.setInterception(t, interception_point, normal, direction);
@@ -182,46 +190,52 @@ class Sphere extends Figure {
     set material(value) {
         super.material = value;
     }
+
     /** */
     set index(value) {
         super.index = value;
     }
+
     /** */
     set TransformationMatrix(value) {
         super.TransformationMatrix = value;
     }
+
     /** */
     set inverseTransformationMatrix(value) {
         super.inverseTransformationMatrix = value;
     }
+
     /** */
     set transposedInverseTransformationMatrix(value) {
         super.transposedInverseTransformationMatrix = value;
     }
+
     /** */
     set hasTransformationMatrix(value) {
         super.hasTransformationMatrix = value;
     }
+
     /** */
     set t(value) {
         super.t = value;
     }
+
     /** */
     set interception_point(value) {
         super.interception_point = value;
     }
+
     /** */
     set normal(value) {
         super.normal = value;
     }
+
     /** */
     set radius(value) {
         this._radius = value;
     }
 
-    set name(value) {
-        this._name = value;
-    }
 
     //____________________________________________________________________________________________________
     /*
@@ -280,7 +294,4 @@ class Sphere extends Figure {
         return this._radius;
     }
 
-    get name() {
-        return this._name;
-    }
 }

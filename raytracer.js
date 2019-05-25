@@ -9,7 +9,7 @@ let minrow;
 let maxrow;
 let cropped = false;
 let animate = false;
-let AntialiasDepth = 4;
+let AntialiasDepth = 5;
 
 let scene;
 let camera;
@@ -83,6 +83,7 @@ function ClearALL() {
     shadow_bias = 0;
     counterflag = 0;
 }
+
 //_______________________________________________________________________________________________________________________
 
 
@@ -117,6 +118,7 @@ $(document).ready(function () {
         showImagesLikeVideo(0);
 
 });
+
 //_______________________________________________________________________________________________________________________
 
 /**
@@ -130,6 +132,7 @@ function showImagesLikeVideo(index) {
     } else
         setTimeout(showImagesLikeVideo.bind(null, 0), cycletime + cycle_delay);
 }
+
 //_______________________________________________________________________________________________________________________
 
 
@@ -207,6 +210,7 @@ function computePixel(ray, current_bounce) {
 
     return color;
 }
+
 //_______________________________________________________________________________________________________________________
 
 /**
@@ -232,6 +236,7 @@ function transformRay(ray, shape) {
     }
 
 }
+
 //_______________________________________________________________________________________________________________________
 
 /**
@@ -369,6 +374,7 @@ function getPixelColor(ray, element) {
 
     return total;
 }
+
 //_______________________________________________________________________________________________________________________
 
 
@@ -393,6 +399,7 @@ function ShadowCast(castedRay, element) {
     }
     return false;
 }
+
 //_______________________________________________________________________________________________________________________
 
 
@@ -403,6 +410,7 @@ function ShadowCast(castedRay, element) {
 function rad(degrees) {
     return degrees * Math.PI / 180;
 }
+
 //_______________________________________________________________________________________________________________________
 
 
@@ -415,6 +423,7 @@ function init() {
     imageBuffer = context.createImageData(canvas.width, canvas.height); //buffer for pixels
     loadSceneFile(file_path);
 }
+
 //_______________________________________________________________________________________________________________________
 
 
@@ -442,7 +451,10 @@ function loadSceneFile(filepath) {
     shadow_bias = scene.shadow_bias;
 
     scene.materials.forEach(function (element) {
-        materials.push(new Material(element.ka, element.kd, element.ks, element.shininess, element.kr));
+        let kr = element.kr;
+        if(kr == undefined)
+            kr = [0,0,0];
+        materials.push(new Material(element.ka, element.kd, element.ks, element.shininess, kr));
 
     });
     let counter = 0;
@@ -452,10 +464,10 @@ function loadSceneFile(filepath) {
 
 
         if (element.shape == "Sphere")
-            currentObject = new Sphere(element.center, element.radius, element.material, counter, element.name);
+            currentObject = new Sphere(element.center, element.radius, element.material, counter);
 
         if (element.shape == "Triangle")
-            currentObject = new Triangle(element.p1, element.p2, element.p3, element.material, counter, element.name);
+            currentObject = new Triangle(element.p1, element.p2, element.p3, element.material, counter);
 
         counter++;
         if (element.transforms != undefined) {
@@ -483,6 +495,7 @@ function loadSceneFile(filepath) {
     });
     console.log("Computing Image Number: " + countRepetitionsGif);
 }
+
 //_______________________________________________________________________________________________________________________
 
 
@@ -508,12 +521,14 @@ function render() {
             for (let xDepth = 0; xDepth < AntialiasDepth; xDepth++)
                 for (let yDepth = 0; yDepth < AntialiasDepth; yDepth++) {
 
+
                     xOffset = (xDepth / AntialiasDepth) - (1 / (2 * AntialiasDepth));
                     yOffset = (yDepth / AntialiasDepth) - (1 / (2 * AntialiasDepth));
 
-                    xOffset += Math.random() * (1 / AntialiasDepth); // generazione componente randomica (jitter)
-                    yOffset += Math.random() * (1 / AntialiasDepth); // generazione componente randomica (jitter)
-
+                    if (AntialiasDepth > 1) {
+                        xOffset += Math.random() * (1 / AntialiasDepth); // generazione componente randomica (jitter)
+                        yOffset += Math.random() * (1 / AntialiasDepth); // generazione componente randomica (jitter)
+                    }
 
                     ray = camera.castRay(coloumn + xOffset, row + yOffset);
                     tempcolor = computePixel(ray, current_bounce);
@@ -523,12 +538,10 @@ function render() {
                     colormean[2] += tempcolor[2];
 
                     surfaces.forEach(function (element) {
-                        element.initInterception();// azzera i campi
-                    }
+                            element.initInterception();// azzera i campi
+                        }
                     );
                 }
-
-
 
 
             colormean[0] = colormean[0] / (AntialiasDepth * AntialiasDepth);
@@ -554,8 +567,8 @@ function render() {
     IMMAGEARRAY.push(fullQuality);
 
 
-
 }
+
 //_______________________________________________________________________________________________________________________
 
 
@@ -572,4 +585,5 @@ function setPixel(x, y, color) {
     imageBuffer.data[i + 2] = (color[2] * 255) | 0;
     imageBuffer.data[i + 3] = 255; //(color[3]*255) | 0; //switch to include transparency
 }
+
 //_______________________________________________________________________________________________________________________
