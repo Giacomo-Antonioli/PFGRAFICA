@@ -44,30 +44,6 @@ class Ray {
         console.log("tMax: " + this._tMax);
     }
 
-    /**
-     * Funzione che setta il punto più vicino di hit. Raddrizza i versi errati delle normali
-     * @param {Float} t 
-     * @param {Array} point 
-     * @param {Array} n 
-     */
-    // ray_Intersect(t,point,n) {
-    //     /*
-    //     * INPUT
-    //     * t         scalare
-    //     * point     Vettore
-    //     * n         Vettore
-    //     * */
-    //      if (glMatrix.vec3.dot(n, this.direction)>rad(90))//NON SO IL VERSO DELLA NORMALE QUINDI LO ADATTO ALLA POS DELLA CAMERA
-    //             glMatrix.vec3.negate(n, n);
-    //     this.t_parameter=t;
-    //     this.intersection_point=glMatrix.vec3.clone(point);
-    //     this.normalpoint = glMatrix.vec3.clone(n);
-    //     if (t <= this.t_Nearest && t >= this._tMin)
-    //         this.t_Nearest = t;
-    //
-    // }
-
-
     //____________________________________________________________________________________________________
     /*
         ######  ######## ######## ######## ######## ########   ######  

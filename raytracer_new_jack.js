@@ -3,29 +3,14 @@ let context;
 let imageBuffer;
 let DEBUG = false; //whether to show debug messages
 let EPSILON = 0.00001; //error margins
-let mydebug = false;
 let mincoloumn;
 let maxcoloumn;
 let minrow;
 let maxrow;
 let cropped = false;
 let animate = false;
-let AntialiasDepth = 5;
-//##################################################################
+let AntialiasDepth = 4;
 
-// let file_path = "assets/TriangleTest.json";
-// let file_path = "assets/TriangleShadingTest.json";
-// let file_path = "assets/TransformationTest.json";
-// let file_path = "assets/SphereShadingTest2.json";
-// let file_path = "assets/SphereTest.json";
-// let file_path = "assets/CornellBox.json";
-// let file_path = "assets/RecursiveTest.json";
-// let file_path = "assets/ShadowTest1.json";
-// let file_path = "assets/ShadowTest2.json";
-// let file_path = "assets/SphereShadingTest1.json";
-let file_path = "assets/FullTest.json";
-
-//####################GLOBAL VALUES#################################
 let scene;
 let camera;
 let surfaces = [];
@@ -36,7 +21,9 @@ let shadow_bias;
 let counterflag = 0;
 let countRepetitionsGif;
 let FRAMES;
-
+let cycletime = 500 / FRAMES;
+let cycle_delay = 5000;
+let IMMAGEARRAY = [];
 
 if (animate) {
     FRAMES = 8;
@@ -56,15 +43,37 @@ if (cropped) {
     maxrow = 512;
 }
 
-let cycletime = 500 / FRAMES;
-let cycle_delay = 5000;
+//################################################################################################
 
-let IMMAGEARRAY = [];
-//_:::::::::::::::::::::::::::::::::::::::::::::::
+// let file_path = "assets/TriangleTest.json";
+// let file_path = "assets/TriangleShadingTest.json";
+// let file_path = "assets/TransformationTest.json";
+// let file_path = "assets/SphereShadingTest2.json";
+// let file_path = "assets/SphereTest.json";
+let file_path = "assets/CornellBox.json";
+// let file_path = "assets/RecursiveTest.json";
+// let file_path = "assets/ShadowTest1.json";
+// let file_path = "assets/ShadowTest2.json";
+// let file_path = "assets/SphereShadingTest1.json";
+// let file_path = "assets/FullTest.json";
 
-//etc...
-//####################GLOBAL VALUES#################################
-//ProvaBranch
+//################################################################################################
+
+/*
+    ######## ##     ## ##    ##  ######  ######## ####  #######  ##    ##  ######  
+    ##       ##     ## ###   ## ##    ##    ##     ##  ##     ## ###   ## ##    ## 
+    ##       ##     ## ####  ## ##          ##     ##  ##     ## ####  ## ##       
+    ######   ##     ## ## ## ## ##          ##     ##  ##     ## ## ## ##  ######  
+    ##       ##     ## ##  #### ##          ##     ##  ##     ## ##  ####       ## 
+    ##       ##     ## ##   ### ##    ##    ##     ##  ##     ## ##   ### ##    ## 
+    ##        #######  ##    ##  ######     ##    ####  #######  ##    ##  ###### 
+*/
+
+//_______________________________________________________________________________________________________________________
+
+/**
+ * Funzione di reset dei campi specificati.
+ */
 function ClearALL() {
     let camera;
     surfaces = [];
@@ -74,6 +83,8 @@ function ClearALL() {
     shadow_bias = 0;
     counterflag = 0;
 }
+//_______________________________________________________________________________________________________________________
+
 
 /**
  * Funzione di inizializzazione a documento pronto.
@@ -105,18 +116,13 @@ $(document).ready(function () {
     if (animate)
         showImagesLikeVideo(0);
 
-    //debugging - cast a ray through the clicked pixel with DEBUG messaging on
-    /* $('#canvas').click(function (e) {
-         let x = e.pageX - $('#canvas').offset().left;
-         let y = e.pageY - $('#canvas').offset().top;
-         DEBUG = true;
-         camera.castRay(x, y); //cast a ray through the point
-         DEBUG = false;
-     });*/
-
 });
+//_______________________________________________________________________________________________________________________
 
-
+/**
+ * Funzione che, partendo da un array di immagini, genera un animazione con tempi determinati.
+ * @param {Int} index indice immagine corrente.
+ */
 function showImagesLikeVideo(index) {
     if (index < IMMAGEARRAY.length) {
         document.getElementById("AnimatedVideo").src = IMMAGEARRAY[index];
@@ -124,12 +130,14 @@ function showImagesLikeVideo(index) {
     } else
         setTimeout(showImagesLikeVideo.bind(null, 0), cycletime + cycle_delay);
 }
-//____________________________________________________________________________________________________|
+//_______________________________________________________________________________________________________________________
+
 
 /**
  * Funzione di calcolo dei valori dello spazio RGB da applicare ai pixel.
  * @param {Ray} ray Raggio che dall'osservatore interseca gli oggetti visibili della scena e che puo' essere riflesso un numero finito di volte
- * @returns {Array} color Colore con cui illluminare il piexl
+ * @param {Int} current_bounce numero riflessione corrente
+ * @returns {Array} color Colore con cui illuminare il pixel
  */
 function computePixel(ray, current_bounce) {
 
@@ -141,12 +149,8 @@ function computePixel(ray, current_bounce) {
 
     surfaces.forEach(function (shape) {
 
-        //TODO - calculate the intersection of that ray with the scene
-
         tempRay = transformRay(ray, shape);
-        setpixel = shape.intersection(tempRay); //setpixel mi dice se il raggio interseca la figura
-
-
+        setpixel = shape.intersection(tempRay); //true se il raggio interseca la figura
 
         if (setpixel) {
             Recorded_HIT = true;
@@ -162,21 +166,14 @@ function computePixel(ray, current_bounce) {
         let intercepted_shape = surfaces[ray.NearestObject];
         if (intercepted_shape.hasTransformationMatrix)
             intercepted_shape.RestoreSDR();
-        //  console.log("Nearest Object: "+intercepted_shape.name);
-        // console.log("HITTED POINT:");
-        //console.log(intercepted_shape.interception_point);
 
-        //console.log("HIT");
         color = getPixelColor(ray, surfaces[ray.NearestObject]);
 
-
-        //console.log(color);
         if (current_bounce < bounce_depth) {
-            //    console.log("ENTRO");
             current_bounce++;
 
-            //************************************************/
-            //Reflect Ray
+            //**************************************************************/
+            //Calcolo del Raggio Riflesso
             if (materials[intercepted_shape.material].kr[0] != 0 && materials[intercepted_shape.material].kr[1] != 0 && materials[intercepted_shape.material].kr[2] != 0) {
 
                 let local_normal = glMatrix.vec3.clone(intercepted_shape.normal);
@@ -185,7 +182,7 @@ function computePixel(ray, current_bounce) {
                 let double_d_MUL_n = 2 * glMatrix.vec3.dot(ray.direction, local_normal);
                 let scaled_n = glMatrix.vec3.create();
 
-                if (glMatrix.vec3.dot(ray.direction, intercepted_shape.normal) > rad(90)) //NON SO IL VERSO DELLA NORMALE QUINDI LO ADATTO ALLA POS DELLA CAMERA
+                if (glMatrix.vec3.dot(ray.direction, intercepted_shape.normal) > rad(90)) //non conosco il verso della normale, quindi lo adatto alla posizione della camera
                     glMatrix.vec3.negate(local_normal, local_normal);
 
                 glMatrix.vec3.scale(scaled_n, local_normal, double_d_MUL_n);
@@ -202,29 +199,29 @@ function computePixel(ray, current_bounce) {
                 color[2] = color[2] + materials[intercepted_shape.material].kr[2] * Recorded_color[2];
 
             }
-
-
-            //************************************************/
+            //**************************************************************/
 
 
         }
     }
 
-
     return color;
 }
+//_______________________________________________________________________________________________________________________
 
-
-
-
-
+/**
+ * Funzione di trasformazione di un raggio
+ * @param {Ray} ray Raggio a cui applicare la trasformazione
+ * @param {Figure} shape figura rispetto alla quale eventualmete si trasforma il raggio
+ * @returns {Ray} ray Raggio trasformato (se la figura corrente ha campo "hasTransformationMatrix" true)
+ */
 function transformRay(ray, shape) {
     if (shape.hasTransformationMatrix) {
         let temporigin;
         let tempdirection;
 
-        temporigin = glMatrix.vec4.fromValues(ray.origin[0], ray.origin[1], ray.origin[2], 1); //l’origine è un punto quindi il termine omogeneo deve essere 1
-        tempdirection = glMatrix.vec4.fromValues(ray.direction[0], ray.direction[1], ray.direction[2], 0); //il vettore direzione il termine omogeneo deve essere 0
+        temporigin = glMatrix.vec4.fromValues(ray.origin[0], ray.origin[1], ray.origin[2], 1); //l’origine è un punto, il termine omogeneo deve essere 1
+        tempdirection = glMatrix.vec4.fromValues(ray.direction[0], ray.direction[1], ray.direction[2], 0); //la direzione e' un vettore, il termine omogeneo deve essere 0
 
         glMatrix.vec4.transformMat4(tempdirection, tempdirection, shape.inverseTransformationMatrix);
         glMatrix.vec4.transformMat4(temporigin, temporigin, shape.inverseTransformationMatrix);
@@ -235,16 +232,15 @@ function transformRay(ray, shape) {
     }
 
 }
+//_______________________________________________________________________________________________________________________
 
-//##########################################################FUNCTIONS#####################################################
-
-
-//##########################################################DEBUG FUNCTIONS#####################################################
-
-
+/**
+ * Funzione di calcolo del colore in base al raggio e figura intersecata.
+ * @param {Ray} ray raggio tracciato
+ * @param {Figure} element figura intersecata
+ * @returns {Vec3} total apporto cromatico
+ */
 function getPixelColor(ray, element) {
-
-    //this.hit_point = ray.point_at_parameter(element.interception_point);// tre coordinate punto nello spazio
 
     //*******************************************variabili Principali************************************
     let total = glMatrix.vec3.fromValues(0, 0, 0);
@@ -296,7 +292,6 @@ function getPixelColor(ray, element) {
 
     for (let i = 1; i < lights.length; i++) { // sommatoria per ogni luce
         //Calcolo di diffuse_component
-        //Appunto negare r
 
         I = glMatrix.vec3.clone(lights[i].color);
         Kd = glMatrix.vec3.clone(materials[element.material].kd);
@@ -319,24 +314,17 @@ function getPixelColor(ray, element) {
             L = glMatrix.vec3.clone(lights[i].direction);
             maxdistance = Number.POSITIVE_INFINITY;
         }
-        ///FUNZIONE CASTING OMBRA
+        //**************************************************************/
+        /// EVENTUALE CASTING OMBRA
         glMatrix.vec3.negate(negativeL, L);
-
-        //console.log("SHADOW CASTER: "+element.name);
-
-
-        // console.log("NEGATIVE L :"+ negativeL);
-        // console.log(maxdistance);
-
         shadowHit = ShadowCast(new Ray(negativeL, element.interception_point, maxdistance, shadow_bias), element);
-        //console.log(shadowHit);
+
         if (!shadowHit) {
-            ///FINE FUNZIONE CASTING OMBRA
+
             glMatrix.vec3.normalize(L, L); // normalizzo L
 
             N = glMatrix.vec3.clone(element.normal);
 
-            // console.log("N:" + N);
             glMatrix.vec3.normalize(N, N); // normalizzo N
 
             glMatrix.vec3.negate(NormNegL, L);
@@ -376,42 +364,37 @@ function getPixelColor(ray, element) {
 
 
         }
-    }
-    if (mydebug) {
-        showcolor(ambient_component, diffuse_component, specular_component);
+        //**************************************************************/
     }
 
     return total;
-
-
 }
+//_______________________________________________________________________________________________________________________
 
 
 /**
  * Funzione di valutazione della presenza o assenza del contributo luminoso di una data sorgente luminosa in un dato pixel.
  * @param {Ray} castedRay Raggio con origine sulla superficie con direzione verso la luce (Direzionale o Posizionale)
+ * @param {Figure} element figura corrente
  * @returns {Boolean} Hit Ritorna true se il raggio interseca una figura lungo il suo percorso
  */
 function ShadowCast(castedRay, element) {
 
-    //console.log("SHADOWFUNCTION");
     let tempRay;
     for (var i = 0; i < surfaces.length; i++) {
         if (!element.isTheSame(surfaces[i])) {
-            //
-            //
-            //console.log(surfaces[i].name);
+
             tempRay = transformRay(castedRay, surfaces[i]);
-            //console.log("RAYMAX: "+castedRay.tMax);
+
             if (surfaces[i].intersection(tempRay)) {
-                //console.log("END SHADOWFUNCTION");
                 return true;
             }
         }
     }
-    //console.log("END SHADOWFUNCTION");
     return false;
 }
+//_______________________________________________________________________________________________________________________
+
 
 /**
  * Funzione di conversione in gradi del valore di un angolo espresso in radianti.
@@ -420,6 +403,8 @@ function ShadowCast(castedRay, element) {
 function rad(degrees) {
     return degrees * Math.PI / 180;
 }
+//_______________________________________________________________________________________________________________________
+
 
 /**
  * Funzione di inizializzazione della scena.
@@ -430,13 +415,15 @@ function init() {
     imageBuffer = context.createImageData(canvas.width, canvas.height); //buffer for pixels
     loadSceneFile(file_path);
 }
+//_______________________________________________________________________________________________________________________
+
 
 /**
  * Funzione di caricamento degli elementi di ogni asset.
  * @param {String} filepath Path assoluto o relativo dell'asset da caricare
  */
 function loadSceneFile(filepath) {
-    scene = Utils.loadJSON(filepath); //load the scene
+    scene = Utils.loadJSON(filepath);
 
 
     camera = new Camera(scene.camera.eye, scene.camera.at, scene.camera.up, scene.camera.fovy, scene.camera.aspect);
@@ -473,7 +460,7 @@ function loadSceneFile(filepath) {
         counter++;
         if (element.transforms != undefined) {
             element.transforms.forEach(function (transformsArrayMember) {
-                //  console.log(transformsArrayMember[1]);
+
                 switch (transformsArrayMember[0]) {
                     case "Translate":
                         currentObject.setTranslation(transformsArrayMember[1]);
@@ -492,11 +479,12 @@ function loadSceneFile(filepath) {
         }
 
         surfaces.push(currentObject);
-        //currentObject.showTransformationMatrix();
 
     });
     console.log("Computing Image Number: " + countRepetitionsGif);
 }
+//_______________________________________________________________________________________________________________________
+
 
 /**
  * Funzione di rendering del canvas.
@@ -507,25 +495,7 @@ function render() {
     let tempcolor = colormean;
 
 
-    // //Faccio un doppio for per prendere tutti i pixel del canvas
-    // for (let coloumn = mincoloumn; coloumn < maxcoloumn; coloumn++) {
-    //     for (let row = minrow; row < maxrow; row++) {
-    //         //TODO - fire a ray though each pixel
-
-    //         current_bounce = 0;
-
-    //         ray = camera.castRay(coloumn, row);
-
-    //         setPixel(coloumn, row, computePixel(ray, current_bounce));
-
-    //         surfaces.forEach(function (element) {
-    //                 element.initInterception();
-    //             } // azzera i campi
-    //         );
-    //     }
-    // }
-
-    //Faccio un doppio for per prendere tutti i pixel del canvas
+    // doppio FOR che include tutti i pixel del canvas
     for (let coloumn = mincoloumn; coloumn < maxcoloumn; coloumn++) {
         for (let row = minrow; row < maxrow; row++) {
 
@@ -533,14 +503,16 @@ function render() {
 
             let xOffset, yOffset;
 
+            //**************************************************************/
+            /// ANTIALIASING
             for (let xDepth = 0; xDepth < AntialiasDepth; xDepth++)
                 for (let yDepth = 0; yDepth < AntialiasDepth; yDepth++) {
 
                     xOffset = (xDepth / AntialiasDepth) - (1 / (2 * AntialiasDepth));
                     yOffset = (yDepth / AntialiasDepth) - (1 / (2 * AntialiasDepth));
 
-                    xOffset += Math.random() * (1 / AntialiasDepth);
-                    yOffset += Math.random() * (1 / AntialiasDepth);
+                    xOffset += Math.random() * (1 / AntialiasDepth); // generazione componente randomica (jitter)
+                    yOffset += Math.random() * (1 / AntialiasDepth); // generazione componente randomica (jitter)
 
 
                     ray = camera.castRay(coloumn + xOffset, row + yOffset);
@@ -551,8 +523,8 @@ function render() {
                     colormean[2] += tempcolor[2];
 
                     surfaces.forEach(function (element) {
-                            element.initInterception();
-                        } // azzera i campi
+                        element.initInterception();// azzera i campi
+                    }
                     );
                 }
 
@@ -562,11 +534,13 @@ function render() {
             colormean[0] = colormean[0] / (AntialiasDepth * AntialiasDepth);
             colormean[1] = colormean[1] / (AntialiasDepth * AntialiasDepth);
             colormean[2] = colormean[2] / (AntialiasDepth * AntialiasDepth);
-            // }
+
             setPixel(coloumn, row, colormean);
             colormean[0] = 0;
             colormean[1] = 0;
             colormean[2] = 0;
+            //**************************************************************/
+
         }
     }
 
@@ -582,14 +556,8 @@ function render() {
 
 
 }
+//_______________________________________________________________________________________________________________________
 
-// function download() {
-//     var download = document.getElementById("download");
-//     var image = document.getElementById("canvas").toDataURL("image/png")
-//         .replace("image/png", "image/octet-stream");
-//     download.setAttribute("href", image);
-
-// }
 
 /**
  * Funzione di assegnazione del colore ad ogni singolo elemento del canvas.
@@ -604,17 +572,4 @@ function setPixel(x, y, color) {
     imageBuffer.data[i + 2] = (color[2] * 255) | 0;
     imageBuffer.data[i + 3] = 255; //(color[3]*255) | 0; //switch to include transparency
 }
-
-//##########################################################FUNCTIONS#####################################################
-
-
-//##########################################################DEBUG FUNCTIONS#####################################################
-/**
- * Funzione di Debug. Mostra le varie compontenti luminose.
- */
-function showcolor(ambient_component, diffuse_component, specular_component) {
-    /*    console.log("ambient_component: " + ambient_component);
-        console.log("diffuse_component: " + diffuse_component);
-        console.log("specular_component " + specular_component);
-        console.log("________________________________________________");*/
-}
+//_______________________________________________________________________________________________________________________

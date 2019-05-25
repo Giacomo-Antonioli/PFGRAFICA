@@ -6,7 +6,7 @@
 		"fovy" : 36.5, "aspect" : 1 
 	},
 	"bounce_depth" : 1,
-	"shadow_bias" : 0.001,
+	"shadow_bias" : 0.0005,
 
 	"lights" : [ 
 		{"source" : "Ambient", "color" : [0.05,0.05,0.05]},
@@ -74,7 +74,7 @@
 		},
 
 		{
-			"name" : "Floor1",
+			"name" : "Floor",
 			"shape" : "Triangle",
 			"p1" : [-10, -10, 10],
 			"p2" : [10, -10, -10],
@@ -82,7 +82,7 @@
 			"material" : 0
 		},
 		{
-			"name" : "Floor2",
+			"name" : "Floor",
 			"shape" : "Triangle",
 			"p1" : [10, -10, 10],
 			"p2" : [10, -10, -10],
@@ -90,7 +90,7 @@
 			"material" : 0
 		},
 		{
-			"name" : "Ceiling1",
+			"name" : "Ceiling",
 			"shape" : "Triangle",
 			"p1" : [-10, 10, 10],
 			"p2" : [10, 10, -10],
@@ -98,7 +98,7 @@
 			"material" : 0
 		},
 		{
-			"name" : "Ceiling2",
+			"name" : "Ceiling",
 			"shape" : "Triangle",
 			"p1" : [10, 10, 10],
 			"p2" : [10, 10, -10],
@@ -106,7 +106,7 @@
 			"material" : 0
 		},
 		{
-			"name" : "Front wall1",
+			"name" : "Front wall",
 			"shape" : "Triangle",
 			"p1" : [-10, -10, -10],
 			"p2" : [10, 10, -10],
@@ -114,7 +114,7 @@
 			"material" : 0
 		},
 		{
-			"name" : "Front wall2",
+			"name" : "Front wall",
 			"shape" : "Triangle",
 			"p1" : [10, -10, -10],
 			"p2" : [10, 10, -10],
@@ -122,7 +122,7 @@
 			"material" : 0
 		},
 		{
-			"name" : "Red wall1",
+			"name" : "Red wall",
 			"shape" : "Triangle",
 			"p1" : [-10, 10, 10],
 			"p2" : [-10, -10, -10],
@@ -130,7 +130,7 @@
 			"material" : 3
 		},
 		{
-			"name" : "Red wall2",
+			"name" : "Red wall",
 			"shape" : "Triangle",
 			"p1" : [-10, -10, 10],
 			"p2" : [-10, -10, -10],
@@ -138,7 +138,7 @@
 			"material" : 3
 		},
 		{
-			"name" : "Blue wall1",
+			"name" : "Blue wall",
 			"shape" : "Triangle",
 			"p1" : [10, -10, 10],
 			"p2" : [10, 10, -10],
@@ -146,7 +146,7 @@
 			"material" : 4
 		},
 		{
-			"name" : "Blue wall2",
+			"name" : "Blue wall",
 			"shape" : "Triangle",
 			"p1" : [10, 10, 10],
 			"p2" : [10, 10, -10],

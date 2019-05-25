@@ -49,11 +49,6 @@ class Triangle extends Figure {
         //per identificare intersezione triangolo-raggio
 
 
-        //[beta,gamma,t]trasposta
-
-        //TODO epsilon per +/- 0 e 1
-        //console.log(solutions[2]);
-
         //if (beta>0 && gamma>0 &&(beta+gamma)<1 ) --> HIT!
         if (solutions[0] > -EPSILON && solutions[1] > -EPSILON && (solutions[0] + solutions[1]) < 1 && solutions[2] > ray.tMin) {
             let point = glMatrix.vec3.create();
@@ -63,17 +58,10 @@ class Triangle extends Figure {
             let lato2 = glMatrix.vec3.create(); // vettore appoggio lato2 triangolo
             glMatrix.vec3.subtract(lato1, this._p2, this._p1); // calcolo lato1 triangolo
             glMatrix.vec3.subtract(lato2, this._p3, this._p2); // calcolo lato2 triangolo
-            //   console.log("lato 1: " +lato1);
-            //   console.log("lato 2: " +lato2);
             let normal = glMatrix.vec3.create();
             glMatrix.vec3.cross(normal, lato1, lato2); //prodotto vettoriale dei due lati, normale per definizione
 
-            //spotata in ray_Intersect
-
-            // console.log(ray.tMax);
-            // console.log(glMatrix.vec3.distance(point, ray.origin));
             if ((glMatrix.vec3.distance(point, ray.origin) - ray.tMax) < shadow_bias) {
-                //console.log("HEY");
                 this.setInterception(solutions[2], point, normal, ray.direction);
                 return true;
             } else

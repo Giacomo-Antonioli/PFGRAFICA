@@ -7,16 +7,18 @@ class Sphere extends Figure {
      * @param {Array} center Centro della sfera
      * @param {Float} radius Raggio della sfera
      * @param {Integer} material Indice della lista di materiali di cui è costituito l'oggetto
+     * @param {integer} index Indice nella lista delle superfici
+     * @param {} name
      */
-    constructor(center, radius, material, index,name) {
+    constructor(center, radius, material, index, name) {
         super(material, index);
         this._center = glMatrix.vec3.fromValues(center[0], center[1], center[2]);
         this._radius = radius;
-        this._name=name;
+        this._name = name;
 
     }
 
-//____________________________________________________________________________________________________
+    //____________________________________________________________________________________________________
     /*
 
     ##     ## ######## ######## ##     ##  #######  ########   ######
@@ -70,12 +72,9 @@ class Sphere extends Figure {
         flag_t2 = (-direction_times_origin_center_sub - Math.sqrt(discriminant)) / direction_euclidean_norm_squared;
 
 
-        // flag_t2 = ((-direction_times_origin_center_sub - Math.sqrt(Math.pow(direction_times_origin_center_sub, 2) - direction_euclidean_norm_squared * (origin_center_sub_euclidean_norm_squared - Math.pow(this.radius, 2)))) / direction_euclidean_norm_squared);
-
-
         let t;
-        //Posso fare il controllo solo un flag in quanto se i punti sono coincidenti i flag sono uguali
-        // E se son diversi devono avere entrambi un valore non nullo se intersecano la sfera
+        //Posso fare il controllo solo su un flag in quanto, se i punti sono coincidenti, i flag sono uguali
+        // e se son diversi devono avere entrambi un valore non nullo se intersecano la sfera
         if (flag_t1 < 0 && flag_t2 < 0 || isNaN(flag_t1) && isNaN(flag_t2)) {
             t = -1;
         } else if (flag_t1 < 0 && flag_t2 >= 0 || isNaN(flag_t1) && flag_t2 >= 0) {
@@ -97,7 +96,7 @@ class Sphere extends Figure {
         } else {
             let point = glMatrix.vec3.create();
             glMatrix.vec3.scaleAndAdd(point, ray.origin, ray.direction, t);
-            if((glMatrix.vec3.distance(point, ray.origin) - ray.tMax )>= shadow_bias)
+            if ((glMatrix.vec3.distance(point, ray.origin) - ray.tMax) >= shadow_bias)
                 return false;
             let normal = glMatrix.vec3.create();
             glMatrix.vec3.subtract(normal, point, this._center);
@@ -164,12 +163,11 @@ class Sphere extends Figure {
         super.RestoreSDR();
     }
 
-    setcenter(center)
-    {
+    setcenter(center) {
         this._center = glMatrix.vec3.fromValues(center[0], center[1], center[2]);
     }
 
-//____________________________________________________________________________________________________
+    //____________________________________________________________________________________________________
     /*
         ######  ######## ######## ######## ######## ########   ######  
         ##    ## ##          ##       ##    ##       ##     ## ##    ## 

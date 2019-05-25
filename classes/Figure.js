@@ -5,12 +5,12 @@ class Figure {
     /**
      * @constructor
      * @param {Integer} material Indice della lista di materiali di cui è costituito l'oggetto
+     * @param {Integer} index Indice nella lista delle superfici
      */
     constructor(material, index) {
-        //Indica l'indice all'interno dell'array materiali da applicare alla figura
         this._TransformationMatrix = glMatrix.mat4.create();
         this._inverseTransformationMatrix = glMatrix.mat4.create();
-        this._transposedInverseTransformationMatrix = glMatrix.mat4.create(); // !!!!!!!!!!!!!!!!!!!!!!!!
+        this._transposedInverseTransformationMatrix = glMatrix.mat4.create();
         this._hasTransformationMatrix = false;
         this._t = Number.POSITIVE_INFINITY;
         this._interception_point = 0;
@@ -85,7 +85,7 @@ class Figure {
      * Funzione di trasposizione dell' inversa della matrice di Trasformazione
      */
     transposeInvertedMatrix() {
-        glMatrix.mat4.transpose(this.transposedInverseTransformationMatrix, this.inverseTransformationMatrix); // !!!!!!!!!!!!!!!!!!!!!!!!
+        glMatrix.mat4.transpose(this.transposedInverseTransformationMatrix, this.inverseTransformationMatrix);
     }
 
     /**Setter per definire se l'oggetto ha una matrice di Trasformazione associata */
@@ -109,7 +109,7 @@ class Figure {
      * @param normal {Vec3} normale al punto sulla superficie
      */
     setInterception(t, interception_point, normal, direction) {
-        if (glMatrix.vec3.dot(normal, direction) > rad(90)) //NON SO IL VERSO DELLA NORMALE QUINDI LO ADATTO ALLA POS DELLA CAMERA
+        if (glMatrix.vec3.dot(normal, direction) > rad(90)) //non conosco il verso della normale, quindi lo adatto alla posizione della camera
             glMatrix.vec3.negate(normal, normal);
         this._t = t;
         this._interception_point = interception_point;
@@ -118,8 +118,8 @@ class Figure {
 
     /**
      * Permette di verificare se una figura estratta dall'asset e quella in uso sono la stessa
-     * @param {Sphere/Triangle} secondObject  Oggetto con la quale devo confrontare l'indice di posizione all'interno dell'array delle figure
-     * @returns {Boolean} Same True nel caso sia lo stesso oggetto False nel caso siano oggetti diversi
+     * @param {Sphere/Triangle} secondObject  Oggetto con il quale devo confrontare l'indice di posizione all'interno dell'array delle figure
+     * @returns {Boolean} True nel caso sia lo stesso oggetto False nel caso siano oggetti diversi
      */
     isTheSame(secondObject) {
         if (this.index == secondObject.index)
@@ -174,7 +174,7 @@ class Figure {
     }
 
     set transposedInverseTransformationMatrix(value) {
-        this._transposedInverseTransformationMatrix = value; // !!!!!!!!!!!!!!!!!!!!!!!!
+        this._transposedInverseTransformationMatrix = value;
     }
 
     set hasTransformationMatrix(value) {
