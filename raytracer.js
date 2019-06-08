@@ -8,8 +8,8 @@ let maxcoloumn;
 let minrow;
 let maxrow;
 let cropped = false;
-let animate = false;
-let AntialiasDepth = 5;
+let animate = true;
+let AntialiasDepth = 1;
 
 let scene;
 let camera;
@@ -21,15 +21,15 @@ let shadow_bias;
 let counterflag = 0;
 let countRepetitionsGif;
 let FRAMES;
-let cycletime = 500 / FRAMES;
-let cycle_delay = 5000;
-let IMMAGEARRAY = [];
-
 if (animate) {
-    FRAMES = 8;
+    FRAMES = 36;
 } else {
     FRAMES = 0;
 }
+let cycletime = 500 / FRAMES;
+let cycle_delay = 3000;
+let IMMAGEARRAY = [];
+
 
 if (cropped) {
     mincoloumn = 164;
@@ -50,12 +50,12 @@ if (cropped) {
 // let file_path = "assets/TransformationTest.json";
 // let file_path = "assets/SphereShadingTest2.json";
 // let file_path = "assets/SphereTest.json";
-let file_path = "assets/CornellBox.json";
+// let file_path = "assets/CornellBox.json";
 // let file_path = "assets/RecursiveTest.json";
 // let file_path = "assets/ShadowTest1.json";
 // let file_path = "assets/ShadowTest2.json";
 // let file_path = "assets/SphereShadingTest1.json";
-// let file_path = "assets/FullTest.json";
+let file_path = "assets/FullTest.json";
 
 //################################################################################################
 
@@ -75,7 +75,7 @@ let file_path = "assets/CornellBox.json";
  * Funzione di reset dei campi specificati.
  */
 function ClearALL() {
-    let camera;
+    camera = [];
     surfaces = [];
     lights = [];
     materials = [];
@@ -86,6 +86,17 @@ function ClearALL() {
 
 //_______________________________________________________________________________________________________________________
 
+function renderCycle() {
+    init();
+    if (animate) {
+        switchAnimation(file_path);
+    }
+    else {
+        render();
+        ClearALL();
+    }
+
+}
 
 /**
  * Funzione di inizializzazione a documento pronto.
@@ -93,29 +104,21 @@ function ClearALL() {
 $(document).ready(function () {
 
     let start = Date.now(); //for logging
-    for (countRepetitionsGif = 0; countRepetitionsGif < FRAMES + 1; countRepetitionsGif++) {
 
-        init();
-        if (animate) {
-            if (countRepetitionsGif < 5)
-                surfaces[0].setcenter([1, 1.5 * Math.sin(countRepetitionsGif * Math.PI / (FRAMES - 3)), -1]);
-            if (countRepetitionsGif > 3)
-                surfaces[1].setcenter([-1, 1.5 * Math.sin((countRepetitionsGif - 3) * Math.PI / (FRAMES - 3)), 0]);
-        }
+    renderCycle();
 
-        render();
-        ClearALL();
-    }
     //load and render new scene
     $('#load_scene_button').click(function () {
         let filepath = 'assets/' + $('#scene_file_input').val() + '.json';
         loadSceneFile(filepath);
+        renderCycle();
     });
     let end = Date.now(); //for logging
     $('#log').html("rendered in: " + (end - start) + "ms");
     console.log("rendered in: " + (end - start) + "ms");
     if (animate)
         showImagesLikeVideo(0);
+
 
 });
 
@@ -452,8 +455,8 @@ function loadSceneFile(filepath) {
 
     scene.materials.forEach(function (element) {
         let kr = element.kr;
-        if(kr == undefined)
-            kr = [0,0,0];
+        if (kr == undefined)
+            kr = [0, 0, 0];
         materials.push(new Material(element.ka, element.kd, element.ks, element.shininess, kr));
 
     });
@@ -493,7 +496,7 @@ function loadSceneFile(filepath) {
         surfaces.push(currentObject);
 
     });
-    console.log("Computing Image Number: " + countRepetitionsGif);
+
 }
 
 //_______________________________________________________________________________________________________________________
@@ -538,8 +541,8 @@ function render() {
                     colormean[2] += tempcolor[2];
 
                     surfaces.forEach(function (element) {
-                            element.initInterception();// azzera i campi
-                        }
+                        element.initInterception();// azzera i campi
+                    }
                     );
                 }
 
@@ -587,3 +590,5 @@ function setPixel(x, y, color) {
 }
 
 //_______________________________________________________________________________________________________________________
+
+
