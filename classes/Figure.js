@@ -56,6 +56,10 @@ class Figure {
         glMatrix.mat4.translate(this._TransformationMatrix, this._TransformationMatrix, TransaltionVector);
     }
 
+    resetMatrix(){
+        this._TransformationMatrix = [];
+        this._TransformationMatrix = glMatrix.mat4.create();
+    }
     /**
      * Ruota la matrice di trasformazione.
      * @param {Vec3} RotationVector Vettore di rotazione

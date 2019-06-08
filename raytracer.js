@@ -22,7 +22,7 @@ let counterflag = 0;
 let countRepetitionsGif;
 let FRAMES;
 if (animate) {
-    FRAMES = 36;
+    FRAMES = 10;
 } else {
     FRAMES = 0;
 }
@@ -47,7 +47,7 @@ if (cropped) {
 
 // let file_path = "assets/TriangleTest.json";
 // let file_path = "assets/TriangleShadingTest.json";
-// let file_path = "assets/TransformationTest.json";
+let file_path = "assets/TransformationTest.json";
 // let file_path = "assets/SphereShadingTest2.json";
 // let file_path = "assets/SphereTest.json";
 // let file_path = "assets/CornellBox.json";
@@ -55,7 +55,7 @@ if (cropped) {
 // let file_path = "assets/ShadowTest1.json";
 // let file_path = "assets/ShadowTest2.json";
 // let file_path = "assets/SphereShadingTest1.json";
-let file_path = "assets/FullTest.json";
+// let file_path = "assets/FullTest.json";
 
 //################################################################################################
 

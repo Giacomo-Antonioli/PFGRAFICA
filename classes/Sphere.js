@@ -121,6 +121,10 @@ class Sphere extends Figure {
         console.log("SPHERE");
     }
 
+    resetMatrix(){
+        super.resetMatrix();
+    }
+    /**
     /** */
     showTransformationMatrix() {
         super.showTransformationMatrix();
