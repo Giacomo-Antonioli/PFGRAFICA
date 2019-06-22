@@ -124,7 +124,7 @@ class Sphere extends Figure {
     resetMatrix(){
         super.resetMatrix();
     }
-    
+    /**
     /** */
     showTransformationMatrix() {
         super.showTransformationMatrix();
