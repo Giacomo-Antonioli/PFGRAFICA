@@ -8,7 +8,7 @@ let maxcoloumn;
 let minrow;
 let maxrow;
 let cropped = false;
-let animate = true;
+let animate = false;
 let AntialiasDepth = 1;
 
 let scene;
@@ -76,18 +76,24 @@ let file_path = "assets/TransformationTest.json";
  */
 function ClearALL() {
     camera = [];
+    scene=[];
     surfaces = [];
     lights = [];
     materials = [];
     bounce_depth = 0;
     shadow_bias = 0;
     counterflag = 0;
+    console.log(camera);
+    console.log(scene);
+    console.log(surfaces);
+    console.log(lights);
+    console.log(materials);
 }
 
 //_______________________________________________________________________________________________________________________
 
 function renderCycle() {
-    init();
+
     if (animate) {
         switchAnimation(file_path);
     }
@@ -104,12 +110,13 @@ function renderCycle() {
 $(document).ready(function () {
 
     let start = Date.now(); //for logging
-
+    init();
     renderCycle();
 
     //load and render new scene
     $('#load_scene_button').click(function () {
         let filepath = 'assets/' + $('#scene_file_input').val() + '.json';
+        console.log(filepath);
         loadSceneFile(filepath);
         renderCycle();
     });
@@ -307,17 +314,7 @@ function getPixelColor(ray, element) {
         if (lights[i] instanceof PointLight) {
             glMatrix.vec3.subtract(L, element.interception_point, lights[i].position); //L
             maxdistance = glMatrix.vec3.distance(element.interception_point, lights[i].position);
-            /*
-             * p(t)=lights[i].position
-             * e=element.interception_point
-             * d=negativeL
-             * p(t)=e+td
-             *
-             * t=(p(t)-e)/d
-             *
-             *
-             *
-             * */
+
         } else {
             L = glMatrix.vec3.clone(lights[i].direction);
             maxdistance = Number.POSITIVE_INFINITY;
@@ -435,6 +432,7 @@ function init() {
  * @param {String} filepath Path assoluto o relativo dell'asset da caricare
  */
 function loadSceneFile(filepath) {
+
     scene = Utils.loadJSON(filepath);
 
 

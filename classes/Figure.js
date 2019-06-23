@@ -260,7 +260,7 @@ class Figure {
 
     /**
      * Parametro t che serve nel calcolo e + t*d
-     * @returns t {Double} Paramtero t
+     * @returns t {Double} Parametro t
      */
     get t() {
         return this._t;
