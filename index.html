@@ -60,22 +60,62 @@
 
 <!-- Masthead -->
 <header class="masthead text-white text-center">
-    <div class="container" style="height:auto; width:auto;">
-        <canvas height="512" id="canvas" style="border: 1 solid black" width="512">
-            If you see this, your browser doesn't support HTML5 canvas elements!
-        </canvas>
+    <div class=container">
+        <div class="row">
+            <div class="col">
+                <canvas height="512" id="canvas" style="border: 1 solid black" width="512">
+                    If you see this, your browser doesn't support HTML5 canvas elements!
+                </canvas>
+            </div>
+            <div class="col-1" style="background-color:rgba(48,56,49,0.5); width: auto; display: inline-block">
+                <div>
+                    <p>Anti-Aliasing</p>
+                    <label><input type="radio" name="Aliasing" value="1" checked="checked">1</label>
+                    <label><input type="radio" name="Aliasing" value="2">2</label>
+                    <label><input type="radio" name="Aliasing" value="3">3</label>
+                    <label><input type="radio" name="Aliasing" value="4">4</label>
+                    <label><input type="radio" name="Aliasing" value="5">5</label>
+                </div>
+                <div>
+                    <p>Animation</br></p>
+                    <label><input type="radio" name="animate" value="True">True</label>
+                    <label><input type="radio" name="animate" value="False"checked="checked">False</label>
+                    <p></br>ATTENZIONE: Impostare l'Anti-Aliasing al massimo comporta tempi di computazione molto
+                        alti</p>
+                    <p><input type="button" value="Get Value"></p>
+                </div>
+            </div>
+
+            <div class="col" style="margin-right: 0"><img id="AnimatedVideo" src="#" style="display: none;"></div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <p style="background-color:rgba(48,56,49,0.5); height: auto; width: auto; display: inline-block">
+                    Scene: <code>assets/</code>
+                    <input id="scene_file_input" type="text">
+                    <code>.json</code>
+                    <span style="padding-left:1em">&nbsp;</span>
+                    <button id="load_scene_button">Load Scene</button>
+                </p>
+            </div>
+            <div class="col-1"></div>
+
+            <div class="col"></div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <p id="log" style="background-color:rgba(48,56,49,0.5); height: auto; width: auto; display: inline-block"></p>
+            </div>
+            <div class="col-1"></div>
+
+            <div class="col"></div>
+
+        </div>
     </div>
-    <div>
-        <p style="background-color:rgba(48,56,49,0.5); height: auto; width: auto; display: inline-block">
-            Scene: <code>assets/</code>
-            <input id="scene_file_input" type="text">
-            <code>.json</code>
-            <span style="padding-left:1em">&nbsp;</span>
-            <button id="load_scene_button">Load Scene</button>
-        </p>
-    </div>
-    <div>
-        <p id="log" style="background-color:rgba(48,56,49,0.5); height: auto; width: auto; display: inline-block"></p>
+
+
+    <div class="container" style="margin-left: 0">
+
     </div>
 </header>
 
@@ -98,9 +138,8 @@
 <script src="vendor/jquery/jquery.min.js"></script>
 <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-<img id="AnimatedVideo" src="#">
-
 
 </body>
+
 
 </html>

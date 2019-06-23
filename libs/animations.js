@@ -205,7 +205,7 @@ function animateTransformationTest() {
 
     let animate1;
     for (countRepetitionsGif = 0; countRepetitionsGif <= (FRAMES); countRepetitionsGif++) {
-
+console.log(countRepetitionsGif);
         animate1 = 0.5 * Math.sin((countRepetitionsGif * Math.PI) / FRAMES);
 
         surfaces[0].resetMatrix();

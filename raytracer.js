@@ -76,32 +76,29 @@ let file_path = "assets/TransformationTest.json";
  */
 function ClearALL() {
     camera = [];
-    scene=[];
+    scene = [];
     surfaces = [];
     lights = [];
     materials = [];
+
     bounce_depth = 0;
     shadow_bias = 0;
     counterflag = 0;
-    console.log(camera);
-    console.log(scene);
-    console.log(surfaces);
-    console.log(lights);
-    console.log(materials);
+
 }
 
 //_______________________________________________________________________________________________________________________
 
 function renderCycle() {
-
+console.log("RENDERING");
+console.log("ANIMATE: "+animate);
     if (animate) {
         switchAnimation(file_path);
-    }
-    else {
+    } else {
         render();
         ClearALL();
     }
-
+    console.log("DONE");
 }
 
 /**
@@ -116,16 +113,51 @@ $(document).ready(function () {
     //load and render new scene
     $('#load_scene_button').click(function () {
         let filepath = 'assets/' + $('#scene_file_input').val() + '.json';
-        console.log(filepath);
+        file_path=filepath;
+        IMMAGEARRAY=[];
         loadSceneFile(filepath);
         renderCycle();
+    });
+
+    $("input[type='button']").click(function(){
+        var radioValue1 = $("input[name='Aliasing']:checked").val();
+        var radioValue2 = $("input[name='animate']:checked").val();
+        if(radioValue1){
+            AntialiasDepth=radioValue1;
+        }
+        if(radioValue2){
+            if(radioValue2=='True')
+            {
+                var img = document.getElementById('AnimatedVideo');
+                img.style.display = 'block';
+                animate=true;
+
+            }
+            else {
+                var img = document.getElementById('AnimatedVideo');
+                img.style.display = 'none';
+                animate=false;
+            }
+        }
+        if (animate) {
+            FRAMES = 10;
+        } else {
+            FRAMES = 0;
+        }
+        IMMAGEARRAY=[];
+        cycletime = 500 / FRAMES;
+        loadSceneFile(file_path);
+        renderCycle();
+        if (animate)
+            showImagesLikeVideo(0);
+
     });
     let end = Date.now(); //for logging
     $('#log').html("rendered in: " + (end - start) + "ms");
     console.log("rendered in: " + (end - start) + "ms");
+
     if (animate)
         showImagesLikeVideo(0);
-
 
 });
 
@@ -136,6 +168,7 @@ $(document).ready(function () {
  * @param {Int} index indice immagine corrente.
  */
 function showImagesLikeVideo(index) {
+    console.log(cycle_delay);
     if (index < IMMAGEARRAY.length) {
         document.getElementById("AnimatedVideo").src = IMMAGEARRAY[index];
         setTimeout(showImagesLikeVideo.bind(null, index + 1), cycletime);
@@ -539,8 +572,8 @@ function render() {
                     colormean[2] += tempcolor[2];
 
                     surfaces.forEach(function (element) {
-                        element.initInterception();// azzera i campi
-                    }
+                            element.initInterception();// azzera i campi
+                        }
                     );
                 }
 
