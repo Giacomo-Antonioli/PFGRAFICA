@@ -28,7 +28,7 @@
 
 <header>
     
-        <h2><span class="attribs"><span class="type-signature"></span></span>Figure<span class="signature">(center, radius, material)</span><span class="type-signature"></span></h2>
+        <h2><span class="attribs"><span class="type-signature"></span></span>Figure<span class="signature">(material, index)</span><span class="type-signature"></span></h2>
         
             <div class="class-description">Classe che rappresenta una generica Figura.</div>
         
@@ -45,7 +45,7 @@
     
 
     
-    <h4 class="name" id="Figure"><span class="type-signature"></span>new Figure<span class="signature">(center, radius, material)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Figure"><span class="type-signature"></span>new Figure<span class="signature">(material, index)</span><span class="type-signature"></span></h4>
     
 
     
@@ -85,52 +85,6 @@
 
         <tr>
             
-                <td class="name"><code>center</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Centro della sfera</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>radius</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Float</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Raggio della sfera</td>
-        </tr>
-
-    
-
-        <tr>
-            
                 <td class="name"><code>material</code></td>
             
 
@@ -148,6 +102,29 @@
             
 
             <td class="description last">Indice della lista di materiali di cui è costituito l'oggetto</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>index</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Integer</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Indice nella lista delle superfici</td>
         </tr>
 
     
@@ -188,7 +165,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="classes_Figure.js.html">classes/Figure.js</a>, <a href="classes_Figure.js.html#line4">line 4</a>
+        <a href="classes_Figure.js.html">classes/Figure.js</a>, <a href="classes_Figure.js.html#line10">line 10</a>
     </li></ul></dd>
     
 
@@ -198,6 +175,8 @@
 
     
 </dl>
+
+
 
 
 
@@ -280,7 +259,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="classes_Figure.js.html">classes/Figure.js</a>, <a href="classes_Figure.js.html#line205">line 205</a>
+        <a href="classes_Figure.js.html">classes/Figure.js</a>, <a href="classes_Figure.js.html#line257">line 257</a>
     </li></ul></dd>
     
 
@@ -342,7 +321,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="classes_Figure.js.html">classes/Figure.js</a>, <a href="classes_Figure.js.html#line181">line 181</a>
+        <a href="classes_Figure.js.html">classes/Figure.js</a>, <a href="classes_Figure.js.html#line225">line 225</a>
     </li></ul></dd>
     
 
@@ -404,7 +383,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="classes_Figure.js.html">classes/Figure.js</a>, <a href="classes_Figure.js.html#line221">line 221</a>
+        <a href="classes_Figure.js.html">classes/Figure.js</a>, <a href="classes_Figure.js.html#line273">line 273</a>
     </li></ul></dd>
     
 
@@ -466,7 +445,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="classes_Figure.js.html">classes/Figure.js</a>, <a href="classes_Figure.js.html#line197">line 197</a>
+        <a href="classes_Figure.js.html">classes/Figure.js</a>, <a href="classes_Figure.js.html#line241">line 241</a>
     </li></ul></dd>
     
 
@@ -528,7 +507,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="classes_Figure.js.html">classes/Figure.js</a>, <a href="classes_Figure.js.html#line173">line 173</a>
+        <a href="classes_Figure.js.html">classes/Figure.js</a>, <a href="classes_Figure.js.html#line217">line 217</a>
     </li></ul></dd>
     
 
@@ -590,7 +569,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="classes_Figure.js.html">classes/Figure.js</a>, <a href="classes_Figure.js.html#line229">line 229</a>
+        <a href="classes_Figure.js.html">classes/Figure.js</a>, <a href="classes_Figure.js.html#line281">line 281</a>
     </li></ul></dd>
     
 
@@ -652,7 +631,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="classes_Figure.js.html">classes/Figure.js</a>, <a href="classes_Figure.js.html#line213">line 213</a>
+        <a href="classes_Figure.js.html">classes/Figure.js</a>, <a href="classes_Figure.js.html#line265">line 265</a>
     </li></ul></dd>
     
 
@@ -714,7 +693,69 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="classes_Figure.js.html">classes/Figure.js</a>, <a href="classes_Figure.js.html#line189">line 189</a>
+        <a href="classes_Figure.js.html">classes/Figure.js</a>, <a href="classes_Figure.js.html#line233">line 233</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="transposedInverseTransformationMatrix"><span class="type-signature"></span>transposedInverseTransformationMatrix<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    Inversa della matrice di Trasformazione della figura
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="classes_Figure.js.html">classes/Figure.js</a>, <a href="classes_Figure.js.html#line249">line 249</a>
     </li></ul></dd>
     
 
@@ -794,7 +835,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="classes_Figure.js.html">classes/Figure.js</a>, <a href="classes_Figure.js.html#line90">line 90</a>
+        <a href="classes_Figure.js.html">classes/Figure.js</a>, <a href="classes_Figure.js.html#line103">line 103</a>
     </li></ul></dd>
     
 
@@ -804,6 +845,8 @@
 
     
 </dl>
+
+
 
 
 
@@ -880,7 +923,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="classes_Figure.js.html">classes/Figure.js</a>, <a href="classes_Figure.js.html#line78">line 78</a>
+        <a href="classes_Figure.js.html">classes/Figure.js</a>, <a href="classes_Figure.js.html#line84">line 84</a>
     </li></ul></dd>
     
 
@@ -890,6 +933,256 @@
 
     
 </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="isTheSame"><span class="type-signature"></span>isTheSame<span class="signature">(secondObject)</span><span class="type-signature"> &rarr; {Boolean}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Permette di verificare se una figura estratta dall'asset e quella in uso sono la stessa
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>secondObject</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Sphere/Triangle</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Oggetto con il quale devo confrontare l'indice di posizione all'interno dell'array delle figure</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="classes_Figure.js.html">classes/Figure.js</a>, <a href="classes_Figure.js.html#line128">line 128</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    True nel caso sia lo stesso oggetto False nel caso siano oggetti diversi
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Boolean</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="RestoreSDR"><span class="type-signature"></span>RestoreSDR<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Funzione di ripristino del sistema di riferimento dei punti di intersezione e normale al punto, utilizzata
+in caso di trasformazione.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="classes_Figure.js.html">classes/Figure.js</a>, <a href="classes_Figure.js.html#line138">line 138</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
 
 
 
@@ -1061,7 +1354,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="classes_Figure.js.html">classes/Figure.js</a>, <a href="classes_Figure.js.html#line102">line 102</a>
+        <a href="classes_Figure.js.html">classes/Figure.js</a>, <a href="classes_Figure.js.html#line115">line 115</a>
     </li></ul></dd>
     
 
@@ -1071,6 +1364,8 @@
 
     
 </dl>
+
+
 
 
 
@@ -1196,7 +1491,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="classes_Figure.js.html">classes/Figure.js</a>, <a href="classes_Figure.js.html#line61">line 61</a>
+        <a href="classes_Figure.js.html">classes/Figure.js</a>, <a href="classes_Figure.js.html#line67">line 67</a>
     </li></ul></dd>
     
 
@@ -1206,6 +1501,8 @@
 
     
 </dl>
+
+
 
 
 
@@ -1331,7 +1628,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="classes_Figure.js.html">classes/Figure.js</a>, <a href="classes_Figure.js.html#line71">line 71</a>
+        <a href="classes_Figure.js.html">classes/Figure.js</a>, <a href="classes_Figure.js.html#line77">line 77</a>
     </li></ul></dd>
     
 
@@ -1341,6 +1638,8 @@
 
     
 </dl>
+
+
 
 
 
@@ -1417,7 +1716,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="classes_Figure.js.html">classes/Figure.js</a>, <a href="classes_Figure.js.html#line83">line 83</a>
+        <a href="classes_Figure.js.html">classes/Figure.js</a>, <a href="classes_Figure.js.html#line96">line 96</a>
     </li></ul></dd>
     
 
@@ -1427,6 +1726,8 @@
 
     
 </dl>
+
+
 
 
 
@@ -1552,7 +1853,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="classes_Figure.js.html">classes/Figure.js</a>, <a href="classes_Figure.js.html#line53">line 53</a>
+        <a href="classes_Figure.js.html">classes/Figure.js</a>, <a href="classes_Figure.js.html#line55">line 55</a>
     </li></ul></dd>
     
 
@@ -1562,6 +1863,8 @@
 
     
 </dl>
+
+
 
 
 
@@ -1638,7 +1941,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="classes_Figure.js.html">classes/Figure.js</a>, <a href="classes_Figure.js.html#line40">line 40</a>
+        <a href="classes_Figure.js.html">classes/Figure.js</a>, <a href="classes_Figure.js.html#line42">line 42</a>
     </li></ul></dd>
     
 
@@ -1648,6 +1951,96 @@
 
     
 </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="transposeInvertedMatrix"><span class="type-signature"></span>transposeInvertedMatrix<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Funzione di trasposizione dell' inversa della matrice di Trasformazione
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="classes_Figure.js.html">classes/Figure.js</a>, <a href="classes_Figure.js.html#line91">line 91</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
 
 
 
@@ -1682,13 +2075,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AmbientLight.html">AmbientLight</a></li><li><a href="Camera.html">Camera</a></li><li><a href="DirectionalLight.html">DirectionalLight</a></li><li><a href="Figure.html">Figure</a></li><li><a href="Material.html">Material</a></li><li><a href="PointLight.html">PointLight</a></li><li><a href="Ray.html">Ray</a></li><li><a href="Sphere.html">Sphere</a></li><li><a href="Triangle.html">Triangle</a></li></ul><h3>Global</h3><ul><li><a href="global.html#computePixel">computePixel</a></li><li><a href="global.html#gauss">gauss</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#loadSceneFile">loadSceneFile</a></li><li><a href="global.html#rad">rad</a></li><li><a href="global.html#render">render</a></li><li><a href="global.html#setPixel">setPixel</a></li><li><a href="global.html#ShadowCast">ShadowCast</a></li><li><a href="global.html#showcolor">showcolor</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AmbientLight.html">AmbientLight</a></li><li><a href="Camera.html">Camera</a></li><li><a href="DirectionalLight.html">DirectionalLight</a></li><li><a href="Figure.html">Figure</a></li><li><a href="Material.html">Material</a></li><li><a href="PointLight.html">PointLight</a></li><li><a href="Ray.html">Ray</a></li><li><a href="Sphere.html">Sphere</a></li><li><a href="Triangle.html">Triangle</a></li></ul><h3>Global</h3><ul><li><a href="global.html#ClearALL">ClearALL</a></li><li><a href="global.html#computePixel">computePixel</a></li><li><a href="global.html#getPixelColor">getPixelColor</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#loadSceneFile">loadSceneFile</a></li><li><a href="global.html#rad">rad</a></li><li><a href="global.html#render">render</a></li><li><a href="global.html#setPixel">setPixel</a></li><li><a href="global.html#ShadowCast">ShadowCast</a></li><li><a href="global.html#showImagesLikeVideo">showImagesLikeVideo</a></li><li><a href="global.html#transformRay">transformRay</a></li><li><a href="global.html#triangleSolutions">triangleSolutions</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue May 07 2019 15:04:07 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.2</a> on Sat Jun 22 2019 19:22:23 GMT+0200 (Central European Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -55,7 +55,7 @@
         <a class="navbar-brand" href="#">G&G</a>
 
     </div>
-    <a class="btn btn-dark" href="DOCS/index.html" role="button">DOCS</a>
+    <a class="btn btn-dark" href="DOCS/index.html" role="button">Documentazione sulle Classi</a>
 </nav>
 
 <!-- Masthead -->
@@ -66,27 +66,33 @@
                 <canvas height="512" id="canvas" style="border: 1 solid black" width="512">
                     If you see this, your browser doesn't support HTML5 canvas elements!
                 </canvas>
+                <canvas height="512" id="canvashidden" style="border: 1 solid black; display: none;" width="512">
+                    If you see this, your browser doesn't support HTML5 canvas elements!
+                </canvas>
+
             </div>
             <div class="col-1" style="background-color:rgba(48,56,49,0.5); width: auto; display: inline-block">
                 <div>
                     <p>Anti-Aliasing</p>
-                    <label><input type="radio" name="Aliasing" value="1" checked="checked">off</label>
-                    <label><input type="radio" name="Aliasing" value="2">2</label>
-                    <label><input type="radio" name="Aliasing" value="3">3</label>
-                    <label><input type="radio" name="Aliasing" value="4">4</label>
-                    <label><input type="radio" name="Aliasing" value="5">5</label>
+                    <label><input type="radio" id="a1" name="Aliasing" value="1" checked="checked">off</label>
+                    <label><input type="radio" id="a2" name="Aliasing" value="2">2</label>
+                    <label><input type="radio" id="a3" name="Aliasing" value="3">3</label>
+                    <label><input type="radio" id="a4" name="Aliasing" value="4">4</label>
+                    <label><input type="radio" id="a5" name="Aliasing" value="5">5</label>
                 </div>
                 <div>
                     <p>Animation</br></p>
-                    <label><input type="radio" name="animate" value="True">True</label>
-                    <label><input type="radio" name="animate" value="False"checked="checked">False</label>
+                    <label><input type="radio" id="anit" name="animate" value="True">True</label>
+                    <label><input type="radio" id="anif" name="animate" value="False"checked="checked">False</label>
                     <p></br>ATTENZIONE: Impostare l'Anti-Aliasing al massimo comporta tempi di computazione molto
                         alti</p>
                     <p><input type="button" value="Render -->"></p>
+                    <p>Status: </p>
+                    <p id="Status">Rendered</p>
                 </div>
             </div>
 
-            <div class="col" style="margin-right: 0"><img id="AnimatedVideo" src="#" style="display: none;"></div>
+            <div class="col" style="margin-right: 0"><img id="AnimatedVideo" src="img/gray.png" style="width:512px;height:512px;display: block;"></div>
         </div>
         <div class="row">
             <div class="col">

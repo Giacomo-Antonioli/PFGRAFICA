@@ -10,7 +10,7 @@ let maxrow;
 let cropped = false;
 let animate = false;
 let AntialiasDepth = 1;
-
+let myanimate=0;
 let scene;
 let camera;
 let surfaces = [];
@@ -91,14 +91,17 @@ function ClearALL() {
 
 function renderCycle() {
 console.log("RENDERING");
-console.log("ANIMATE: "+animate);
+
+
+
     if (animate) {
         switchAnimation(file_path);
     } else {
+        console.log(canvas);
         render();
         ClearALL();
     }
-    console.log("DONE");
+
 }
 
 /**
@@ -112,30 +115,40 @@ $(document).ready(function () {
 
     //load and render new scene
     $('#load_scene_button').click(function () {
+        init();
+        ClearALL();
+        document.getElementById("Status").innerHTML ="Rendering";
+
+        animate=false;
+        AntialiasDepth=1;
+        IMMAGEARRAY=[];
+        myanimate=0;
         let filepath = 'assets/' + $('#scene_file_input').val() + '.json';
         file_path=filepath;
         IMMAGEARRAY=[];
         loadSceneFile(filepath);
         renderCycle();
+        document.getElementById("Status").innerHTML ="Rendered";
     });
 
     $("input[type='button']").click(function(){
         var radioValue1 = $("input[name='Aliasing']:checked").val();
         var radioValue2 = $("input[name='animate']:checked").val();
+
+
+        myinit();
         if(radioValue1){
             AntialiasDepth=radioValue1;
         }
         if(radioValue2){
             if(radioValue2=='True')
             {
-                var img = document.getElementById('AnimatedVideo');
-                img.style.display = 'block';
+
                 animate=true;
 
             }
             else {
-                var img = document.getElementById('AnimatedVideo');
-                img.style.display = 'none';
+
                 animate=false;
             }
         }
@@ -146,18 +159,28 @@ $(document).ready(function () {
         }
         IMMAGEARRAY=[];
         cycletime = 500 / FRAMES;
+        ClearALL();
+
+
+        let start = Date.now(); //for logging
+        document.getElementById("Status").innerHTML ="Rendering";
         loadSceneFile(file_path);
         renderCycle();
-        if (animate)
+        //if (animate)
+        let end = Date.now(); //for logging
+        $('#log').html("rendered in: " + (end - start) + "ms");
+        console.log("rendered in: " + (end - start) + "ms");
+        console.log(IMMAGEARRAY.length);
+        document.getElementById("Status").innerHTML ="Rendered";
             showImagesLikeVideo(0);
 
     });
     let end = Date.now(); //for logging
     $('#log').html("rendered in: " + (end - start) + "ms");
     console.log("rendered in: " + (end - start) + "ms");
-
+/*
     if (animate)
-        showImagesLikeVideo(0);
+        showImagesLikeVideo(0);*/
 
 });
 
@@ -451,12 +474,25 @@ function rad(degrees) {
  * Funzione di inizializzazione della scena.
  */
 function init() {
+    canvas=[];
+    context=[];
+    imageBuffer=[];
+    myanimate=0;
     canvas = $('#canvas')[0];
     context = canvas.getContext("2d");
     imageBuffer = context.createImageData(canvas.width, canvas.height); //buffer for pixels
     loadSceneFile(file_path);
 }
-
+function myinit() {
+    canvas=[];
+    context=[];
+    imageBuffer=[];
+    myanimate=1;
+    canvas = $('#canvashidden')[0];
+    context = canvas.getContext("2d");
+    imageBuffer = context.createImageData(canvas.width, canvas.height); //buffer for pixels
+    loadSceneFile(file_path);
+}
 //_______________________________________________________________________________________________________________________
 
 
@@ -593,13 +629,12 @@ function render() {
 
     //render the pixels that have been set
     context.putImageData(imageBuffer, 0, 0);
-
-
-    var canvas = document.getElementById('canvas');
+if(myanimate==1) {
+    var canvas = document.getElementById('canvashidden');
     var fullQuality = canvas.toDataURL('image/jpeg', 1.0);
 
     IMMAGEARRAY.push(fullQuality);
-
+}
 
 }
 

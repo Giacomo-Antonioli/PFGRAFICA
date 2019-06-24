@@ -42,6 +42,7 @@ class Triangle extends Figure {
         this._p1 = glMatrix.vec3.fromValues(p1[0], p1[1], p1[2]);
         this._p2 = glMatrix.vec3.fromValues(p2[0], p2[1], p2[2]);
         this._p3 = glMatrix.vec3.fromValues(p3[0], p3[1], p3[2]);
+       
     }
 
     //____________________________________________________________________________________________________
@@ -65,19 +66,16 @@ class Triangle extends Figure {
      */
     intersection(ray) {
         let solutions;
+
         let A = [
-            [this.p1[0] - this.p2[0], this.p1[0] - this.p3[0], ray.direction[0], this.p1[0] - ray.origin[0]],
-            [this.p1[1] - this.p2[1], this.p1[1] - this.p3[1], ray.direction[1], this.p1[1] - ray.origin[1]],
-            [this.p1[2] - this.p2[2], this.p1[2] - this.p3[2], ray.direction[2], this.p1[2] - ray.origin[2]],
+            [this._p1[0] - this._p2[0], this._p1[0] - this._p3[0], ray.direction[0], this._p1[0] - ray.origin[0]],
+            [this._p1[1] - this._p2[1], this._p1[1] - this._p3[1], ray.direction[1], this._p1[1] - ray.origin[1]],
+            [this._p1[2] - this._p2[2], this._p1[2] - this._p3[2], ray.direction[2], this._p1[2] - ray.origin[2]],
         ];
 
-        solutions = (gauss(A)); //Calcola il vettore contenente la soluzione delle tre equazioni necessarie
+        solutions = triangleSolutions(A); //Calcola il vettore contenente la soluzione delle tre equazioni necessarie
         //per identificare intersezione triangolo-raggio
 
-
-        //[beta,gamma,t]trasposta
-
-        //TODO epsilon per +/- 0 e 1
 
         //if (beta>0 &amp;&amp; gamma>0 &amp;&amp;(beta+gamma)&lt;1 ) --> HIT!
         if (solutions[0] > -EPSILON &amp;&amp; solutions[1] > -EPSILON &amp;&amp; (solutions[0] + solutions[1]) &lt; 1 &amp;&amp; solutions[2] > ray.tMin) {
@@ -86,48 +84,60 @@ class Triangle extends Figure {
 
             let lato1 = glMatrix.vec3.create(); // vettore appoggio lato1 triangolo
             let lato2 = glMatrix.vec3.create(); // vettore appoggio lato2 triangolo
-            glMatrix.vec3.subtract(lato1, this.p2, this.p1); // calcolo lato1 triangolo
-            glMatrix.vec3.subtract(lato2, this.p3, this.p2); // calcolo lato2 triangolo
-
+            glMatrix.vec3.subtract(lato1, this._p2, this._p1); // calcolo lato1 triangolo
+            glMatrix.vec3.subtract(lato2, this._p3, this._p2); // calcolo lato2 triangolo
             let normal = glMatrix.vec3.create();
             glMatrix.vec3.cross(normal, lato1, lato2); //prodotto vettoriale dei due lati, normale per definizione
-            //if (glMatrix.vec3.dot(normal, ray.direction)>rad(90))//NON SO IL VERSO DELLA NORMALE QUINDI LO ADATTO ALLA POS DELLA CAMERA
-            //  glMatrix.vec3.negate(normal, normal);
-            //spotata in ray_Intersect
-            ray.ray_Intersect(solutions[2], point, normal);
-            return true;
+
+            if ((glMatrix.vec3.distance(point, ray.origin) - ray.tMax) &lt; shadow_bias) {
+                this.setInterception(solutions[2], point, normal, ray.direction);
+                return true;
+            } else
+                return false;
 
         } else
             return false;
     }
 
+
     /** */
     setTranslation(TransaltionVector) {
         super.setTranslation(TransaltionVector);
     }
+
     /** */
     setRotation(RotationVector) {
         super.setRotation(RotationVector);
     }
+
     /** */
     setScaling(ScalingVector) {
         super.setScaling(ScalingVector);
     }
+
     /** */
     invertMatrix() {
         super.invertMatrix();
     }
+
+    /** */
+    transposeInvertedMatrix() {
+        super.transposeInvertedMatrix();
+    }
+
     /** */
     setTransformationMatrixValue() {
         super.setTransformationMatrixValue();
     }
+
     /** */
     initInterception() {
         super.initInterception();
     }
+
     /** */
-    setInterception(t, interception_point, normal) {
-        super.setInterception(t, interception_point, normal);
+    setInterception(t, interception_point, normal, direction) {
+        super.setInterception(t, interception_point, normal, direction);
     }
 
     /**
@@ -136,15 +146,26 @@ class Triangle extends Figure {
     me() {
         console.log("TRIANGLE");
     }
+
     /** */
     showTransformationMatrix() {
         super.showTransformationMatrix();
     }
 
-
     /** */
     isTheSame(secondObject) {
         return super.isTheSame(secondObject);
+    }
+
+    /** */
+    RestoreSDR() {
+        super.RestoreSDR();
+    }
+
+    setPoints(p1,p2,p3){
+        this._p1 = glMatrix.vec3.fromValues(p1[0], p1[1], p1[2]);
+        this._p2 = glMatrix.vec3.fromValues(p2[0], p2[1], p2[2]);
+        this._p3 = glMatrix.vec3.fromValues(p3[0], p3[1], p3[2]);
     }
 
     //____________________________________________________________________________________________________
@@ -158,40 +179,53 @@ class Triangle extends Figure {
          ######  ########    ##       ##    ######## ##     ##  ######  
     */
 
+    /** */
+    set t(value) {
+        super.t = value;
+    }
+
+    /** */
+    set interception_point(value) {
+        super.interception_point = value;
+    }
+
+    /** */
+    set normal(value) {
+        super.normal = value;
+    }
+
 
 
     /** */
     set material(value) {
         super.material = value;
     }
+
     /** */
     set index(value) {
         super.index = value;
     }
+
     /** */
     set TransformationMatrix(value) {
         super.TransformationMatrix = value;
     }
+
     /** */
     set inverseTransformationMatrix(value) {
         super.inverseTransformationMatrix = value;
     }
+
+    /** */
+    set transposedInverseTransformationMatrix(value) {
+        super.transposedInverseTransformationMatrix = value;
+    }
+
     /** */
     set hasTransformationMatrix(value) {
         super.hasTransformationMatrix = value;
     }
-    /** */
-    set t(value) {
-        super.t = value;
-    }
-    /** */
-    set interception_point(value) {
-        super.interception_point = value;
-    }
-    /** */
-    set normal(value) {
-        super.normal = value;
-    }
+
     //____________________________________________________________________________________________________
     /*
 
@@ -204,53 +238,59 @@ class Triangle extends Figure {
      ######   ########    ##       ##    ######## ##     ##  ######
 
 */
-    
-    get material() {
-        return super.material;
-    }
-    
-    get index() {
-        return super.index;
-    }
-    
-    get TransformationMatrix() {
-        return super.TransformationMatrix;
-    }
-    
-    get inverseTransformationMatrix() {
-        return super.inverseTransformationMatrix;
-    }
-    
-    get hasTransformationMatrix() {
-        return super.hasTransformationMatrix;
-    }
-    
-    get t() {
-        return super.t;
-    }
-    
+
     get interception_point() {
         return super.interception_point;
     }
-    
+
     get normal() {
         return super.normal;
     }
-    
+
     get p1() {
         return this._p1;
     }
-    
+
     get p2() {
         return this._p2;
     }
-    
+
     get p3() {
         return this._p3;
     }
 
+    get material() {
+        return super.material;
+    }
+
+    get index() {
+        return super.index;
+    }
+
+    get TransformationMatrix() {
+        return super.TransformationMatrix;
+    }
+
+    get inverseTransformationMatrix() {
+        return super.inverseTransformationMatrix;
+    }
+
+    get transposedInverseTransformationMatrix() {
+        return super.transposedInverseTransformationMatrix;
+    }
+
+    get hasTransformationMatrix() {
+        return super.hasTransformationMatrix;
+    }
+
+    get t() {
+        return super.t;
+    }
+
+
 
 }
+
 //____________________________________________________________________________________________________
 /*
     ######## ##     ## ##    ##  ######  ######## ####  #######  ##    ##  ######  
@@ -263,53 +303,18 @@ class Triangle extends Figure {
 */
 
 /**
- * Fattorizzazzione di Gauss con pivoting parziale per la risoluzione di un sistema lineare di dimensione pari al numero di colonne di A.
- * A deve essere quadrata.
+ * applicazione metodo di cramer per la risoluzione di sistemi lineari
  * @param {Array} A Matrice associata al sistema
+ * @return {Array} array delle soluzioni
  */
-function gauss(A) {
-    let n = A.length;
+function triangleSolutions(A) {
+    let M = A[0][0] * (A[1][1] * A[2][2] - A[1][2] * A[2][1]) + A[1][0] * (A[0][2] * A[2][1] - A[0][1] * A[2][2]) + A[2][0] * (A[0][1] * A[1][2] - A[1][1] * A[0][2]);
+    let solutions = [];
+    solutions.push((A[0][3] * (A[1][1] * A[2][2] - A[1][2] * A[2][1]) + A[1][3] * (A[0][2] * A[2][1] - A[0][1] * A[2][2]) + A[2][3] * (A[0][1] * A[1][2] - A[1][1] * A[0][2])) / M);
+    solutions.push((A[2][2] * (A[0][0] * A[1][3] - A[0][3] * A[1][0]) + A[1][2] * (A[0][3] * A[2][0] - A[0][0] * A[2][3]) + A[0][2] * (A[1][0] * A[2][3] - A[1][3] * A[2][0])) / M);
+    solutions.push(-(A[2][1] * (A[0][0] * A[1][3] - A[0][3] * A[1][0]) + A[1][1] * (A[0][3] * A[2][0] - A[0][0] * A[2][3]) + A[0][1] * (A[1][0] * A[2][3] - A[1][3] * A[2][0])) / M);
+    return solutions;
 
-    for (let i = 0; i &lt; n; i++) {
-        // Search for maximum in this column
-        let maxEl = Math.abs(A[i][i]);
-        let maxRow = i;
-        for (let k = i + 1; k &lt; n; k++) {
-            if (Math.abs(A[k][i]) > maxEl) {
-                maxEl = Math.abs(A[k][i]);
-                maxRow = k;
-            }
-        }
-
-        // Swap maximum row with current row (column by column)
-        for (let k = i; k &lt; n + 1; k++) {
-            let tmp = A[maxRow][k];
-            A[maxRow][k] = A[i][k];
-            A[i][k] = tmp;
-        }
-
-        // Make all rows below this one 0 in current column
-        for (let k = i + 1; k &lt; n; k++) {
-            let c = -A[k][i] / A[i][i];
-            for (let j = i; j &lt; n + 1; j++) {
-                if (i === j) {
-                    A[k][j] = 0;
-                } else {
-                    A[k][j] += c * A[i][j];
-                }
-            }
-        }
-    }
-
-    // Solve equation Ax=b for an upper triangular matrix A
-    let x = new Array(n);
-    for (let i = n - 1; i > -1; i--) {
-        x[i] = A[i][n] / A[i][i];
-        for (let k = i - 1; k > -1; k--) {
-            A[k][n] -= A[k][i] * x[i];
-        }
-    }
-    return x;
 }</code></pre>
         </article>
     </section>
@@ -320,17 +325,13 @@ function gauss(A) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AmbientLight.html">AmbientLight</a></li><li><a href="Camera.html">Camera</a></li><li><a href="DirectionalLight.html">DirectionalLight</a></li><li><a href="Figure.html">Figure</a></li><li><a href="Material.html">Material</a></li><li><a href="PointLight.html">PointLight</a></li><li><a href="Ray.html">Ray</a></li><li><a href="Sphere.html">Sphere</a></li><li><a href="Triangle.html">Triangle</a></li></ul><h3>Global</h3><ul><li><a href="global.html#computePixel">computePixel</a></li><li><a href="global.html#gauss">gauss</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#loadSceneFile">loadSceneFile</a></li><li><a href="global.html#rad">rad</a></li><li><a href="global.html#render">render</a></li><li><a href="global.html#setPixel">setPixel</a></li><li><a href="global.html#ShadowCast">ShadowCast</a></li><li><a href="global.html#showcolor">showcolor</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AmbientLight.html">AmbientLight</a></li><li><a href="Camera.html">Camera</a></li><li><a href="DirectionalLight.html">DirectionalLight</a></li><li><a href="Figure.html">Figure</a></li><li><a href="Material.html">Material</a></li><li><a href="PointLight.html">PointLight</a></li><li><a href="Ray.html">Ray</a></li><li><a href="Sphere.html">Sphere</a></li><li><a href="Triangle.html">Triangle</a></li></ul><h3>Global</h3><ul><li><a href="global.html#ClearALL">ClearALL</a></li><li><a href="global.html#computePixel">computePixel</a></li><li><a href="global.html#getPixelColor">getPixelColor</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#loadSceneFile">loadSceneFile</a></li><li><a href="global.html#rad">rad</a></li><li><a href="global.html#render">render</a></li><li><a href="global.html#setPixel">setPixel</a></li><li><a href="global.html#ShadowCast">ShadowCast</a></li><li><a href="global.html#showImagesLikeVideo">showImagesLikeVideo</a></li><li><a href="global.html#transformRay">transformRay</a></li><li><a href="global.html#triangleSolutions">triangleSolutions</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-<<<<<<< Updated upstream
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue May 07 2019 15:04:07 GMT+0200 (CEST)
-=======
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue May 07 2019 10:14:14 GMT+0200 (CEST)
->>>>>>> Stashed changes
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.2</a> on Sat Jun 22 2019 19:22:23 GMT+0200 (Central European Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>
